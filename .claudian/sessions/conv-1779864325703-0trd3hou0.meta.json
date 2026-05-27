@@ -4,8 +4,8 @@
   "title": "Write Obsidian GitHub sync manual",
   "titleGenerationStatus": "success",
   "createdAt": 1779864325704,
-  "updatedAt": 1779878744932,
-  "lastResponseAt": 1779878744932,
+  "updatedAt": 1779879228569,
+  "lastResponseAt": 1779879228569,
   "sessionId": "03139e15-e602-46e5-a02f-6031aa4e4101",
   "providerState": {
     "providerSessionId": "03139e15-e602-46e5-a02f-6031aa4e4101"
@@ -13,12 +13,12 @@
   "currentNote": "笔记同步助手/2026-05-27/新技能√get： Obsidian 同步 Github.md",
   "usage": {
     "model": "haiku",
-    "inputTokens": 150,
+    "inputTokens": 42,
     "cacheCreationInputTokens": 0,
-    "cacheReadInputTokens": 67456,
+    "cacheReadInputTokens": 91008,
     "contextWindow": 200000,
-    "contextTokens": 67606,
-    "percentage": 34,
+    "contextTokens": 91050,
+    "percentage": 46,
     "contextWindowIsAuthoritative": true
   }
 }
