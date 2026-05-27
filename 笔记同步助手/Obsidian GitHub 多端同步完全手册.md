@@ -8,15 +8,19 @@ tags:
   - Obsidian
 created: 2026-05-27
 updated: 2026-05-27
+status: 已配置完成
 ---
 
 # Obsidian GitHub 多端同步完全手册
 
 > **适用场景**：多台电脑（办公/家里/笔记本）同步 Obsidian 笔记库
-> **核心技术**：Obsidian Git 插件 + GitHub 私有仓库
+> **核心技术**：Obsidian Git 插件 + GitHub 仓库 + SSH 密钥
+> **网络环境**：国内直连（已配置代理解决连接问题）
 > **账号信息**：
 > - GitHub 用户名：`22mouseok-crypto`
 > - GitHub 邮箱：`22mouse.ok@gmail.com`
+> - 仓库地址：`git@github.com:22mouseok-crypto/obsidian-vault.git`
+> - 仓库可见性：Public（公开）
 
 ---
 
@@ -77,53 +81,95 @@ updated: 2026-05-27
    https://github.com/22mouseok-crypto/obsidian-vault.git
    ```
 
-### Step 2：本地初始化 Git 并推送
+### Step 2：生成 SSH 密钥（推荐）或准备 Token
+
+**方式 A：SSH 密钥（推荐，配置一次永久使用）**
+
+打开 Git Bash，执行：
+
+```bash
+# 生成 SSH 密钥（一路回车即可）
+ssh-keygen -t ed25519 -C "22mouse.ok@gmail.com"
+```
+
+查看公钥内容并复制：
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+然后：
+1. 浏览器打开 https://github.com/settings/keys
+2. 点击 **New SSH key**
+3. Title 填 `我的笔记本`，Key 粘贴上面复制的内容
+4. 点击 **Add SSH key**
+
+验证 SSH 连接：
+```bash
+ssh -T git@github.com
+# 看到 Hi 22mouseok-crypto! 即成功
+```
+
+**方式 B：Personal Access Token（适用于 HTTPS 协议）**
+
+1. 浏览器打开 https://github.com/settings/tokens
+2. 点击 **Generate new token (classic)**
+3. 勾选 `repo` 权限，生成后复制 token
+
+---
+
+### Step 3：本地初始化 Git 并推送
 
 1. 打开你的 Obsidian 笔记库文件夹（即本 vault 根目录：`D:\耗吧那就\Documents\我的第一个知识库`）
 2. 在文件夹空白处**右键** → **Open Git Bash here**
-3. 依次执行以下命令（**一行一回车**）：
-
-```bash
-# ① 初始化 Git 仓库
-git init
-
-# ② 关联远程 GitHub 仓库（替换成你实际的仓库地址）
-git remote add origin https://github.com/22mouseok-crypto/obsidian-vault.git
-
-# ③ 设置 Git 用户信息（第一次用 Git 需要）
-git config --global user.email "22mouse.ok@gmail.com"
-git config --global user.name "22mouseok-crypto"
-
-# ④ 拉取远程仓库（首次为空，用于建立连接）
-git pull origin main --allow-unrelated-histories
-# 如果上面这行报错说 main 分支不存在，跳过这步即可
-
-# ⑤ 添加所有文件到暂存区
-git add .
-
-# ⑥ 首次提交
-git commit -m "🎉 首次提交：初始化 Obsidian 笔记库"
-
-# ⑦ 推送到 GitHub
-git push -u origin main
-```
-
-4. 执行 `git push` 时，会弹出 GitHub 登录窗口：
-   - **方式一（推荐）**：选择 **Sign in with your browser** → 浏览器登录 GitHub 账号
-   - **方式二**：输入用户名 `22mouseok-crypto` 和密码（如开启了两步验证，需使用 **Personal Access Token** 代替密码，详见下方说明）
-
-5. 看到以下信息即成功：
+3. **先检查有没有配置过错的的 SSH 命令**（常见坑！）：
+   ```bash
+   git config --global --list | grep sshcommand
    ```
-   branch 'main' set up to track 'origin/main'.
+   如果有输出（如 `core.sshcommand=...`），先清除它：
+   ```bash
+   git config --global --unset core.sshcommand
+   ```
+   > ⚠️ 这个配置会强制 Git 使用指定的 SSH 密钥，容易导致账号冲突。
+
+4. 设置 Git 用户信息（**第一次用 Git 必须设置**）：
+   ```bash
+   git config --global user.email "22mouse.ok@gmail.com"
+   git config --global user.name "22mouseok-crypto"
    ```
 
-> 💡 **Personal Access Token 获取方式**（如果密码登录失败）：
-> 1. GitHub → 右上角头像 → Settings → Developer settings → Personal access tokens → Tokens (classic)
-> 2. Generate new token (classic)
-> 3. 勾选 `repo` 全部权限
-> 4. 生成后复制 token（只会显示一次），在 Git 登录时用这个 token 当密码
+5. 初始化并关联远程仓库：
+   ```bash
+   # ① 初始化 Git 仓库
+   git init
 
-### Step 3：在 Obsidian 中配置 Git 插件
+   # ② 关联远程仓库（用 SSH 地址）
+   git remote add origin git@github.com:22mouseok-crypto/obsidian-vault.git
+
+   # ③ 添加所有文件
+   git add .
+
+   # ④ 首次提交
+   git commit -m "🎉 首次提交：初始化 Obsidian 笔记库"
+
+   # ⑤ 推送到 GitHub
+   git push -u origin master
+   ```
+
+6. 看到以下信息即成功：
+   ```
+   branch 'master' set up to track 'origin/master'.
+   ```
+
+7. 如果刚刚创建仓库时选了 Public，后面想改回 Private，可以在仓库 Settings → Danger Zone → Change visibility 中修改。
+
+> 💡 **注意分支名**：本地的默认分支可能是 `master`（旧版 Git）或 `main`（新版 Git）。如果 `git push -u origin master` 不行，试试 `git push -u origin main`。或者先查看本地分支名：
+> ```bash
+> git branch  # 查看本地分支名
+> git branch -r  # 查看远程分支名
+> ```
+
+### Step 4：在 Obsidian 中配置 Git 插件
 
 1. Obsidian → 设置（左下角齿轮）→ **第三方插件** → **社区插件** → **浏览**
 2. 搜索 **Git** → 安装 **Obsidian Git** 插件 → **启用**
@@ -140,6 +186,57 @@ git push -u origin main
 
 ---
 
+## 🌐 国内网络环境配置（代理）
+
+> 如果你在国内，直连 GitHub 经常会 HTTPS 超时（443 错误）或 SSH 断流（Broken pipe）。
+> 解决方案是给 Git 和 SSH 配置代理。
+
+### 已经使用代理的情况下
+
+如果你电脑上已经在用 Clash / V2Ray / sing-box 等代理软件，只需配置 Git 走代理：
+
+```bash
+# 查看代理地址和端口（以 Clash 默认 7890 为例）
+git config --global http.proxy http://127.0.0.1:7890
+git config --global https.proxy http://127.0.0.1:7890
+
+# 如果代理端口不同，改成你自己的（如 6454、10809 等）
+git config --global http.proxy http://127.0.0.1:你的端口
+git config --global https.proxy http://127.0.0.1:你的端口
+```
+
+### 同时配置 SSH 走代理（可选）
+
+如果 SSH 连接也不稳定，配置 SSH 使用代理隧道（需要 Git for Windows 自带的 `connect` 工具）：
+
+创建 `~/.ssh/config` 文件（无后缀名），写入：
+
+```
+Host github.com
+  HostName github.com
+  User git
+  Port 22
+  ProxyCommand connect -H 127.0.0.1:你的端口 %h %p
+```
+
+- `-H` 表示 HTTP 代理
+- `-S` 表示 SOCKS5 代理（根据你的代理类型选择）
+
+验证代理配置：
+```bash
+ssh -T git@github.com
+# 看到 Hi 22mouseok-crypto! 即成功
+```
+
+### 取消代理（换网络环境后）
+
+```bash
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+```
+
+---
+
 ## 💻 第二台电脑同步（已有仓库）
 
 > 场景：你已经在电脑 A 上完成了第一次同步，现在想在电脑 B（如公司电脑）上也同步同一个笔记库
@@ -148,7 +245,13 @@ git push -u origin main
 
 同"前置准备"部分，下载安装 Git。
 
-### Step 2：克隆仓库到新电脑
+### Step 2：生成 SSH 密钥并添加到 GitHub
+
+参照上文「第一次完整同步」的 Step 2，在新的电脑上也生成 SSH 密钥并添加到 GitHub 账号。
+
+> 💡 一台电脑对应一个 SSH 密钥，可以在 GitHub 设置中同时添加多个设备的公钥。
+
+### Step 3：克隆仓库到新电脑
 
 1. 在电脑 B 上打开 Obsidian，先创建一个**空 vault**（位置随意，可以就叫 `我的第一个知识库`）
 2. 直接**删除这个空文件夹**（我们用 GitHub 的仓库来替代它）
@@ -156,7 +259,7 @@ git push -u origin main
 4. 执行克隆命令：
 
 ```bash
-git clone https://github.com/22mouseok-crypto/obsidian-vault.git "我的第一个知识库"
+git clone git@github.com:22mouseok-crypto/obsidian-vault.git "我的第一个知识库"
 ```
 
 5. 等待下载完成（取决于笔记库大小）
@@ -481,6 +584,39 @@ git remote set-url origin https://YOUR_TOKEN@github.com/22mouseok-crypto/obsidia
 
 ---
 
+### 错误 4B：Permission denied to 另一个账号（多 GitHub 账号冲突）
+
+**错误信息**：
+```
+ERROR: Permission to 22mouseok-crypto/obsidian-vault.git denied to mOUse-Ok.
+```
+
+**原因**：电脑上配置了多个 GitHub 账号的 SSH 密钥，Git 用错了密钥。
+
+**排查方法**：
+```bash
+# ① 检查是否有自定义 SSH 命令配置
+git config --global --list | grep sshcommand
+
+# ② 查看本地有哪些 SSH 密钥
+ls -la ~/.ssh/
+```
+
+**解决方法**：
+```bash
+# 方法 A：删除错误的 core.sshcommand 配置（最常见的原因）
+git config --global --unset core.sshcommand
+
+# 方法 B：指定使用正确的 SSH 密钥
+# 在 ~/.ssh/config 中添加：
+# Host github.com
+#   IdentityFile ~/.ssh/id_ed25519
+```
+
+> ⚠️ 你可能之前为其他用途（如 Hexo 博客、公司 GitLab 等）配置过 Git，导致 SSH 指向了其他账号的密钥。用 `git config --global --list` 检查所有配置，清理不需要的项。
+
+---
+
 ### 错误 5：分支名称不匹配
 
 **错误信息**：
@@ -540,10 +676,17 @@ rm -f .git/index.lock
 # 系统文件
 Thumbs.db
 .DS_Store
+Desktop.ini
+
+# Claude AI 会话记录（体积很大，不需要同步）
+.claudian/
 
 # Obsidian 工作区配置（不同电脑屏幕不同，不通用）
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
+
+# Obsidian 同步助手备份
+.obsidian/.obsidian-sync-helper-backup/
 
 # Obsidian 插件缓存（可选，建议保留以同步插件设置）
 # .obsidian/plugins/
@@ -594,17 +737,36 @@ Thumbs.db
 ### 首次安装完整流程
 
 ```bash
-# 电脑 A - 首次推送（在 vault 根目录执行）
+# ① 生成 SSH 密钥（如果还没生成）
+ssh-keygen -t ed25519 -C "22mouse.ok@gmail.com"
+# 复制公钥：cat ~/.ssh/id_ed25519.pub → 添加到 GitHub Settings → SSH keys
+
+# ② 电脑 A - 首次推送（在 vault 根目录执行）
 git init
-git remote add origin https://github.com/22mouseok-crypto/obsidian-vault.git
+git remote add origin git@github.com:22mouseok-crypto/obsidian-vault.git
 git config --global user.email "22mouse.ok@gmail.com"
 git config --global user.name "22mouseok-crypto"
 git add .
 git commit -m "🎉 首次提交"
-git push -u origin main
+git push -u origin master
 
-# 电脑 B - 克隆仓库
-git clone https://github.com/22mouseok-crypto/obsidian-vault.git "我的第一个知识库"
+# ③ 电脑 B - 克隆仓库（先在新电脑上添加 SSH 密钥）
+git clone git@github.com:22mouseok-crypto/obsidian-vault.git "我的第一个知识库"
+```
+
+### 代理配置（国内网络需要）
+
+```bash
+# 配置 Git 走代理（端口换成你自己的）
+git config --global http.proxy http://127.0.0.1:6454
+git config --global https.proxy http://127.0.0.1:6454
+
+# 验证
+curl -I --max-time 10 https://github.com
+
+# 取消代理
+git config --global --unset http.proxy
+git config --global --unset https.proxy
 ```
 
 ---
