@@ -18,7 +18,7 @@
   "messageSortOrder": "desc",
   "messageFolder": "",
   "frequency": 15,
-  "intervalId": 41472,
+  "intervalId": 0,
   "frontMatterVariables": [],
   "frontMatterTemplate": "author: {{{author}}}\nsource: {{{siteName}}}\nurl: {{{originalUrl}}}\nsaved: {{{dateSaved}}}\ntags: [笔记同步助手]{{#labels}}[{{{name}}}]{{/labels}}",
   "syncOnStart": true,
@@ -57,6 +57,10 @@
     "desktop-mpnox15x-h1lo": {
       "frequency": 15,
       "syncOnStart": true
+    },
+    "desktop-mpnygfle-g4fc": {
+      "frequency": 0,
+      "syncOnStart": false
     }
   },
   "deviceAutoSyncMigrated": true,
