@@ -1,0 +1,24 @@
+{
+  "id": "conv-1779758362279-zbgygitws",
+  "providerId": "claude",
+  "title": "继续编写学习报告2",
+  "titleGenerationStatus": "success",
+  "createdAt": 1779758362288,
+  "updatedAt": 1779776373160,
+  "lastResponseAt": 1779776373159,
+  "sessionId": "ab12c599-6220-4bed-8223-b1f7ce9be4d3",
+  "providerState": {
+    "providerSessionId": "ab12c599-6220-4bed-8223-b1f7ce9be4d3"
+  },
+  "currentNote": "抗量子密码/讲义/学习报告2.md",
+  "usage": {
+    "model": "haiku",
+    "inputTokens": 3878,
+    "cacheCreationInputTokens": 0,
+    "cacheReadInputTokens": 114176,
+    "contextWindow": 200000,
+    "contextTokens": 118054,
+    "percentage": 59,
+    "contextWindowIsAuthoritative": true
+  }
+}

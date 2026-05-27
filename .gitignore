@@ -1,0 +1,14 @@
+# 系统文件
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# Claude 会话记录（很大，不需要同步）
+.claudian/
+
+# Obsidian 工作区配置（不同设备屏幕不同）
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Obsidian 同步助手备份
+.obsidian/.obsidian-sync-helper-backup/
