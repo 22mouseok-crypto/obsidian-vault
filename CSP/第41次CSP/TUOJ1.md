@@ -75,6 +75,44 @@ $50 \%$ 的测试点满足： $0 < a_i \le 256$ ；
 递交历史
 
 递交答案 （剩余次数: 32）
+我的答案
+```cpp
+#include<iostream>
+using namespace std;
+bool ifbalance(int a){
+    if(a==0||a==1){
+        return 0;
+    }
+    else{
+        int b=0;
+        while(a>=1){
+            int res=a%2;
+            if(res==0)
+                b++;
+            else
+                b--;
+            a=a/2;
+        }
+        if(b==0)
+            return 1;
+        else
+            return 0;
+    }
+}
+int main(){
+    int n;
+    cin>>n;
+    int *a;
+    a=new int[n];
+    int count=0;
+    for(int i=0;i<n;i++){
+        cin>>a[i];
+        if(ifbalance(a[i]))
+            count++;
+    }
+    cout<<count;
+}
+```
 
 
 
