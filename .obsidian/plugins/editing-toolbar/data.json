@@ -81,16 +81,6 @@
       "icon": "strikethrough-glyph"
     },
     {
-      "id": "editing-toolbar:underline",
-      "name": "Underline",
-      "icon": "underline-glyph"
-    },
-    {
-      "id": "editing-toolbar:toggle-highlight",
-      "name": "Highlight",
-      "icon": "highlight-glyph"
-    },
-    {
       "id": "SubmenuCommands-text-tools",
       "name": "Text Tools",
       "icon": "box",
@@ -187,6 +177,16 @@
           "icon": "lucide-brackets"
         }
       ]
+    },
+    {
+      "id": "editing-toolbar:toggle-highlight",
+      "name": "Highlight",
+      "icon": "highlight-glyph"
+    },
+    {
+      "id": "editing-toolbar:underline",
+      "name": "Underline",
+      "icon": "underline-glyph"
     },
     {
       "id": "SubmenuCommands-lucdf3en5",
