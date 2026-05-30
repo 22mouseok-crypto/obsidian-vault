@@ -66,16 +66,6 @@
       ]
     },
     {
-      "id": "editing-toolbar:toggle-bold",
-      "name": "Bold",
-      "icon": "bold-glyph"
-    },
-    {
-      "id": "editing-toolbar:toggle-italics",
-      "name": "Italic",
-      "icon": "italic-glyph"
-    },
-    {
       "id": "editing-toolbar:toggle-strikethrough",
       "name": "Strikethrough",
       "icon": "strikethrough-glyph"
@@ -504,8 +494,20 @@
       "artifact": "03-agent"
     },
     "pkmer": {
-      "tokenExpiresAt": 0,
-      "userInfo": null
+      "tokenExpiresAt": 1780156427786,
+      "userInfo": {
+        "sub": "4f5db11c-84ca-497d-89bb-2e0fe0675ef0",
+        "name": "13333713929",
+        "ai_quota": {
+          "quota": 50000000,
+          "usedQuota": 0,
+          "remainingQuota": 50000000,
+          "remainingTokens": 100,
+          "requestCount": 0
+        },
+        "thino": false,
+        "supporter": false
+      }
     },
     "enableCustomModel": false,
     "customModel": {
