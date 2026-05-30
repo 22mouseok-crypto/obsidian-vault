@@ -137,6 +137,100 @@ $$
 
 递交答案 （剩余次数: 32）
 我的答案
+```cpp
+#include<iostream>
+using namespace std;
+class op{
+    public:
+        int t;
+        int l,r,v;
+};
+
+int xor0(int a,int b,int k){
+    int sum=0;
+    int i=0;
+    while(a!=0||b!=0){//ab不全为0
+        if(a!=0&&b!=0){//ab都不为0
+            int resa=a%k;//a的k进制的第i+1位
+            int resb=b%k;//b的k进制的第i+1位
+            int resc=(resa+resb)%k;//第i+1位异或值
+            for(int j=0;j<i;j++){//k的i次方*resc
+                resc*=k;//这时resc就变成了该位换算成十进制的大小
+            }
+            sum+=resc;//求和
+            a/=k;
+            b/=k;
+            i++;//处理下一位
+        }
+        else{
+            if(a==0){
+                for(int j=0;j<i;j++){//k的i次方*b
+                    b*=k;//这时b换算成十进制的大小
+                }
+                sum+=b;
+            }
+            else{
+                for(int j=0;j<i;j++){//k的i次方*a
+                    a*=k;//这时a换算成十进制的大小
+                }
+                sum+=a;
+            }
+            break;
+        }
+    }
+    return sum;
+}
+
+void op1(int *a,int l,int r,int v,int k){
+    for(int i=l-1;i<r;i++){
+        a[i]=xor0(a[i],v,k);
+    }
+}
+
+int f(int n,int k){
+    if(n==0){
+        return 0;
+    }
+    else{
+        return xor0(n,f(n-1,k),k);
+    }
+}
+
+int op2(int a[],int l,int r,int k){
+    int sum;
+    for(int i=l-1;i<r-1;i++){
+        sum+=xor0(a[i],a[i+1],k);
+    }
+    return sum;
+}
+
+int main(){
+    int n,m,k;
+    cin>>n>>m>>k;
+    
+    int* a;
+    a=new int[n];
+    for(int i=0;i<n;i++){
+        cin>>a[i];
+    }
+
+    op* mop;
+    mop=new op[m];
+    for(int i=0;i<n;i++){
+        cin>>op[i].t;
+        if(t==1){
+            cin>>op[i].l>>op[i].r>>op[i].v;
+            op1(a[],op[i].l,op[i].r,op[i].v,k);
+        }
+        else{
+            cin>>op[i].l>>op[i].r;
+            op[i].v=-1;
+            cout<<op2(a[],op[i].l,op[i].r,k)<<endl;
+        }
+    }
+}
+```
+```
 
 ---
 
