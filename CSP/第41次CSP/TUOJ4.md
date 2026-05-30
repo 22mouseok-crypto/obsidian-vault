@@ -197,7 +197,7 @@ int f(int n,int k){
 }
 
 int op2(int a[],int l,int r,int k){
-    int sum;
+    int sum=0;
     for(int i=l-1;i<r-1;i++){
         sum+=xor0(a[i],a[i+1],k);
     }
@@ -216,16 +216,16 @@ int main(){
 
     op* mop;
     mop=new op[m];
-    for(int i=0;i<n;i++){
-        cin>>op[i].t;
-        if(t==1){
-            cin>>op[i].l>>op[i].r>>op[i].v;
-            op1(a[],op[i].l,op[i].r,op[i].v,k);
+    for(int i=0;i<m;i++){
+        cin>>mop[i].t;
+        if(mop[i].t==1){
+            cin>>mop[i].l>>mop[i].r>>mop[i].v;
+            op1(a,mop[i].l,mop[i].r,mop[i].v,k);
         }
         else{
-            cin>>op[i].l>>op[i].r;
-            op[i].v=-1;
-            cout<<op2(a[],op[i].l,op[i].r,k)<<endl;
+            cin>>mop[i].l>>mop[i].r;
+            mop[i].v=-1;
+            cout<<op2(a,mop[i].l,mop[i].r,k)<<endl;
         }
     }
 }
