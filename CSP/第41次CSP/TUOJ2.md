@@ -110,119 +110,63 @@ $80 \%$ 的测试点满足：所有任务均为灵活型任务，且对于每个
 递交答案 （剩余次数: 32）
 我的答案
 
-```c++
+```cpp
 #include<iostream>
-
 using namespace std;
-
 class robot{
-
     public:
-
         bool o;
-
         int t,a,b;
-
         double pri;
-
 };
-
 int main(){
-
     int n,m;
-
     cin>>n>>m;
-
     robot* task;
-
     task=new robot[n];
-
     for(int i=0;i<n;i++){
-
         cin>>task[i].o>>task[i].t>>task[i].a>>task[i].b;
-
         task[i].pri=task[i].b/task[i].a;
-
     }
-
     for(int i=0;i<n;i++){
-
         for(int j=n;j>i;j--){
-
             if(task[j].pri>=task[j-1].pri){
-
                 if(task[j].pri==task[j-1].pri){//如果优先值相等，
-
                     if(task[j].o-task[j-1].o>=0){//把普通任务放在前面，优先处理
-
                         robot temp=task[j];
-
                         task[j]=task[j-1];
-
                         task[j-1]=temp;
-
                     }
-
                 }
-
                 else{//优先值严格大于
-
                     robot temp=task[j];
-
                     task[j]=task[j-1];
-
                     task[j-1]=temp;
-
                 }
-
             }
-
         }
-
     }
-
     int sum=0;
-
     for(int i=0;i<n;i++){
-
         if(m==0){//没有剩余咖啡了
-
             break;
-
         }
-
         if(m>=task[i].a){//如果咖啡够当前任务完全加速
-
             m-=task[i].a;
-
             task[i].t-=task[i].b;
-
         }
-
         else{//如果咖啡不够当前任务完全加速
-
             if(task[i].o==0){//如果是灵活任务，耗尽全力
-
                 double rem=m/task[i].a;
-
                 task[i].t-=task[i].b * (rem);
-
                 m=0;
-
             }
-
             else{//如果不是灵活任务，就加速下一个，如果下一个的pri和本任务不同，那么答案就可能不对了，但是现在暂时没别的想法。
-
             }
-
         }
-
         sum+=task[i].t;
-
     }
-
     cout<<sum;
-
 }
 ```
 
