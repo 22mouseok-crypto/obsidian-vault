@@ -2,6 +2,7 @@
 title: "Claude Code Skills 清单"
 created: 2026-05-31
 updated: 2026-06-01
+auto-maintained: update-skill-inventory
 tags:
   - claude-code
   - skills
@@ -11,15 +12,15 @@ tags:
 # Claude Code Skills 清单
 
 > 记录所有已安装的 Claude Code Skills，包括能力说明和自动触发条件。
-> **维护规则**：每次安装新 Skill 时同步更新此笔记。
+> **本笔记由 `update-skill-inventory` Skill 自动维护**，安装/卸载 Skill 后自动更新，无需手动编辑。
 
 ---
 
 ## 📁 项目 Skills（仅当前项目）
 
-| Skill              | 能力                                      | 自动触发条件                                                       |
-| ------------------ | --------------------------------------- | ------------------------------------------------------------ |
-| **`paper-to-ppt`** | 论文 → 汇报 PPT 转换：深度分析 PDF 论文，基于模板逐页生成演示文稿 | 提到"论文汇报""组会 PPT""答辩PPT""paper presentation"，且涉及 .pdf + .pptx |
+| Skill | 能力 | 自动触发条件 |
+|-------|------|-------------|
+| — | *暂无项目专属 Skill* | — |
 
 ---
 
