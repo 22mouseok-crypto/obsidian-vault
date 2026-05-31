@@ -31,6 +31,8 @@ tags:
 | **`data-analysis`** | 4 步数据分析：安全探索 → 质量检查 → 代码分析 → 洞察报告 | 提到数据分析、图表、统计、EDA、趋势、数据清洗 |
 | **`feishu-card`** | 飞书/Lark 交互式富文本卡片消息：日报、告警、审批、数据播报 | 提到飞书、Lark、卡片消息、Bot 通知、发送到飞书群 |
 | **`ffmpeg-usage`** | 音视频全链路处理：格式转换、拼接、压缩、GIF、字幕、转录 | 提到视频、音频、ffmpeg、mp4、gif、转码、媒体处理 |
+| **`paper-to-ppt`** | 论文 → 汇报 PPT：深度分析 PDF 论文，基于模板逐页生成演示文稿 | 提到"论文汇报""组会 PPT""答辩PPT""paper presentation"，涉及 .pdf + .pptx |
+| **`update-skill-inventory`** | 自动扫描所有 Skill 并更新此清单笔记 | 安装/卸载 Skill 时自动触发；手动调用刷新 |
 
 ---
 
@@ -84,10 +86,10 @@ tags:
 
 | 分类 | 数量 |
 |------|:--:|
-| 项目 Skills | 1 |
-| 个人 Skills | 3 |
+| 项目 Skills | 0 |
+| 个人 Skills | 5 |
 | 插件 Skills | 17 |
-| **总计** | **21** |
+| **总计** | **22** |
 
 ---
 
@@ -96,3 +98,4 @@ tags:
 - [[Paper-to-PPT Skill 完整说明]] — 自定义 paper-to-ppt 的详细文档
 - [[Clippings/Claude Code 10个必装的 Skills 完全指南（2026）]] — 参考文章
 - [[笔记同步助手/2026-05-28/如何用Claude Skill 做高质量 PPT（附完整教程）]] — 参考文章
+- `update-skill-inventory` — 自动维护本清单的 Skill（位于 `~/.claude/skills/update-skill-inventory/`）
