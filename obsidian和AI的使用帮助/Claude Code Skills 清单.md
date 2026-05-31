@@ -93,6 +93,44 @@ tags:
 
 ---
 
+## 🔍 如何验证 Skill 是否被正确调用？
+
+Claude Code 的 Skill 触发是内部决策，对话中不会直接显示"已启用 XX Skill"。以下方法可以验证：
+
+### 1. 显式调用（最可靠）
+直接输入 `/skill-name` 手动触发，不依赖自动匹配：
+```
+/paper-to-ppt 论文.pdf 模板.pptx
+```
+
+### 2. 问 Claude 用了哪些 Skill
+在对话中直接问：
+> "你刚才处理这个任务时，调用了哪些 Skill？"
+
+或者对话一开始就问：
+> "列出当前可用的 Skills，说明你会怎么处理我的需求。"
+
+### 3. 检查 Skill 文件是否存在
+```bash
+# 检查某个 Skill 是否已安装
+ls ~/.claude/skills/paper-to-ppt/SKILL.md && echo "已安装" || echo "未安装"
+```
+
+### 4. 测试自动触发
+用明显应该触发某 Skill 的话术测试——如果 Claude 的处理方式不像该 Skill 的工作流，就说明没触发。
+
+### 5. 观察 Claude 的工作方式
+- 触发了 `pdf` skill → 会用 pdfplumber/pypdf 提取，不是直接 Read PDF
+- 触发了 `pptx` skill → 会用 markitdown 或 OOXML 工具操作 .pptx
+- 触发了 `paper-to-ppt` → 会先分析论文结构、再分析模板、确认方案后才填充
+
+### 建议
+- **重要任务**：显式 `/skill-name` 调用
+- **日常操作**：信任自动触发（触发条件匹配时很准）
+- **不确定时**：直接问 Claude "用了哪些 Skill？"
+
+---
+
 ## 🔗 相关笔记
 
 - [[Paper-to-PPT Skill 完整说明]] — 自定义 paper-to-ppt 的详细文档
