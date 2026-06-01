@@ -114,7 +114,7 @@ prs = Presentation(TEMPLATE)
 # Delete all existing slides
 NS = '{http://schemas.openxmlformats.org/presentationml/2006/main}'
 R_NS = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
-sldIdLst = prs.part.element.find(f'.//{NS}sldIdLst')
+sldIdLst = prs.part._element.find(f'.//{NS}sldIdLst')
 if sldIdLst is not None:
     for sldId in list(sldIdLst):
         rId = sldId.get(f'{R_NS}id')
