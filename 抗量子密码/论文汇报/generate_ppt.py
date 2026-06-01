@@ -341,15 +341,15 @@ if slide.shapes.title:
     set_font(run, 34, bold=True, color=DARK_BLUE, font_name=TITLE_FONT)
 
 outline_items = [
-    {"main": "1.  研究背景与动机 —— 全同态加密与Gentry蓝图", "bold": True, "size": 18, "color": DARK_BLUE},
-    {"main": "2.  前人工作的局限 —— 理想格假设与Squashing范式", "bold": True, "size": 18, "color": DARK_BLUE},
-    {"main": "3.  核心创新 I：Re-linearization（重线性化）", "bold": True, "size": 18, "color": MEDIUM_BLUE},
+    {"main": "1.  研究背景与动机 —— 全同态加密与Gentry蓝图「, "bold」: True, "size": 18, "color": DARK_BLUE},
+    {"main": "2.  前人工作的局限 —— 理想格假设与Squashing范式「, "bold」: True, "size": 18, "color": DARK_BLUE},
+    {"main": "3.  核心创新 I：Re-linearization（重线性化）「, "bold」: True, "size": 18, "color": MEDIUM_BLUE},
     {"subs": ["→ 从标准LWE构造Somewhat HE，摆脱理想格依赖"]},
-    {"main": "4.  核心创新 II：Dimension-Modulus Reduction（维度-模缩减）", "bold": True, "size": 18, "color": MEDIUM_BLUE},
+    {"main": "4.  核心创新 II：Dimension-Modulus Reduction（维度-模缩减）「, "bold」: True, "size": 18, "color": MEDIUM_BLUE},
     {"subs": ["→ 替代Squashing，实现Bootstrapping，达到全同态"]},
-    {"main": "5.  BTS方案完整构造与安全性分析", "bold": True, "size": 18, "color": DARK_BLUE},
-    {"main": "6.  应用：近最优私有信息检索（PIR）", "bold": True, "size": 18, "color": DARK_BLUE},
-    {"main": "7.  总结与讨论", "bold": True, "size": 18, "color": DARK_BLUE},
+    {"main": "5.  BTS方案完整构造与安全性分析「, "bold」: True, "size": 18, "color": DARK_BLUE},
+    {"main": "6.  应用：近最优私有信息检索（PIR）「, "bold」: True, "size": 18, "color": DARK_BLUE},
+    {"main": "7.  总结与讨论「, "bold」: True, "size": 18, "color": DARK_BLUE},
 ]
 add_bullet_slide(slide, "", outline_items)
 
@@ -371,29 +371,29 @@ add_math_box(slide, 0.9, 1.4, 11.5, 0.7,
 
 # Key points
 add_textbox(slide, 0.9, 2.4, 5.5, 3.5, [
-    [{"text": "核心能力", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "核心能力「, "size」: 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
-    [{"text": "• 在加密数据上执行任意复杂度的计算", "size": 15, "color": DARK_GRAY}],
-    [{"text": "• 计算结果仍为加密形式，只有私钥持有者能解密", "size": 15, "color": DARK_GRAY}],
+    [{"text": "• 在加密数据上执行任意复杂度的计算「, "size」: 15, "color": DARK_GRAY}],
+    [{"text": "• 计算结果仍为加密形式，只有私钥持有者能解密「, "size」: 15, "color": DARK_GRAY}],
     [{"text": '• 从数学上实现「可委托计算」：数据加密 → 云端处理 → 返回加密结果', "size": 15, "color": DARK_GRAY}],
     [{"text": ""}],
-    [{"text": "应用场景", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "应用场景「, "size」: 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
-    [{"text": "• 云计算隐私保护 · 加密数据库查询", "size": 15, "color": DARK_GRAY}],
-    [{"text": "• 私有信息检索 (PIR) · 安全多方计算", "size": 15, "color": DARK_GRAY}],
-    [{"text": "• 机器学习推理隐私保护", "size": 15, "color": DARK_GRAY}],
+    [{"text": "• 云计算隐私保护 · 加密数据库查询「, "size」: 15, "color": DARK_GRAY}],
+    [{"text": "• 私有信息检索 (PIR) · 安全多方计算「, "size」: 15, "color": DARK_GRAY}],
+    [{"text": "• 机器学习推理隐私保护「, "size」: 15, "color": DARK_GRAY}],
 ])
 
 # Timeline on right
 add_textbox(slide, 7.2, 2.4, 5.5, 3.8, [
-    [{"text": "发展历程", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "发展历程「, "size」: 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
-    [{"text": "1978  Rivest, Adleman, Dertouzos 提出FHE概念", "size": 13, "color": DARK_GRAY, "font": EN_FONT}],
-    [{"text": "       ↓  密码学「圣杯」，30年无解", "size": 12, "color": MED_GRAY}],
+    [{"text": "1978  Rivest, Adleman, Dertouzos 提出FHE概念「, "size」: 13, "color": DARK_GRAY, "font": EN_FONT}],
+    [{"text": "       ↓  密码学「圣杯」，30年无解「, "size」: 12, "color": MED_GRAY}],
     [{"text": "2009  Gentry 首个候选方案 [STOC'09]", "size": 13, "bold": True, "color": RED_ACCENT, "font": EN_FONT}],
     [{"text": "       基于理想格 (Ideal Lattices)", "size": 12, "color": MED_GRAY}],
     [{"text": "2010  van Dijk et al. 整数上的FHE [Eurocrypt'10]", "size": 13, "color": DARK_GRAY, "font": EN_FONT}],
-    [{"text": "2011  Brakerski & Vaikuntanathan 本文", "size": 13, "bold": True, "color": MEDIUM_BLUE, "font": EN_FONT}],
+    [{"text": "2011  Brakerski & Vaikuntanathan 本文「, "size」: 13, "bold": True, "color": MEDIUM_BLUE, "font": EN_FONT}],
     [{"text": "       → 仅基于标准LWE假设的FHE", "size": 12, "color": MED_GRAY}],
     [{"text": "2011  Brakerski & V.  Ring-LWE FHE [Crypto'11]", "size": 13, "color": DARK_GRAY, "font": EN_FONT}],
 ])
@@ -408,8 +408,8 @@ add_content_title(slide, "Gentry 的 Bootstrapping 蓝图（2009）")
 # Step 1
 add_highlight_box(slide, 0.9, 1.8, 3.5, 0.8, "Step 1: Somewhat HE", MEDIUM_BLUE)
 add_textbox(slide, 0.9, 2.7, 3.5, 1.2, [
-    [{"text": "构造一个可对密文进行有限次加法和乘法运算的「部分同态」加密方案", "size": 12, "color": DARK_GRAY}],
-    [{"text": "能评估深度 ≤ D 的电路", "size": 12, "bold": True, "color": DARK_BLUE, "font": MATH_FONT}],
+    [{"text": "构造一个可对密文进行有限次加法和乘法运算的「部分同态」加密方案「, "size」: 12, "color": DARK_GRAY}],
+    [{"text": "能评估深度 ≤ D 的电路「, "size」: 12, "bold": True, "color": DARK_BLUE, "font": MATH_FONT}],
 ])
 
 # Arrow
@@ -419,7 +419,7 @@ add_flow_arrow(slide, 4.6, 2.1, 0.6, 0.3)
 add_highlight_box(slide, 5.4, 1.8, 3.5, 0.8, "Step 2: Bootstrappable?", MEDIUM_BLUE)
 add_textbox(slide, 5.4, 2.7, 3.5, 1.2, [
     [{"text": "关键条件：解密电路 + 1次乘法 的深度 ≤ D", "size": 12, "color": DARK_GRAY}],
-    [{"text": "即方案能「自举」地评估自身的解密过程", "size": 12, "color": DARK_GRAY}],
+    [{"text": "即方案能「自举」地评估自身的解密过程「, "size」: 12, "color": DARK_GRAY}],
 ])
 
 # Arrow
@@ -428,8 +428,8 @@ add_flow_arrow(slide, 9.1, 2.1, 0.6, 0.3)
 # Step 3
 add_highlight_box(slide, 9.9, 1.8, 3.0, 0.8, "Step 3: FHE!", GREEN_ACCENT)
 add_textbox(slide, 9.9, 2.7, 3.0, 1.2, [
-    [{"text": "Bootstrapping定理：部分同态 + 自举 = 全同态", "size": 12, "color": DARK_GRAY, "font": BODY_FONT}],
-    [{"text": "可评估任意深度电路", "size": 12, "bold": True, "color": GREEN_ACCENT, "font": MATH_FONT}],
+    [{"text": "Bootstrapping定理：部分同态 + 自举 = 全同态「, "size」: 12, "color": DARK_GRAY, "font": BODY_FONT}],
+    [{"text": "可评估任意深度电路「, "size」: 12, "bold": True, "color": GREEN_ACCENT, "font": MATH_FONT}],
 ])
 
 # Bottom: Diagram explanation
@@ -454,11 +454,11 @@ add_content_title(slide, "前人工作的两大局限")
 # Limitation 1
 add_highlight_box(slide, 0.9, 1.6, 5.5, 0.65, "局限 1：依赖理想格（Ideal Lattices）假设", RED_ACCENT)
 add_textbox(slide, 0.9, 2.4, 5.5, 2.0, [
-    [{"text": "• Gentry方案的Somewhat HE基于理想格上的困难问题", "size": 13, "color": DARK_GRAY}],
-    [{"text": "• 理想格 (Ideal Lattices) 自然地同时支持加法和乘法", "size": 13, "color": DARK_GRAY}],
-    [{"text": "  原因：理想是环的子结构，对+和×封闭", "size": 12, "color": MED_GRAY, "font": EN_FONT}],
-    [{"text": "  相比之下，一般格只对加法封闭", "size": 12, "color": MED_GRAY, "font": EN_FONT}],
-    [{"text": "• 问题：理想格 = 「特殊品种」，我们对其了解甚少", "size": 13, "bold": True, "color": RED_ACCENT}],
+    [{"text": "• Gentry方案的Somewhat HE基于理想格上的困难问题「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "• 理想格 (Ideal Lattices) 自然地同时支持加法和乘法「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "  原因：理想是环的子结构，对+和×封闭「, "size」: 12, "color": MED_GRAY, "font": EN_FONT}],
+    [{"text": "  相比之下，一般格只对加法封闭「, "size」: 12, "color": MED_GRAY, "font": EN_FONT}],
+    [{"text": "• 问题：理想格 = 「特殊品种」，我们对其了解甚少「, "size」: 13, "bold": True, "color": RED_ACCENT}],
     [{"text": "  一般格的研究更深入 (LLL, Ajtai, Micciancio...)", "size": 12, "color": MED_GRAY}],
 ])
 # Arrow in the middle
@@ -468,22 +468,22 @@ add_textbox(slide, 6.6, 2.5, 0.5, 0.5, [
 
 # Our goal for limitation 1
 add_textbox(slide, 7.2, 1.6, 5.5, 3.0, [
-    [{"text": "本文目标 1：去掉理想格", "size": 18, "bold": True, "color": MEDIUM_BLUE, "font": TITLE_FONT}],
+    [{"text": "本文目标 1：去掉理想格「, "size」: 18, "bold": True, "color": MEDIUM_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "在标准 LWE 假设上构造 Somewhat HE", "size": 14, "bold": True, "color": DARK_BLUE}],
-    [{"text": "• LWE 问题等价于一般格上最坏情况困难问题", "size": 13, "color": DARK_GRAY}],
+    [{"text": "• LWE 问题等价于一般格上最坏情况困难问题「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "  (Regev'05, Peikert'09: worst-case → average-case)", "size": 11, "color": MED_GRAY, "font": EN_FONT}],
-    [{"text": "• 新工具：Re-linearization（重线性化）", "size": 13, "bold": True, "color": MEDIUM_BLUE}],
+    [{"text": "• 新工具：Re-linearization（重线性化）「, "size」: 13, "bold": True, "color": MEDIUM_BLUE}],
 ])
 
 # Limitation 2
 add_highlight_box(slide, 0.9, 4.7, 5.5, 0.65, "局限 2：Squashing 范式 + 稀疏子集和假设", RED_ACCENT)
 add_textbox(slide, 0.9, 5.45, 5.5, 2.0, [
     [{"text": "• 部分同态 → 全同态需要 Bootstrapping", "size": 13, "color": DARK_GRAY}],
-    [{"text": "• 但解密电路复杂度 (degree ≈ max(n, log q)) 超过同态能力", "size": 13, "color": DARK_GRAY}],
-    [{"text": "• Gentry 的 Squashing：人为降低解密复杂度", "size": 13, "color": DARK_GRAY}],
-    [{"text": "  代价：引入"稀疏子集和" (Sparse Subset-Sum) 假设", "size": 12, "bold": True, "color": RED_ACCENT}],
-    [{"text": "• 这个额外假设是所有先前方案的「主要缺陷」", "size": 13, "color": RED_ACCENT}],
+    [{"text": "• 但解密电路复杂度 (degree ≈ max(n, log q)) 超过同态能力「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "• Gentry 的 Squashing：人为降低解密复杂度「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "  代价：引入「稀疏子集和" (Sparse Subset-Sum) 假设」, "size": 12, "bold": True, "color": RED_ACCENT}],
+    [{"text": "• 这个额外假设是所有先前方案的「主要缺陷」「, "size」: 13, "color": RED_ACCENT}],
 ])
 
 add_textbox(slide, 7.2, 4.7, 5.5, 3.0, [
@@ -491,7 +491,7 @@ add_textbox(slide, 7.2, 4.7, 5.5, 3.0, [
     [{"text": ""}],
     [{"text": "不引入额外假设，直接实现 Bootstrapping", "size": 14, "bold": True, "color": DARK_BLUE}],
     [{"text": "• 新工具：Dimension-Modulus Reduction", "size": 13, "bold": True, "color": MEDIUM_BLUE}],
-    [{"text": "  （维度-模缩减）", "size": 12, "color": MED_GRAY, "font": TITLE_FONT}],
+    [{"text": "  （维度-模缩减）「, "size」: 12, "color": MED_GRAY, "font": TITLE_FONT}],
     [{"text": "• 额外收获：密文非常短 → 高效的 PIR", "size": 13, "color": DARK_GRAY}],
 ])
 
@@ -508,16 +508,16 @@ slide = new_slide(6)  # Blank
 add_content_title(slide, "起点：Regev 的 LWE 加密方案 [STOC'05]")
 
 add_textbox(slide, 0.9, 1.4, 5.8, 2.5, [
-    [{"text": "LWE (Learning With Errors) 假设", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "LWE (Learning With Errors) 假设「, "size」: 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
-    [{"text": "给定 (aᵢ, ⟨aᵢ,s⟩ + eᵢ)，区分其与均匀随机分布是困难的", "size": 13, "color": DARK_GRAY, "font": MATH_FONT}],
+    [{"text": "给定 (aᵢ, ⟨aᵢ,s⟩ + eᵢ)，区分其与均匀随机分布是困难的「, "size」: 13, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": "  aᵢ ∈ Z_qⁿ (均匀随机),  s ∈ Z_qⁿ (秘密),  eᵢ ← χ (小噪声)", "size": 12, "color": MED_GRAY, "font": MATH_FONT}],
     [{"text": "• LWE 的困难性 ≈ 一般格上最坏情况的 Short Vector Problem", "size": 13, "color": DARK_GRAY}],
     [{"text": "  → 已知最优算法运行时间：exp(Ω̃(n))", "size": 12, "color": MED_GRAY, "font": MATH_FONT}],
 ])
 
 add_textbox(slide, 7.2, 1.4, 5.5, 2.5, [
-    [{"text": "Regev 加密方案（单比特）", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "Regev 加密方案（单比特）「, "size」: 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "Secret Key:  s ∈ Z_qⁿ", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": "Enc(μ∈{0,1}):  选择 a ← Z_qⁿ, e ← χ", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
@@ -531,7 +531,7 @@ add_math_box(slide, 0.9, 4.2, 11.5, 0.7,
     "核心观察: 两个「掩码」互不干扰 —— 秘密掩码 ⟨a,s⟩ 和 偶数掩码 2e 可以依次消除！")
 
 add_textbox(slide, 0.9, 5.2, 11.5, 2.0, [
-    [{"text": "解密视角的转换 —— 将密文看作关于密钥的线性函数", "size": 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "解密视角的转换 —— 将密文看作关于密钥的线性函数「, "size」: 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "定义: 对密文 c = (a,b)，考虑函数  f_{a,b}(x) = b - ⟨a,x⟩  (mod q)", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": "那么解密就是: 在 x = s 处求值 f，然后 mod 2 → μ", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
@@ -550,7 +550,7 @@ add_textbox(slide, 0.9, 2.2, 5.5, 1.5, [
     [{"text": "f_{a,b}(x) + f_{a',b'}(x)", "size": 15, "color": BLACK, "font": MATH_FONT}],
     [{"text": "  = (b - ⟨a,x⟩) + (b' - ⟨a',x⟩)", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": "  = (b+b') - ⟨a+a', x⟩", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
-    [{"text": "  = f_{a+a', b+b'}(x)    ← 仍是线性函数！", "size": 15, "bold": True, "color": GREEN_ACCENT, "font": MATH_FONT}],
+    [{"text": "  = f_{a+a', b+b'}(x)    ← 仍是线性函数！「, "size」: 15, "bold": True, "color": GREEN_ACCENT, "font": MATH_FONT}],
     [{"text": "→ 密文 (a+a', b+b') 解密得到 μ₁+μ₂ ✓", "size": 13, "color": DARK_GRAY}],
 ])
 
@@ -560,7 +560,7 @@ add_textbox(slide, 7.2, 2.2, 5.5, 2.5, [
     [{"text": "f₁(x) · f₂(x) = (b - ⟨a,x⟩)(b' - ⟨a',x⟩)", "size": 14, "color": BLACK, "font": MATH_FONT}],
     [{"text": "展开后得到:", "size": 13, "color": DARK_GRAY}],
     [{"text": "  φ(x) = h₀ + Σᵢ hᵢ·x[i] + Σᵢⱼ hᵢⱼ·x[i]x[j]", "size": 14, "bold": True, "color": RED_ACCENT, "font": MATH_FONT}],
-    [{"text": "  ↑ 二次项！不再是线性函数！", "size": 13, "color": RED_ACCENT}],
+    [{"text": "  ↑ 二次项！不再是线性函数！「, "size」: 13, "color": RED_ACCENT}],
     [{"text": "", "size": 6}],
     [{"text": "密文大小:  n+1  →  ~n²/2  个系数  (爆炸!!)", "size": 15, "bold": True, "color": RED_ACCENT}],
     [{"text": "→ 一次乘法后密文就膨胀到不可用 [GHV10]", "size": 13, "color": DARK_GRAY}],
@@ -584,16 +584,16 @@ add_content_title(slide, "Re-linearization（重线性化）技术详解")
 
 # Step-by-step
 add_textbox(slide, 0.9, 1.4, 11.5, 0.8, [
-    [{"text": "核心思想：发布"二次项在旧密钥下的密文" → 在新密钥下将其视为线性组合", "size": 16, "bold": True, "color": DARK_BLUE}],
+    [{"text": "核心思想：发布「二次项在旧密钥下的密文" → 在新密钥下将其视为线性组合」, "size": 16, "bold": True, "color": DARK_BLUE}],
 ])
 
 # Step 1
 add_highlight_box(slide, 0.9, 2.3, 3.6, 0.5, "Step 1：密钥链", ACCENT_BLUE)
 add_textbox(slide, 0.9, 2.9, 3.6, 1.5, [
-    [{"text": "生成 L+1 层密钥：", "size": 13, "color": DARK_GRAY}],
+    [{"text": "生成 L+1 层密钥：「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "  s₀, s₁, s₂, ..., s_L", "size": 14, "bold": True, "color": BLACK, "font": MATH_FONT}],
     [{"text": "每个密钥 s_ℓ ∈ Z_qⁿ", "size": 12, "color": MED_GRAY, "font": MATH_FONT}],
-    [{"text": "支持 L 层乘法运算", "size": 12, "color": MED_GRAY}],
+    [{"text": "支持 L 层乘法运算「, "size」: 12, "color": MED_GRAY}],
 ])
 
 # Step 2
@@ -602,7 +602,7 @@ add_textbox(slide, 4.8, 2.9, 3.6, 1.5, [
     [{"text": "对于所有 i,j ∈ [n], τ ∈ [log q]:", "size": 12, "font": MATH_FONT}],
     [{"text": "b_{ℓ,i,j,τ} = ⟨a, s_ℓ⟩ + 2e", "size": 13, "font": MATH_FONT}],
     [{"text": "          + 2^τ · s_{ℓ-1}[i]·s_{ℓ-1}[j]", "size": 13, "bold": True, "color": BLACK, "font": MATH_FONT}],
-    [{"text": "称为「伪加密」（pseudo-encryption）", "size": 12, "color": MED_GRAY}],
+    [{"text": "称为「伪加密」（pseudo-encryption）「, "size」: 12, "color": MED_GRAY}],
 ])
 
 # Step 3
@@ -611,7 +611,7 @@ add_textbox(slide, 8.7, 2.9, 3.7, 1.5, [
     [{"text": "2^τ·s[i]s[j] ≈ b - ⟨a, s_ℓ⟩", "size": 13, "color": BLACK, "font": MATH_FONT}],
     [{"text": "因此 Σ h_{ij}·s[i]s[j]", "size": 13, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": " ≈ Σ h_{ij,τ}·(b_{τ} - ⟨a_{τ}, s_ℓ⟩)", "size": 13, "bold": True, "color": MEDIUM_BLUE, "font": MATH_FONT}],
-    [{"text": " = 线性函数 in s_ℓ ！", "size": 14, "bold": True, "color": GREEN_ACCENT, "font": MATH_FONT}],
+    [{"text": " = 线性函数 in s_ℓ ！「, "size」: 14, "bold": True, "color": GREEN_ACCENT, "font": MATH_FONT}],
 ])
 
 # The magic
@@ -634,36 +634,36 @@ slide = new_slide(6)  # Blank
 add_content_title(slide, "Re-linearization：成就与局限")
 
 add_textbox(slide, 0.9, 1.5, 5.8, 4.5, [
-    [{"text": "✅ 取得的突破", "size": 22, "bold": True, "color": GREEN_ACCENT, "font": TITLE_FONT}],
+    [{"text": "✅ 取得的突破「, "size」: 22, "bold": True, "color": GREEN_ACCENT, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "1. 从标准 LWE 构造出 Somewhat HE", "size": 16, "bold": True, "color": DARK_BLUE}],
-    [{"text": "   → 摆脱了对理想格的依赖！", "size": 14, "color": MED_GRAY}],
-    [{"text": "   → 安全性仅基于一般格的最坏情况困难性", "size": 14, "color": MED_GRAY}],
+    [{"text": "   → 摆脱了对理想格的依赖！「, "size」: 14, "color": MED_GRAY}],
+    [{"text": "   → 安全性仅基于一般格的最坏情况困难性「, "size」: 14, "color": MED_GRAY}],
     [{"text": "", "size": 8}],
-    [{"text": "2. 支持多项式深度的同态运算", "size": 16, "bold": True, "color": DARK_BLUE}],
+    [{"text": "2. 支持多项式深度的同态运算「, "size」: 16, "bold": True, "color": DARK_BLUE}],
     [{"text": "   • 乘法深度 L ≈ ε·log n (0<ε<1)", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
-    [{"text": "   • 等价于可评估度数 D ≈ n^ε 的多项式", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
-    [{"text": "   • 密文大小始终保持 O(n) 不变", "size": 14, "color": DARK_GRAY}],
+    [{"text": "   • 等价于可评估度数 D ≈ n^ε 的多项式「, "size」: 14, "color": DARK_GRAY, "font": MATH_FONT}],
+    [{"text": "   • 密文大小始终保持 O(n) 不变「, "size」: 14, "color": DARK_GRAY}],
     [{"text": "", "size": 8}],
-    [{"text": "3. 技术通用性强", "size": 16, "bold": True, "color": DARK_BLUE}],
-    [{"text": "   • 密钥切换 (Key Switching) 的雏形", "size": 14, "color": DARK_GRAY}],
-    [{"text": "   • 后续工作 (BGV, GSW, CKKS...) 广泛使用", "size": 14, "color": DARK_GRAY}],
+    [{"text": "3. 技术通用性强「, "size」: 16, "bold": True, "color": DARK_BLUE}],
+    [{"text": "   • 密钥切换 (Key Switching) 的雏形「, "size」: 14, "color": DARK_GRAY}],
+    [{"text": "   • 后续工作 (BGV, GSW, CKKS...) 广泛使用「, "size」: 14, "color": DARK_GRAY}],
 ])
 
 add_textbox(slide, 7.2, 1.5, 5.5, 4.5, [
-    [{"text": "⚠️ 仍存在的局限", "size": 22, "bold": True, "color": ORANGE_ACC, "font": TITLE_FONT}],
+    [{"text": "⚠️ 仍存在的局限「, "size」: 22, "bold": True, "color": ORANGE_ACC, "font": TITLE_FONT}],
     [{"text": ""}],
-    [{"text": "这个方案还只是 Somewhat HE：", "size": 16, "bold": True, "color": DARK_BLUE}],
+    [{"text": "这个方案还只是 Somewhat HE：「, "size」: 16, "bold": True, "color": DARK_BLUE}],
     [{"text": "", "size": 6}],
     [{"text": "• 同态运算深度受限于参数 n", "size": 15, "color": DARK_GRAY}],
-    [{"text": "  → 无法评估任意深度的电路", "size": 14, "color": MED_GRAY}],
+    [{"text": "  → 无法评估任意深度的电路「, "size」: 14, "color": MED_GRAY}],
     [{"text": "", "size": 6}],
     [{"text": "• 要变成 FHE，必须能 Bootstrapping", "size": 15, "color": DARK_GRAY}],
     [{"text": "", "size": 6}],
     [{"text": "• 解密电路复杂度:", "size": 15, "color": DARK_GRAY}],
     [{"text": "  degree ≈ max(n, log q)", "size": 15, "bold": True, "color": RED_ACCENT, "font": MATH_FONT}],
     [{"text": "  但方案只能支持 degree ≈ n^ε", "size": 14, "color": MED_GRAY, "font": MATH_FONT}],
-    [{"text": "  → n^ε << max(n, log q)  → 不能自举！", "size": 15, "bold": True, "color": RED_ACCENT}],
+    [{"text": "  → n^ε << max(n, log q)  → 不能自举！「, "size」: 15, "bold": True, "color": RED_ACCENT}],
     [{"text": "", "size": 8}],
     [{"text": "需要新工具来缩小解密电路的复杂度...", "size": 16, "bold": True, "color": MEDIUM_BLUE}],
 ])
@@ -681,9 +681,9 @@ slide = new_slide(6)  # Blank
 add_content_title(slide, "Bootstrapping 的瓶颈与解决思路")
 
 add_textbox(slide, 0.9, 1.5, 5.8, 3.5, [
-    [{"text": "瓶颈分析", "size": 20, "bold": True, "color": RED_ACCENT, "font": TITLE_FONT}],
+    [{"text": "瓶颈分析「, "size」: 20, "bold": True, "color": RED_ACCENT, "font": TITLE_FONT}],
     [{"text": ""}],
-    [{"text": "Bootstrapping 需要方案能够同态评估自身的解密电路", "size": 14, "color": DARK_GRAY}],
+    [{"text": "Bootstrapping 需要方案能够同态评估自身的解密电路「, "size」: 14, "color": DARK_GRAY}],
     [{"text": ""}],
     [{"text": "解密操作: d = b - ⟨a,s⟩ (mod q), 然后 mod 2", "size": 14, "color": BLACK, "font": MATH_FONT}],
     [{"text": "写成关于 s 的多项式 (将 s 的每个比特视为变量):", "size": 13, "color": DARK_GRAY}],
@@ -691,22 +691,22 @@ add_textbox(slide, 0.9, 1.5, 5.8, 3.5, [
     [{"text": "  (n 来自内积, log q 来自模约简)", "size": 12, "color": MED_GRAY, "font": MATH_FONT}],
     [{"text": ""}],
     [{"text": "但 Somewhat HE 只能支持 degree ≈ n^ε (ε<1)", "size": 14, "color": DARK_GRAY}],
-    [{"text": "→ max(n, log q) >> n^ε  无法满足自举条件！", "size": 14, "bold": True, "color": RED_ACCENT}],
+    [{"text": "→ max(n, log q) >> n^ε  无法满足自举条件！「, "size」: 14, "bold": True, "color": RED_ACCENT}],
 ])
 
 add_textbox(slide, 7.2, 1.5, 5.5, 3.5, [
-    [{"text": "两种解决路径", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "两种解决路径「, "size」: 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "路径 A: Squashing (Gentry'09)", "size": 16, "bold": True, "color": MED_GRAY}],
-    [{"text": "• 在公钥中加入关于私钥的「提示」", "size": 13, "color": DARK_GRAY}],
-    [{"text": "• 人为降低解密多项式的次数", "size": 13, "color": DARK_GRAY}],
-    [{"text": "• ❌ 引入稀疏子集和假设", "size": 14, "bold": True, "color": RED_ACCENT}],
+    [{"text": "• 在公钥中加入关于私钥的「提示」「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "• 人为降低解密多项式的次数「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "• ❌ 引入稀疏子集和假设「, "size」: 14, "bold": True, "color": RED_ACCENT}],
     [{"text": "", "size": 8}],
     [{"text": "路径 B: Dimension-Modulus Reduction (本文)", "size": 16, "bold": True, "color": MEDIUM_BLUE}],
     [{"text": "• 将密文从大参数 (n,q) 转换到小参数 (k,p)", "size": 13, "color": DARK_GRAY}],
-    [{"text": "• 小参数下解密多项式的 degree 显著降低", "size": 13, "color": DARK_GRAY}],
-    [{"text": "• ✅ 不需要任何额外假设！", "size": 14, "bold": True, "color": GREEN_ACCENT}],
-    [{"text": "• ✅ 密文变短，一举两得！", "size": 14, "bold": True, "color": GREEN_ACCENT}],
+    [{"text": "• 小参数下解密多项式的 degree 显著降低「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "• ✅ 不需要任何额外假设！「, "size」: 14, "bold": True, "color": GREEN_ACCENT}],
+    [{"text": "• ✅ 密文变短，一举两得！「, "size」: 14, "bold": True, "color": GREEN_ACCENT}],
 ])
 
 # Visual comparison
@@ -733,13 +733,13 @@ add_textbox(slide, 0.9, 1.4, 11.5, 0.7, [
 add_highlight_box(slide, 0.9, 2.3, 5.5, 0.5, "Step 1: 维度缩减 (n → k)", ACCENT_BLUE)
 add_textbox(slide, 0.9, 2.9, 5.5, 2.0, [
     [{"text": "回顾 Re-linearization 的思想:", "size": 13, "color": DARK_GRAY}],
-    [{"text": "可以将对 s (n维) 的密文转换为对 t 的密文", "size": 13, "color": DARK_GRAY}],
+    [{"text": "可以将对 s (n维) 的密文转换为对 t 的密文「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "", "size": 5}],
     [{"text": "这次我们选择新的短密钥:", "size": 13, "color": DARK_GRAY}],
     [{"text": "  ŝ ∈ Z_p^k   (k << n)", "size": 15, "bold": True, "color": BLACK, "font": MATH_FONT}],
     [{"text": "", "size": 5}],
-    [{"text": "关键: s 和 ŝ 的维度不需要相同！", "size": 14, "bold": True, "color": MEDIUM_BLUE}],
-    [{"text": "  → Re-linearization 过程照样工作", "size": 13, "color": DARK_GRAY}],
+    [{"text": "关键: s 和 ŝ 的维度不需要相同！「, "size」: 14, "bold": True, "color": MEDIUM_BLUE}],
+    [{"text": "  → Re-linearization 过程照样工作「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "  → 从 (n, log q) 降到 (k, log q)", "size": 13, "color": DARK_GRAY, "font": MATH_FONT}],
 ])
 
@@ -754,7 +754,7 @@ add_textbox(slide, 7.2, 2.9, 5.5, 2.5, [
     [{"text": "  b̂_{i,τ} = ⟨â_{i,τ}, ŝ⟩ + ê", "size": 13, "color": BLACK, "font": MATH_FONT}],
     [{"text": "          + ⌊(p/q) · 2^τ · s_L[i]⌉", "size": 13, "bold": True, "color": MEDIUM_BLUE, "font": MATH_FONT}],
     [{"text": "", "size": 5}],
-    [{"text": "缩放引入的舍入误差 ≤ 1/2，在噪声预算内可控", "size": 13, "color": DARK_GRAY}],
+    [{"text": "缩放引入的舍入误差 ≤ 1/2，在噪声预算内可控「, "size」: 13, "color": DARK_GRAY}],
 ])
 
 # Bottom summary
@@ -801,7 +801,7 @@ add_textbox(slide, 7.2, 1.5, 5.5, 2.5, [
     [{"text": ""}],
     [{"text": "BTS.Eval(evk, f, c₁,...,c_t):", "size": 16, "bold": True, "color": DARK_BLUE, "font": EN_FONT}],
     [{"text": "  Gate-by-gate 同态评估电路 f", "size": 13, "color": DARK_GRAY}],
-    [{"text": "  最后一步: 维度-模缩减", "size": 13, "bold": True, "color": MEDIUM_BLUE}],
+    [{"text": "  最后一步: 维度-模缩减「, "size」: 13, "bold": True, "color": MEDIUM_BLUE}],
     [{"text": "  输出: ĉ ∈ Z_p^k × Z_p (短密文!)", "size": 13, "bold": True, "color": GREEN_ACCENT, "font": MATH_FONT}],
 ])
 
@@ -828,7 +828,7 @@ add_textbox(slide, 0.9, 1.5, 5.5, 2.2, [
     [{"text": "验证不变量:", "size": 13, "color": DARK_BLUE}],
     [{"text": "  (Σwᵢ) - ⟨Σvᵢ, s_ℓ⟩ = Σ(wᵢ - ⟨vᵢ, s_ℓ⟩)", "size": 12, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": "  = Σ(μᵢ + 2eᵢ) = (Σμᵢ) + 2(Σeᵢ) ✓", "size": 12, "color": BLACK, "font": MATH_FONT}],
-    [{"text": "→ 噪声线性增长，完全可控", "size": 13, "color": GREEN_ACCENT}],
+    [{"text": "→ 噪声线性增长，完全可控「, "size」: 13, "color": GREEN_ACCENT}],
 ])
 
 # Multiplication
@@ -841,7 +841,7 @@ add_textbox(slide, 7.0, 1.5, 5.8, 4.0, [
     [{"text": "  = Σ_{i≤j≤n} h_{i,j} · x[i]x[j]", "size": 12, "color": BLACK, "font": MATH_FONT}],
     [{"text": ""}],
     [{"text": "Step 2: 比特分解 h_{i,j} = Σ_τ h_{i,j,τ}·2^τ", "size": 12, "color": DARK_BLUE, "font": MATH_FONT}],
-    [{"text": "  → h_{i,j,τ} ∈ {0,1}，控制噪声增长", "size": 11, "color": MED_GRAY}],
+    [{"text": "  → h_{i,j,τ} ∈ {0,1}，控制噪声增长「, "size」: 11, "color": MED_GRAY}],
     [{"text": ""}],
     [{"text": "Step 3: 用 Ψ 中参数重线性化:", "size": 12, "color": DARK_BLUE}],
     [{"text": "  v_mult = Σ h_{i,j,τ} · a_{ℓ+1,i,j,τ}", "size": 12, "color": BLACK, "font": MATH_FONT}],
@@ -865,7 +865,7 @@ slide = new_slide(6)  # Blank
 add_content_title(slide, "Bootstrapping 达成与安全性")
 
 add_textbox(slide, 0.9, 1.5, 5.8, 3.5, [
-    [{"text": "参数设置（以运行示例说明）", "size": 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "参数设置（以运行示例说明）「, "size」: 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "  k = κ  (安全参数)", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": "  n = k⁴  (长维度)", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
@@ -874,25 +874,25 @@ add_textbox(slide, 0.9, 1.5, 5.8, 3.5, [
     [{"text": "  L = (1/3)log n = (4/3)log k  (乘法层数)", "size": 14, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": ""}],
     [{"text": "Bootstrapping 条件验证:", "size": 16, "bold": True, "color": MEDIUM_BLUE}],
-    [{"text": "  • BTS 可评估深度 ≈ n^ε = k^{c·ε} 的电路", "size": 13, "color": DARK_GRAY}],
+    [{"text": "  • BTS 可评估深度 ≈ n^ε = k^{c·ε} 的电路「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "  • 解密电路深度 = O(log k + log log p)", "size": 13, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": "  • 选取 c 足够大 → n^ε > 解密电路深度 ✓", "size": 14, "bold": True, "color": GREEN_ACCENT}],
 ])
 
 add_textbox(slide, 7.2, 1.5, 5.5, 3.5, [
-    [{"text": "安全性分析", "size": 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "安全性分析「, "size」: 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "方案安全性基于两个 LWE 假设:", "size": 14, "color": DARK_GRAY}],
     [{"text": ""}],
     [{"text": "1. DLWE_{n,q,χ}:  长参数下的 LWE", "size": 14, "color": DARK_BLUE, "font": MATH_FONT}],
-    [{"text": "   用于公钥和重线性化参数的安全性", "size": 12, "color": MED_GRAY}],
+    [{"text": "   用于公钥和重线性化参数的安全性「, "size」: 12, "color": MED_GRAY}],
     [{"text": ""}],
     [{"text": "2. DLWE_{k,p,χ̂}:  短参数下的 LWE", "size": 14, "color": DARK_BLUE, "font": MATH_FONT}],
-    [{"text": "   用于维度-模缩减桥接参数的安全性", "size": 12, "color": MED_GRAY}],
+    [{"text": "   用于维度-模缩减桥接参数的安全性「, "size」: 12, "color": MED_GRAY}],
     [{"text": ""}],
-    [{"text": "虽然 k,p << n,q，但短参数方案不需要支持", "size": 13, "color": DARK_GRAY}],
-    [{"text": "同态运算，因此可以使用更大的相对噪声，", "size": 13, "color": DARK_GRAY}],
-    [{"text": "使得两个假设的困难度相当。", "size": 13, "color": DARK_GRAY}],
+    [{"text": "虽然 k,p << n,q，但短参数方案不需要支持「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "同态运算，因此可以使用更大的相对噪声，「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "使得两个假设的困难度相当。「, "size」: 13, "color": DARK_GRAY}],
     [{"text": ""}],
     [{"text": "→ 仅依赖 LWE 假设 + 弱循环安全性 (Circular Security)", "size": 14, "bold": True, "color": MEDIUM_BLUE}],
 ])
@@ -916,7 +916,7 @@ slide = new_slide(6)  # Blank
 add_content_title(slide, "从短密文到高效私有信息检索 (PIR)")
 
 add_textbox(slide, 0.9, 1.5, 5.8, 3.5, [
-    [{"text": "PIR 问题设定", "size": 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "PIR 问题设定「, "size」: 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "• 发送方持有大型数据库 DB (大小 N)", "size": 14, "color": DARK_GRAY}],
     [{"text": "• 接收方想查询第 i 条记录，但不泄露 i", "size": 14, "color": DARK_GRAY}],
@@ -925,25 +925,25 @@ add_textbox(slide, 0.9, 1.5, 5.8, 3.5, [
     [{"text": ""}],
     [{"text": "FHE → PIR 的朴素方法:", "size": 15, "bold": True, "color": DARK_BLUE}],
     [{"text": "  1. 接收方加密索引: Enc(i)", "size": 13, "color": DARK_GRAY}],
-    [{"text": "  2. 发送方同态评估 DB 访问函数", "size": 13, "color": DARK_GRAY}],
+    [{"text": "  2. 发送方同态评估 DB 访问函数「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "  3. 发送方返回 Enc(DB[i])", "size": 13, "color": DARK_GRAY}],
-    [{"text": "  问题: 需要逐比特加密索引 → O(log² N) 通信", "size": 12, "color": RED_ACCENT}],
+    [{"text": "  问题: 需要逐比特加密索引 → O(log² N) 通信「, "size」: 12, "color": RED_ACCENT}],
 ])
 
 add_textbox(slide, 7.2, 1.5, 5.5, 3.5, [
-    [{"text": "本文的改进策略", "size": 18, "bold": True, "color": MEDIUM_BLUE, "font": TITLE_FONT}],
+    [{"text": "本文的改进策略「, "size」: 18, "bold": True, "color": MEDIUM_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
-    [{"text": "1. 用对称加密 (短密文) 加密查询索引", "size": 14, "color": DARK_GRAY}],
-    [{"text": "   → 查询复杂度: O(log N) 比特", "size": 13, "color": GREEN_ACCENT}],
+    [{"text": "1. 用对称加密 (短密文) 加密查询索引「, "size」: 14, "color": DARK_GRAY}],
+    [{"text": "   → 查询复杂度: O(log N) 比特「, "size」: 13, "color": GREEN_ACCENT}],
     [{"text": ""}],
-    [{"text": "2. 将对称密钥用 FHE 加密放在公钥中", "size": 14, "color": DARK_GRAY}],
-    [{"text": "   → 发送方可自行转换为同态密文", "size": 13, "color": MED_GRAY}],
+    [{"text": "2. 将对称密钥用 FHE 加密放在公钥中「, "size」: 14, "color": DARK_GRAY}],
+    [{"text": "   → 发送方可自行转换为同态密文「, "size」: 13, "color": MED_GRAY}],
     [{"text": ""}],
     [{"text": "3. BTS 的密文非常短:", "size": 14, "color": DARK_GRAY}],
-    [{"text": "   |ĉ| = (k+1) log p = O(k log k) 比特", "size": 14, "bold": True, "color": BLACK, "font": MATH_FONT}],
+    [{"text": "   |ĉ| = (k+1) log p = O(k log k) 比特「, "size」: 14, "bold": True, "color": BLACK, "font": MATH_FONT}],
     [{"text": "   → 响应复杂度: log N · polyloglog N", "size": 14, "bold": True, "color": GREEN_ACCENT}],
     [{"text": ""}],
-    [{"text": "结果: 首个基于 LWE 的多对数级 PIR！", "size": 15, "bold": True, "color": MEDIUM_BLUE}],
+    [{"text": "结果: 首个基于 LWE 的多对数级 PIR！「, "size」: 15, "bold": True, "color": MEDIUM_BLUE}],
     [{"text": "通信复杂度接近理论下界 log N", "size": 13, "color": DARK_GRAY}],
 ])
 
@@ -965,9 +965,9 @@ add_content_title(slide, "总结：主要贡献与影响")
 add_highlight_box(slide, 0.9, 1.6, 5.5, 0.65, "贡献 1：Re-linearization 技术", MEDIUM_BLUE)
 add_textbox(slide, 0.9, 2.4, 5.5, 2.2, [
     [{"text": "✓ 在标准 LWE 假设上构造 Somewhat HE", "size": 14, "bold": True, "color": GREEN_ACCENT}],
-    [{"text": "  → 摆脱了对理想格 (Ideal Lattices) 的依赖", "size": 13, "color": DARK_GRAY}],
+    [{"text": "  → 摆脱了对理想格 (Ideal Lattices) 的依赖「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "✓ 新范式: 密钥切换 (Key Switching)", "size": 14, "bold": True, "color": GREEN_ACCENT}],
-    [{"text": "  → 将二次密文压回线性，控制尺寸增长", "size": 13, "color": DARK_GRAY}],
+    [{"text": "  → 将二次密文压回线性，控制尺寸增长「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "✓ 成为后续所有主流FHE方案的核心组件:", "size": 14, "bold": True, "color": GREEN_ACCENT}],
     [{"text": "  → BGV [Brakerski-Gentry-V. 2014]", "size": 12, "color": MED_GRAY, "font": EN_FONT}],
     [{"text": "  → GSW [Gentry-Sahai-Waters 2013]", "size": 12, "color": MED_GRAY, "font": EN_FONT}],
@@ -977,23 +977,23 @@ add_textbox(slide, 0.9, 2.4, 5.5, 2.2, [
 # Contribution 2
 add_highlight_box(slide, 7.2, 1.6, 5.5, 0.65, "贡献 2：Dimension-Modulus Reduction", MEDIUM_BLUE)
 add_textbox(slide, 7.2, 2.4, 5.5, 2.2, [
-    [{"text": "✓ 替代 Gentry 的 Squashing 范式", "size": 14, "bold": True, "color": GREEN_ACCENT}],
-    [{"text": "  → 去掉稀疏子集和 (Sparse Subset-Sum) 假设", "size": 13, "color": DARK_GRAY}],
+    [{"text": "✓ 替代 Gentry 的 Squashing 范式「, "size」: 14, "bold": True, "color": GREEN_ACCENT}],
+    [{"text": "  → 去掉稀疏子集和 (Sparse Subset-Sum) 假设「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "✓ 实现纯 LWE 假设上的 Bootstrapping", "size": 14, "bold": True, "color": GREEN_ACCENT}],
-    [{"text": "  → 通过缩减解密电路参数来满足自举条件", "size": 13, "color": DARK_GRAY}],
-    [{"text": "✓ 额外收获: 非常短的密文", "size": 14, "bold": True, "color": GREEN_ACCENT}],
-    [{"text": "  → 直接推动近最优 PIR 协议的构造", "size": 13, "color": DARK_GRAY}],
+    [{"text": "  → 通过缩减解密电路参数来满足自举条件「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "✓ 额外收获: 非常短的密文「, "size」: 14, "bold": True, "color": GREEN_ACCENT}],
+    [{"text": "  → 直接推动近最优 PIR 协议的构造「, "size」: 13, "color": DARK_GRAY}],
     [{"text": "✓ 维度-模缩减 → 模数切换 (Modulus Switching)", "size": 14, "bold": True, "color": GREEN_ACCENT}],
-    [{"text": "  → 同样被后续工作广泛采用", "size": 13, "color": DARK_GRAY}],
+    [{"text": "  → 同样被后续工作广泛采用「, "size」: 13, "color": DARK_GRAY}],
 ])
 
 # Open problems
 add_textbox(slide, 0.9, 5.0, 11.5, 1.8, [
-    [{"text": "开放问题与后续方向", "size": 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
+    [{"text": "开放问题与后续方向「, "size」: 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
-    [{"text": "• 循环安全性 (Circular Security): 要获得纯FHE (非Leveled) 需要额外的循环安全假设，能否去掉？", "size": 13, "color": DARK_GRAY}],
-    [{"text": "• 常数摊销通信的 PIR: 本文实现了 logN·polyloglogN，能否降到 O(log N) 甚至常数摊销？", "size": 13, "color": DARK_GRAY}],
-    [{"text": "• 实际效率: 参数仍然很大 (n=k⁴)，如何进一步缩小以实用化？ → 后续 BGV、GSW、CKKS 等工作逐步推进", "size": 13, "color": DARK_GRAY}],
+    [{"text": "• 循环安全性 (Circular Security): 要获得纯FHE (非Leveled) 需要额外的循环安全假设，能否去掉？「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "• 常数摊销通信的 PIR: 本文实现了 logN·polyloglogN，能否降到 O(log N) 甚至常数摊销？「, "size」: 13, "color": DARK_GRAY}],
+    [{"text": "• 实际效率: 参数仍然很大 (n=k⁴)，如何进一步缩小以实用化？ → 后续 BGV、GSW、CKKS 等工作逐步推进「, "size」: 13, "color": DARK_GRAY}],
 ])
 
 # ═══════════════════════════════════════════════════════════
