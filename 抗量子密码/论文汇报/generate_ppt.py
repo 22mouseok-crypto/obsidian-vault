@@ -375,7 +375,7 @@ add_textbox(slide, 0.9, 2.4, 5.5, 3.5, [
     [{"text": ""}],
     [{"text": "• 在加密数据上执行任意复杂度的计算", "size": 15, "color": DARK_GRAY}],
     [{"text": "• 计算结果仍为加密形式，只有私钥持有者能解密", "size": 15, "color": DARK_GRAY}],
-    [{"text": "• 从数学上实现"可委托计算"：数据加密 → 云端处理 → 返回加密结果", "size": 15, "color": DARK_GRAY}],
+    [{"text": '• 从数学上实现"可委托计算"：数据加密 → 云端处理 → 返回加密结果', "size": 15, "color": DARK_GRAY}],
     [{"text": ""}],
     [{"text": "应用场景", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
