@@ -112,13 +112,16 @@ def arrow(slide, left, top, width, height):
 prs = Presentation(TEMPLATE)
 
 # Delete all existing slides
-sldIdLst = prs.presentation.sldIdLst
-for sldId in list(sldIdLst):
-    rId = sldId.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
-    if rId:
-        try: prs.part.drop_rel(rId)
-        except: pass
-    sldIdLst.remove(sldId)
+NS = '{http://schemas.openxmlformats.org/presentationml/2006/main}'
+R_NS = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
+sldIdLst = prs.part.element.find(f'.//{NS}sldIdLst')
+if sldIdLst is not None:
+    for sldId in list(sldIdLst):
+        rId = sldId.get(f'{R_NS}id')
+        if rId:
+            try: prs.part.drop_rel(rId)
+            except: pass
+        sldIdLst.remove(sldId)
 
 def ns(layout_idx):
     return prs.slides.add_slide(prs.slide_layouts[layout_idx])
