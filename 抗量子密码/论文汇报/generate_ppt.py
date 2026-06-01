@@ -789,7 +789,7 @@ tb(slide, 2.5, 4.8, 8.3, 1.8, [
       "size": 16, "color": MED_GRAY, "font": EN_FONT, "align": PP_ALIGN.CENTER}],
     [{"text": "Brakerski & Vaikuntanathan - FOCS 2011",
       "size": 14, "color": MED_GRAY, "font": EN_FONT, "align": PP_ALIGN.CENTER}],
-    [{"text": ""},
+    [{"text": ""}],
     [{"text": ""}],
     [{"text": "Questions & Discussion",
       "size": 22, "bold": True, "color": MEDIUM_BLUE, "font": EN_FONT, "align": PP_ALIGN.CENTER}],
