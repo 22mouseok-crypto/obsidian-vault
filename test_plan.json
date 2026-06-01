@@ -1,0 +1,26 @@
+{
+  "slides": [
+    {
+      "page": 1,
+      "type": "title",
+      "layout_index": 0,
+      "content": {
+        "title": "Attention Is All You Need",
+        "subtitle": "Vaswani et al. · NeurIPS 2017"
+      }
+    },
+    {
+      "page": 2,
+      "type": "content",
+      "layout_index": 1,
+      "content": {
+        "title": "核心创新",
+        "bullets": [
+          "抛弃 RNN/CNN，完全基于 Attention 机制",
+          "提出 Transformer 架构",
+          "并行训练，速度远超 RNN 序列模型"
+        ]
+      }
+    }
+  ]
+}
