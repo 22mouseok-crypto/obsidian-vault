@@ -375,7 +375,7 @@ add_textbox(slide, 0.9, 2.4, 5.5, 3.5, [
     [{"text": ""}],
     [{"text": "• 在加密数据上执行任意复杂度的计算", "size": 15, "color": DARK_GRAY}],
     [{"text": "• 计算结果仍为加密形式，只有私钥持有者能解密", "size": 15, "color": DARK_GRAY}],
-    [{"text": '• 从数学上实现"可委托计算"：数据加密 → 云端处理 → 返回加密结果', "size": 15, "color": DARK_GRAY}],
+    [{"text": '• 从数学上实现「可委托计算」：数据加密 → 云端处理 → 返回加密结果', "size": 15, "color": DARK_GRAY}],
     [{"text": ""}],
     [{"text": "应用场景", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
@@ -389,7 +389,7 @@ add_textbox(slide, 7.2, 2.4, 5.5, 3.8, [
     [{"text": "发展历程", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "1978  Rivest, Adleman, Dertouzos 提出FHE概念", "size": 13, "color": DARK_GRAY, "font": EN_FONT}],
-    [{"text": "       ↓  密码学"圣杯"，30年无解", "size": 12, "color": MED_GRAY}],
+    [{"text": "       ↓  密码学「圣杯」，30年无解", "size": 12, "color": MED_GRAY}],
     [{"text": "2009  Gentry 首个候选方案 [STOC'09]", "size": 13, "bold": True, "color": RED_ACCENT, "font": EN_FONT}],
     [{"text": "       基于理想格 (Ideal Lattices)", "size": 12, "color": MED_GRAY}],
     [{"text": "2010  van Dijk et al. 整数上的FHE [Eurocrypt'10]", "size": 13, "color": DARK_GRAY, "font": EN_FONT}],
@@ -408,7 +408,7 @@ add_content_title(slide, "Gentry 的 Bootstrapping 蓝图（2009）")
 # Step 1
 add_highlight_box(slide, 0.9, 1.8, 3.5, 0.8, "Step 1: Somewhat HE", MEDIUM_BLUE)
 add_textbox(slide, 0.9, 2.7, 3.5, 1.2, [
-    [{"text": "构造一个可对密文进行有限次加法和乘法运算的"部分同态"加密方案", "size": 12, "color": DARK_GRAY}],
+    [{"text": "构造一个可对密文进行有限次加法和乘法运算的「部分同态」加密方案", "size": 12, "color": DARK_GRAY}],
     [{"text": "能评估深度 ≤ D 的电路", "size": 12, "bold": True, "color": DARK_BLUE, "font": MATH_FONT}],
 ])
 
@@ -419,7 +419,7 @@ add_flow_arrow(slide, 4.6, 2.1, 0.6, 0.3)
 add_highlight_box(slide, 5.4, 1.8, 3.5, 0.8, "Step 2: Bootstrappable?", MEDIUM_BLUE)
 add_textbox(slide, 5.4, 2.7, 3.5, 1.2, [
     [{"text": "关键条件：解密电路 + 1次乘法 的深度 ≤ D", "size": 12, "color": DARK_GRAY}],
-    [{"text": "即方案能"自举"地评估自身的解密过程", "size": 12, "color": DARK_GRAY}],
+    [{"text": "即方案能「自举」地评估自身的解密过程", "size": 12, "color": DARK_GRAY}],
 ])
 
 # Arrow
@@ -436,13 +436,13 @@ add_textbox(slide, 9.9, 2.7, 3.0, 1.2, [
 add_math_box(slide, 0.9, 4.3, 11.5, 2.5,
     "Bootstrapping 核心思想（简化版）：                                           \n"
     "                                                                             \n"
-    "  给定: 密文 c = Enc(pk, m)，希望"刷新"噪声使之可以继续参与同态运算           \n"
+    "  给定: 密文 c = Enc(pk, m)，希望「刷新」噪声使之可以继续参与同态运算           \n"
     "                                                                             \n"
     "  Step A: 将 c 用新公钥 pk₂ 加密：c* = Enc(pk₂, c)   ← 双重加密              \n"
     "  Step B: 同态评估解密电路：Enc(pk₂, m) = Eval(Dec, c*, Enc(pk₂, sk₁))       \n"
-    "           ↳ 方案用自己的同态能力"解开"内层加密，得到新公钥下的密文           \n"
+    "           ↳ 方案用自己的同态能力「解开」内层加密，得到新公钥下的密文           \n"
     "                                                                             \n"
-    "  结果: 得到同一明文在新密钥下的"新鲜"密文 → 可继续参与同态运算！              \n"
+    "  结果: 得到同一明文在新密钥下的「新鲜」密文 → 可继续参与同态运算！              \n"
     "  ▸ 关键：解密电路的复杂度必须 ≤ 方案的同态能力                               ")
 
 # ═══════════════════════════════════════════════════════════
@@ -458,7 +458,7 @@ add_textbox(slide, 0.9, 2.4, 5.5, 2.0, [
     [{"text": "• 理想格 (Ideal Lattices) 自然地同时支持加法和乘法", "size": 13, "color": DARK_GRAY}],
     [{"text": "  原因：理想是环的子结构，对+和×封闭", "size": 12, "color": MED_GRAY, "font": EN_FONT}],
     [{"text": "  相比之下，一般格只对加法封闭", "size": 12, "color": MED_GRAY, "font": EN_FONT}],
-    [{"text": "• 问题：理想格 = "特殊品种"，我们对其了解甚少", "size": 13, "bold": True, "color": RED_ACCENT}],
+    [{"text": "• 问题：理想格 = 「特殊品种」，我们对其了解甚少", "size": 13, "bold": True, "color": RED_ACCENT}],
     [{"text": "  一般格的研究更深入 (LLL, Ajtai, Micciancio...)", "size": 12, "color": MED_GRAY}],
 ])
 # Arrow in the middle
@@ -483,7 +483,7 @@ add_textbox(slide, 0.9, 5.45, 5.5, 2.0, [
     [{"text": "• 但解密电路复杂度 (degree ≈ max(n, log q)) 超过同态能力", "size": 13, "color": DARK_GRAY}],
     [{"text": "• Gentry 的 Squashing：人为降低解密复杂度", "size": 13, "color": DARK_GRAY}],
     [{"text": "  代价：引入"稀疏子集和" (Sparse Subset-Sum) 假设", "size": 12, "bold": True, "color": RED_ACCENT}],
-    [{"text": "• 这个额外假设是所有先前方案的"主要缺陷"", "size": 13, "color": RED_ACCENT}],
+    [{"text": "• 这个额外假设是所有先前方案的「主要缺陷」", "size": 13, "color": RED_ACCENT}],
 ])
 
 add_textbox(slide, 7.2, 4.7, 5.5, 3.0, [
@@ -528,7 +528,7 @@ add_textbox(slide, 7.2, 1.4, 5.5, 2.5, [
 
 # Key observation box
 add_math_box(slide, 0.9, 4.2, 11.5, 0.7,
-    "核心观察: 两个"掩码"互不干扰 —— 秘密掩码 ⟨a,s⟩ 和 偶数掩码 2e 可以依次消除！")
+    "核心观察: 两个「掩码」互不干扰 —— 秘密掩码 ⟨a,s⟩ 和 偶数掩码 2e 可以依次消除！")
 
 add_textbox(slide, 0.9, 5.2, 11.5, 2.0, [
     [{"text": "解密视角的转换 —— 将密文看作关于密钥的线性函数", "size": 18, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
@@ -573,7 +573,7 @@ add_math_box(slide, 0.9, 5.1, 11.5, 1.6,
     "  同态乘法 → 线性 × 线性 = 二次多项式     ✗  密文从 O(n) 膨胀为 O(n²)        \n"
     "                                                                             \n"
     "  ═══════════════  ═══════════════════════════════════════════════            \n"
-    "  问题: 如何在做乘法时，把"二次"密文压缩回"线性"？                            \n"
+    "  问题: 如何在做乘法时，把「二次」密文压缩回「线性」？                            \n"
     "  答案: Re-linearization（重线性化）—— 本论文的第一个核心创新！               ")
 
 # ═══════════════════════════════════════════════════════════
@@ -602,7 +602,7 @@ add_textbox(slide, 4.8, 2.9, 3.6, 1.5, [
     [{"text": "对于所有 i,j ∈ [n], τ ∈ [log q]:", "size": 12, "font": MATH_FONT}],
     [{"text": "b_{ℓ,i,j,τ} = ⟨a, s_ℓ⟩ + 2e", "size": 13, "font": MATH_FONT}],
     [{"text": "          + 2^τ · s_{ℓ-1}[i]·s_{ℓ-1}[j]", "size": 13, "bold": True, "color": BLACK, "font": MATH_FONT}],
-    [{"text": "称为"伪加密"（pseudo-encryption）", "size": 12, "color": MED_GRAY}],
+    [{"text": "称为「伪加密」（pseudo-encryption）", "size": 12, "color": MED_GRAY}],
 ])
 
 # Step 3
@@ -616,7 +616,7 @@ add_textbox(slide, 8.7, 2.9, 3.7, 1.5, [
 
 # The magic
 add_math_box(slide, 0.9, 4.7, 11.5, 2.2,
-    "重线性化的"魔法"：                                                          \n"
+    "重线性化的「魔法」：                                                          \n"
     "                                                                             \n"
     "  输入:  两个密文 (a,b) 和 (a',b')，对应密钥 s_{ℓ-1}，明文 μ, μ'             \n"
     "         （它们代表的线性函数 f, f' 的乘积 是 二次函数 φ）                    \n"
@@ -698,7 +698,7 @@ add_textbox(slide, 7.2, 1.5, 5.5, 3.5, [
     [{"text": "两种解决路径", "size": 20, "bold": True, "color": DARK_BLUE, "font": TITLE_FONT}],
     [{"text": ""}],
     [{"text": "路径 A: Squashing (Gentry'09)", "size": 16, "bold": True, "color": MED_GRAY}],
-    [{"text": "• 在公钥中加入关于私钥的"提示"", "size": 13, "color": DARK_GRAY}],
+    [{"text": "• 在公钥中加入关于私钥的「提示」", "size": 13, "color": DARK_GRAY}],
     [{"text": "• 人为降低解密多项式的次数", "size": 13, "color": DARK_GRAY}],
     [{"text": "• ❌ 引入稀疏子集和假设", "size": 14, "bold": True, "color": RED_ACCENT}],
     [{"text": "", "size": 8}],
@@ -777,11 +777,11 @@ add_content_title(slide, "BTS 方案完整构造")
 add_textbox(slide, 0.9, 1.5, 5.8, 2.5, [
     [{"text": "BTS.KeyGen(1^κ) → (pk, evk, sk)", "size": 16, "bold": True, "color": DARK_BLUE, "font": EN_FONT}],
     [{"text": ""}],
-    [{"text": "1. 采样"长"密钥链: s₀,...,s_L ← Z_q^n", "size": 13, "color": DARK_GRAY, "font": MATH_FONT}],
+    [{"text": "1. 采样「长」密钥链: s₀,...,s_L ← Z_q^n", "size": 13, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": "2. 生成重线性化参数 Ψ:", "size": 13, "color": DARK_GRAY}],
     [{"text": "   对于 ℓ∈[L], i≤j≤n, τ∈[log q]:", "size": 12, "color": MED_GRAY, "font": MATH_FONT}],
     [{"text": "   b_{ℓ,i,j,τ} = ⟨a, s_ℓ⟩ + 2e + 2^τ·s_{ℓ-1}[i]·s_{ℓ-1}[j]", "size": 12, "color": BLACK, "font": MATH_FONT}],
-    [{"text": "3. 采样"短"密钥: ŝ ← Z_p^k", "size": 13, "color": DARK_GRAY, "font": MATH_FONT}],
+    [{"text": "3. 采样「短」密钥: ŝ ← Z_p^k", "size": 13, "color": DARK_GRAY, "font": MATH_FONT}],
     [{"text": "4. 生成维度-模缩减桥接参数 Ψ̂:", "size": 13, "color": DARK_GRAY}],
     [{"text": "   对于 i∈[n], τ∈[log q]:", "size": 12, "color": MED_GRAY, "font": MATH_FONT}],
     [{"text": "   b̂_{i,τ} = ⟨â, ŝ⟩ + ê + ⌊(p/q)·2^τ·s_L[i]⌉", "size": 12, "color": BLACK, "font": MATH_FONT}],
