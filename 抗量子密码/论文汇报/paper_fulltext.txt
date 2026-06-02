@@ -1,0 +1,838 @@
+
+--- Page 1 ---
+22222000001111111111 5555IE2222EnnnnddddE AAAA52nnnnnnnnnduuuu aaaaAllll nIIIIEEEEnEEEEuaEEEEl SSSSSyyyyymmmmmpppppooooosssssiiiiiuuuuummmmm ooooonnnnn FFFFFooooouuuuunnnnndddddaaaaatttttiiiiiooooonnnnnsssss ooooofffff CCCCCooooommmmmpppppuuuuuttttteeeeerrrrr SSSSSccccciiiiieeeeennnnnccccceeeee
+Efficient Fully Homomorphic Encryption from (Standard) LWE
+Zvika Brakerski Vinod Vaikuntanathan
+Weizmann Institute of Science University of Toronto
+Abstract— We present a fully homomorphic encryption The main building block in Gentry’s construc-
+scheme that is based solely on the (standard) learning with tion (a so-called “somewhat” homomorphic encryption
+errors (LWE) assumption. Applying known results on LWE,
+scheme) was based on the (worst-case, quantum) hard-
+thesecurityofourschemeisbasedontheworst-casehardness
+ness of problems on ideal lattices.1 Although lattices
+of “short vector problems” on arbitrary lattices.
+have become standard fare in cryptography and lattice
+Our construction improves on previous works in two as-
+pects: problemshavebeenrelativelywell-studied,ideallattices
+1) We show that “somewhat homomorphic” encryption are a special breed that we know relatively little about.
+can be based on LWE, using a new re-linearization Idealsareanaturalbuildingblocktoconstructfullyho-
+technique. In contrast, all previous schemes relied on momorphicencryptioninthattheynativelysupportboth
+complexity assumptions related to ideals in various
+addition and multiplication (whereas lattices are closed
+rings.
+under addition only). Indeed, all subsequent construc-
+2) We deviate from the “squashing paradigm” used in
+all previous works. We introduce a new dimension- tions of fully homomorphic encryption [36], [11], [7]
+modulus reduction technique, which shortens the ci- relied on ideals in various rings in an explicit way. Our
+phertextsandreducesthedecryptioncomplexityofour first contribution is the construction of a “somewhat”
+scheme, without introducing additional assumptions.
+homomorphic encryption scheme whose security relies
+Our scheme has very short ciphertexts and we therefore solelyonthe(worst-case,classical)hardnessofstandard
+use it to construct an asymptotically efficient LWE-based
+problems on arbitrary (not necessarily ideal) lattices.
+single-serverprivateinformationretrieval(PIR)protocol.The
+Secondly, in order to achieve full homomorphism,
+communication complexity of our protocol (in the public-key
+model) is k·polylog(k)+log|DB| bits per single-bit query Gentry had to go through a so-called “squashing step”
+(here, k is a security parameter). which forced him to make an additional very strong
+hardness assumption – namely, the hardness of the
+(average-case) sparse subset-sum problem. As if by
+1. INTRODUCTION
+a strange law of nature, all the subsequent solutions
+Fully-homomorphic encryption is one of the holy encountered the same difficulty as Gentry did in going
+grailsofmoderncryptography.Inanutshell,afullyho- froma“somewhat”toafullyhomomorphicencryption,
+momorphic encryption scheme is an encryption scheme and they all countered this difficulty by relying on
+that allows evaluation of arbitrarily complex programs thesamesparsesubset-sumassumption.Thisadditional
+on encrypted data. The problem was suggested by assumption was considered to be the main caveat of
+Rivest, Adleman and Dertouzos [34] back in 1978, Gentry’s solution and removing it has been, perhaps,
+yet the first plausible candidate came thirty years later themainopenprobleminthedesignoffullyhomomor-
+with Gentry’s breakthrough work in 2009 [13], [14] phic encryption schemes. Our second contribution is to
+(although, there has been partial progress in the mean- remove the necessity of this additional assumption.
+while [21], [31], [6], [22]). Thus,inanutshell,weconstructafullyhomomorphic
+Gentry’s work showed for the first time a plausible encryptionschemewhosesecurityisbasedsolelyonthe
+construction of fully homomorphic encryption. How- classical hardness of solving standard lattice problems
+ever, his solution involved new and relatively untested in the worst-case.2 Specifically, our scheme is based
+cryptographic assumptions. Our work aims to base on the learning with errors (LWE) assumption that is
+fullyhomomorphicencryptiononstandard,well-studied
+cryptographic assumptions.
+1Roughlyspeaking,ideallatticescorrespondtoageometricembed-
+dingofanidealinanumberfield.See[25]foraprecisedefinition.
+Email: zvika.brakerski@weizmann.ac.il. The author’s 2Strictlyspeaking,underthisassumption,ourschemecanevaluate
+researchwassupportedbyISFgrant710267,BSFgrant710613,and polynomial-size circuits with a-priori bounded (but arbitrary) depth.
+NSFcontractsCCF-1018064andCCF-0729011. A fully homomorphic encryption scheme independent of the circuit
+Email: vinodv@cs.toronto.edu. This research was con- depth can be obtained by making an additional “circular security”
+ductedwhentheauthorwasatMicrosoftResearchRedmond. assumption(see[8]fordetails).
+00000222227777722222-----55555444442222288888/////1111111111 $$$$$2222266666.....0000000000 ©©©©© 22222000001111111111 IIIIIEEEEEEEEEEEEEEE 8899955777
+DDDDDOOOOOIIIII 111000...111111000999///FFFOOOCCCSSS...222000111111...111222
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
+--- Page 2 ---
+known to be at least as hard as solving hard problems I. Thus, the ciphertext is of the form m + xI (for
+in general lattices. Thus our solution does not rely on some x in the ring). Observe right off the bat that the
+lattices directly and is fairly natural to understand and scheme is born additively homomorphic; in fact, that
+implement. will be the case with all the schemes we consider in
+Toachieveourgoals,wedeviatefromtwoparadigms this paper. The ideal I has two main properties: first, a
+that ruled the design of (a handful of) candidate fully random element in the ideal is assumed to “mask” the
+homomorphic encryption schemes [13], [36], [11], [7]: message; and second, it is possible to generate a secret
+1) We introduce the re-linearization technique, and trapdoor that “annihilates” the ideal, i.e., implementing
+show how to use it to obtain a somewhat homo- the transformation m + xI → m. The first property
+morphic encryption scheme that does not require guarantees security, while the second enables multiply-
+hardness assumptions on ideals. ing ciphertexts. Letting c 1 and c 2 be encryptions of m 1
+2) We present a dimension-modulus reduction tech- and m 2 respectively,
+nique, that turns our somewhat homomorphic
+scheme into a fully homomorphic one, without c 1 c 2 = (m 1 +xI)(m 2 +yI)
+the need for the artificial squashing step and the = m m +(m y+m x+xyI)I
+1 2 1 2
+sparse subset-sum assumption. = m m +zI
+1 2
+Weprovideadetailedoverviewofthesenewtechniques
+in Sections 1.1 and 1.2 below. When decrypting, the ideal is annihilated and the prod-
+Interestingly, the ciphertexts of the resulting fully uct m m survives. Thus, c c is indeed an encryption
+1 2 1 2
+homomorphic scheme are very short. This is a desir- of m m , as required. This nifty solution required, as
+1 2
+able property which we use, in conjunction with other perthefirstproperty,ahardnessassumptiononidealsin
+techniques, to achieve very efficient private information certain rings. Gentry’s original work relied on hardness
+retrieval protocols. See also Section 1.3 below. assumptions on ideal lattices, while van Dijk, Gentry,
+Halevi and Vaikuntanathan [11] presented a different
+1.1. Re-Linearization: Somewhat Homomorphic En-
+instantiation that considered ideals over the integers.
+cryption without Ideals
+Our somewhat homomorphic scheme is based on the
+The starting point of Gentry’s construction is a
+hardness of the “learning with errors” (LWE) problem,
+“somewhat” homomorphic encryption scheme. For a
+first presented by Regev [33]. The LWE assumption
+class of circuits C, a C-homomorphic scheme is one statesthatifs∈Zn isanndimensional“secret”vector,
+that allows evaluation of any circuit in the class C. The q
+any polynomial number of “noisy” random linear com-
+simple, yet striking, observation in Gentry’s work is
+binations of the coefficients of s are computationally
+that if a (slightly augmented) decryption circuit for a
+indistinguishable from uniformly random elements in
+C-homomorphic scheme resides in C, then the scheme
+Z q. Mathematically,
+canbeconverted(or“bootstrapped”)intoafullyhomo-
+mo
+I
+r
+t
+p
+t
+h
+u
+i
+r
+c
+ns
+en
+o
+c
+u
+r
+t
+y
+t
+p
+h
+t
+a
+io
+t
+n
+en
+s
+c
+c
+r
+h
+y
+e
+p
+m
+tio
+e.
+nschemesthatcanevaluate
+(cid:2) a
+i
+,(cid:4)a
+i
+,s(cid:5)+e
+i
+(cid:3) p
+i=
+ol
+1
+y(n) ≈ c (cid:2) a
+i
+,u
+i
+(cid:3) p
+i=
+ol
+1
+y(n) ,
+a non-trivial number of addition and multiplication
+operations3 are already quite hard to come by (even where a i ∈ Zn q and u i ∈ Z q are uniformly random,
+without requiring that they are bootstrappable).4 Gen- and the “noise” e i is sampled from a noise distribution
+that outputs numbers much smaller than q (an example
+try’s solution to this was based on the algebraic notion
+of ideals in rings. In a very high level, the message is is a discrete Gaussian distribution over Z q with small
+standard deviation).
+considered to be a ring element, and the ciphertext is
+The LWE assumption does not refer to ideals, and
+the message masked with some “noise”. The novelty of
+indeed, the LWE problem is at least as hard as find-
+this idea is that the noise itself belonged to an ideal
+ing short vectors in any lattice, as follows from the
+3All known scheme, including ours, treat evaluated functions as worst-case to average-case reductions of Regev [33]
+arithmetic circuits. Hence we use the terminology of “addition and and Peikert [32]. As mentioned earlier, we have a
+multiplication” gates. The conversion to the boolean model (AND,
+much better understanding of the complexity of lattice
+OR,NOTgates)isimmediate.
+4Wemustmentionherethatweareinterestedonlyincompactfully problems (thanks to [23], [2], [27] and many others),
+homomorphicencryptionschemes,namelyoneswheretheciphertexts compared to the corresponding problems on ideal lat-
+donotgrowinsizewitheachhomomorphicoperation.Ifwedoallow
+tices. In particular, despite considerable effort, the best
+suchgrowthinsize,anumberofsolutionsarepossible.See,e.g.,[35],
+[17],[26]. known algorithms to solve the LWE problem run in
+8899966888
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
+--- Page 3 ---
+time nearly exponential in the dimension n.5 The LWE equation. Clearly, decryption of the ciphertext (a,b) is
+assumption also turns out to be particularly amenable nothing but evaluating this function on the secret key s
+to the construction of simple, efficient and highly ex- (and then taking the result modulo 2).8
+pressivecryptographicschemes(e.g.,[33],[19],[4],[5], Homomorphic addition and multiplication can now
+[10], [1] and many others). Our construction of a fully be described in terms of this function f. Adding two
+homomorphic encryption scheme from LWE is perhaps ciphertexts corresponds to the addition of two linear
+a very strong testament to its power and elegance. functions, which is again another linear function. In
+Constructinga(secret-key)encryptionschemewhose particular, f (a+a(cid:2),b+b(cid:2)) (x)=f a,b(x)+f (a(cid:2),b(cid:2)) (x) is the
+security is based on the LWE assumption is rather linear function corresponding to the “homomorphically
+straightforward. To encrypt a bit m ∈ {0,1} using added”ciphertext(a+a(cid:2),b+b(cid:2) ).Similarly,multiplying
+secret key s∈Zn, we choose a random vector a∈Zn two such ciphertexts corresponds to a symbolic multi-
+q q
+and a “noise” e and output the ciphertext plication of these linear equations
+c = (a,b=(cid:4)a,s(cid:5)+2e+m) ∈Zn q ×Z q f (a,b) (x)·f (a(cid:2)(cid:4),b) (x) (cid:4)
+The key observation in decryption is that the two = (b− a[i]x[i])·(b(cid:2)− a(cid:2) [i]x[i])
+“masks” – namely, the secret mask (cid:4)a,s(cid:5) and the “even (cid:4) (cid:4)
+mask” 2e – do not interfere with each other.6 That is, = h 0 + h i · x[i] + h i,j · x[i]x[j]
+one can decrypt this ciphertext by annihilating the two
+which results in a degree-2 polynomial in the variables
+masks, one after the other: The decryption algorithm x = (x[1],...,x[n]), with coefficients h i,j that can be
+first re-computes the mask (cid:4)a,s(cid:5) and subtracts it from computed from (a,b) and (a(cid:2),b(cid:2) ) by opening paren-
+b, resulting in 2e+m (mod q). Since e (cid:7) q, 2e+m
+thesis of the expression above. Decryption, as before,
+(mod q) = 2e+m. Removing the even mask is now
+involves evaluating this quadratic expression on the
+easy – simply compute 2e+m modulo 2.7 secretkeys(andthenreducingmodulo2).Wenowrun
+As we will see below, the scheme is naturally addi-
+intoaseriousproblem–thedecryptionalgorithmhasto
+tive homomorphic, yet multiplication presents a thorny
+know all the coefficients of this quadratic polynomial,
+problem. In fact, a recent work of Gentry, Halevi
+whichmeansthatthesizeoftheciphertextjustwentup
+and Vaikuntanathan [18] showed that (a slight variant from n+1 elements to (roughly) n2/2.
+of) this scheme supports just a single homomorphic
+This is where our re-linearization technique comes
+multiplication, but at the expense of a huge blowup to
+intoplay.Re-linearizationisawaytoreducethesizeof
+the ciphertext which made further advance impossible. the ciphertext back down to n+1. The main idea is the
+To better understand the homomorphic properties of
+following: imagine that we publish “encryptions” of all
+this scheme, let us shift our focus away from the thelinearandquadratictermsinthesecretkeys,namely
+encryption algorithm, on to the decryption algorithm. all the numbers s[i] as well as s[i]s[j], under a new
+Given a ciphertext (a,b), consider the symbolic linear secret key t. Thus, these ciphertexts (for the quadratic
+function f a,b :Zn q →Z q defined as: terms) look like (a i,j ,b i,j) where
+(cid:4)n
+f a,b(x)=b−(cid:4)a,x(cid:5) (mod q)=b− a[i]·x[i] ∈Z q b i,j =(cid:4)a i,j ,t(cid:5)+2e i,j+s[i]·s[j]≈(cid:4)a i,j ,t(cid:5)+s[i]·s[j].9
+(cid:5) (cid:5)
+i=1 Now, the sum h 0 + h i ·s[i]+ h i,j ·s[i]s[j] can be
+where x = (x[1],...,x[n]) denotes the variables, written (approximately) as
+and (a,b) forms the public coefficients of the linear (cid:4) (cid:4)
+h 0 + h i(b i −(cid:4)a i ,t(cid:5))+ h i,j ·(b i,j −(cid:4)a i,j ,t(cid:5)) ,
+5The nearly exponential time is for a large enough error (i.e., i,j
+one that is a 1/poly(n) fraction of the modulus q). For smaller
+errors, as we will encounter in our scheme, there are better – but which, lo and behold, is a linear function in t! The
+not significantly better – algorithms. In particular, if the error is a bottom-line is that multiplying the two linear functions
+t 1 i / m 6 2 e W n a (cid:2) e p r f p e r r a m o c x a ti . r o k 2 n n th o 1 a − f t (cid:2) t u h . s e in m g o 2 d e u i l n u s s te q a , d th o e fe be a s s t in kn th o e w o n ri a g l i g n o a r l it f h o m rm r u u l n at s io i n n f ex (a p , r b e ) ss a i n o d n f r ( e a s (cid:2), u b l (cid:2) t ) s a i n n d a the li n ne r a e r -li f n u e n a c ri t z io in n g ( t w he ith res n ul + tin 1 g
+ofLWEdoesnotadverselyimpactsecurity,solongasqisodd(since
+inthatcase,2isaunitinZ q). 8TheobservationthatanLWE-basedciphertextcanbeinterpreted
+7Although the simplified presentation of Gentry’s scheme above asalinearequationofthesecretwasalsousedin[7].
+seemstodealwithjustonemask(the“secretmask”),inreality,the
+9Actually,callingthese“encryptions”isinaccurate:s[i]·s[j]∈Z
+q
+additional“evenmask”existedintheschemesof[13],[11]aswell. isnotasinglebitandthereforethe“ciphertext”cannotbedecrypted.
+Roughly speaking, they needed this to ensure semantic security, as However, we feel that thinking of these as encryptions may benefit
+wedo. thereader’sintuition.
+8899977999
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
+--- Page 4 ---
+coefficients), whose evaluation on the new secret key in C. All prior somewhat homomorphic schemes fell
+t results in the product of the two original messages short in this category and failed to achieve this re-
+(upon reducing modulo 2). The resulting ciphertext is quirement in a natural way. Thus Gentry, followed by
+simply the coefficients of this linear function, of which all other previous schemes, resorted to “squashing”:
+there are at most n+1. This ciphertext will decrypt to a method for reducing the decryption complexity at
+m·m(cid:2) using the secret key t. the expense of making an additional and fairly strong
+In this semi-formal description, we ignored an im- assumption, namely the sparse subset sum assumption.
+portant detail which has to do with the fact that the Weshowhowto“upgrade”oursomewhathomomor-
+coefficientsh i,j arepotentiallylarge.Thus,eventhough phic scheme (explained in Section 1.1) into a scheme
+(b i,j − (cid:4)a i,j ,t(cid:5)) ≈ s[i]s[j], it may be the case that that enjoys the same amount of homomorphism but has
+h i,j ·(b i,j −(cid:4)a i,j ,t(cid:5)) (cid:8)≈ h i,j ·s[i]s[j]. This is handled a much smaller decryption circuit. All of this, without
+bycons (cid:5) ideringthebinaryrepresentationofh i,j,namely making any additional assumptions (beyond LWE)!
+h i,j = (cid:3) τ l = og 0 q(cid:4) 2 τ ·h i,j,τ. If, for each value of τ, we Our starting point is the somewhat homomorphic
+had a pair (a i,j,τ ,b i,j,τ) such that schemefromSection1.1.Recallthataciphertextinthat
+b i,j,τ = (cid:4)a i,j,τ ,t(cid:5)+2e i,j,τ +2 τs[i]·s[j] a sc n h d e d m e e cr i y s p o t f io th n e is fo d r o m ne (a b , y b c = om (cid:4)a pu ,s ti (cid:5) n + g 2 ( e b + − m (cid:4)a ) , ∈ s(cid:5) Z m n q o × d Z q q ) ,
+≈ (cid:4)a
+i,j,τ
+,t(cid:5)+2 τs[i]·s[j] ,
+(mod 2). One can verify that this computation, pre-
+sented as a polynomial in the bits of s, has degree
+then indeed
+at least max(n,logq), which is more than the maxi-
+(cid:3)l(cid:4)ogq(cid:4)
+mal degree D that our scheme can homomorphically
+h i,j ·s[i]s[j] = h i,j,τ2 τs[i]s[j] evaluate. The bottom line is that decryption complexity
+τ=0 is governed by (n,logq) which are too big for our
+(cid:3)l(cid:4)ogq(cid:4)
+homomorphism capabilities.
+≈ h i,j,τ(b
+i,j,τ
+−(cid:4)a
+i,j,τ
+,t(cid:5)) ,
+Our dimension-modulus reduction idea enbales us to
+τ=0
+take a ciphertext with parameters (n,logq) as above,
+sinceh
+i,j,τ
+∈{0,1}.Thisincreasesthenumberofpairs
+and convert it into a ciphertext of the same message,
+we need to post by a factor of ((cid:9)logq(cid:10)+1), which is but with parameters (k,logp) which are much smaller
+polynomial. than (n,logq). To give a hint as to the magnitude
+This process allows us to do one multiplication with- of improvement, we typically set k to be of size the
+out increasing the size of the ciphertext, and obtain an security parameter and p = poly(k). We can then set
+encryption of the product under a new secret key. But n=kc for essentially any constant c, and q =2 n(cid:2) . We
+why stop at two keys s and t? Posting a “chain” of
+willthusbeabletohomomorphicallyevaluatefunctions
+L secret keys (together with encryptions of quadratic of degree roughly D =n(cid:3) =kc·(cid:3) and we can choose c
+termsofonesecretkeyusingthenextsecretkey)allows
+to be large enough so that this is sufficient to evaluate
+us to perform up to L levels of multiplications without the (k,logp) decryption circuit.
+blowing up the ciphertext size. It is possible to achieve
+To understand dimension-modulus reduction techni-
+multiplicative depth L=(cid:3)logn (which corresponds to
+cally, we go back to re-linearization. We showed above
+a degree D =n(cid:3) polynomial) for an arbitrary constant
+that,postingproperpublicparameters,onecanconverta
+(cid:3) < 1 under reasonable assumptions, but beyond that, ciphertext(a,b=(cid:4)a,s(cid:5)+2e+m),thatcorrespondstoa
+the growth of the error in the ciphertext kicks in, and secretkeys,intoaciphertext(a(cid:2),b(cid:2) =(cid:4)a(cid:2),t(cid:5)+2e(cid:2) +m)
+destroys the ciphertext. Handling this requires us to use thatcorrespondstoasecretkeyt.10Thecrucialobserva-
+the machinery of bootstrapping, which we explain in tion is that s and t need not have the same dimension
+the next section. n. Specifically, if we chose t to be of dimension k,
+In conclusion, the above technique allows us to
+the procedure still works. This brings us down from
+remove the need for “ideal assumptions” and obtain (n,logq) to (k,logq), which is a big step but still not
+somewhat homomorphic encryption from LWE.
+sufficient.
+1.2. Dimension-Modulus Reduction: Fully Homomor- Having the above observation in mind, we wonder if
+phic Encryption Without Squashing we can take t to have not only low dimension but also
+As explained above, the “bootstrapping” method
+for achieving full homomorphism requires a C- fun 1 c 0 t I i n on the of pr s e , vi w ou h s ile se h ct e i r o e n, w w e e a a p p p p l l y ied it r t e o -li t n h e e ar c i i z p a h ti e o r n tex to t a (a q , u b a ) dr t a h ti a c t
+homomorphic scheme whose decryption circuit resides correspondstoalinearfunctionofs.Thisonlymakesthingseasier.
+1118800088000
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
+--- Page 5 ---
+small modulus p, thus completing the transition from and hence we wish that the receiver’s running time and
+(n,logq) to (k,logp). This is indeed possible using communication complexity are polylogarithmic in the
+some additional ideas, where the underlying intuition sizeofthedatabaseN (atleastlogN bitsarerequiredto
+is that Z p can “approximate” Z q by simple scaling, up specifyanentryinthedatabase).Thefirstpolylogarith-
+to a small error. miccandidateprotocolwaspresentedbyCachin,Micali
+The public parameters for the transition from s to t andStadler[9]andadditionalpolylograithmicprotocols
+will be (a i,τ ,b i,τ)∈Zk p ×Z p, where were introduced by Lipmaa [24] and by Gentry and
+(cid:6) (cid:7) Ramzan [20]. Of which, the latter achieves the best
+p
+b
+i,τ
+=(cid:4)a
+i,τ
+,t(cid:5)+e+
+q
+·2 τ ·s[i] .11 communication complexity of O(log3−o(1)(N)).13 The
+lattertwoprotocolsachieveconstantamortizedcommu-
+Namely,wescale2 τ·s[i]∈Z q intoanelementinZ p by nication complexity when retrieving large consecutive
+multiplying by p/q and rounding. The rounding incurs blocks of data. See a survey in [30] for more details on
+anadditionalerrorofmagnitudeatmost1/2.Itfollows these schemes.
+that Fully homomorphic, or even somewhat homomor-
+q
+2 τ ·s[i]≈ p ·(b i,τ −(cid:4)a i,τ ,t(cid:5)) , phic,encryptionisknowntoimplypolylogarithmicPIR
+protocols.14 Most trivially, the receiver can encrypt the
+which enables converting a linear equation in s into a indexitwantstoquery,andthedatabasewillusethatto
+linear equation in t. The result of dimension-modulus homomorphicallyevaluatethedatabaseaccessfunction,
+reduction, therefore, is a ciphertext (aˆ,ˆb) ∈ Zk p ×Z p thus retrieving an encryption of the answer and sending
+such that ˆb−(cid:4)aˆ,t(cid:5) = m+2eˆ. For security, we need it to the receiver. The total communication complexity
+to assume the hardness of LWE with parameters k,p. of this protocol is the sum of lengths of the public key,
+We can show that in the parameter range we use, this encryptionoftheindexandoutputciphertext.However,
+assumption is as hard as the one used for the somewhat the public key is sent only once, it is independent of
+homomorphic scheme.12 the database and the query, and it can be used for
+In conclusion, dimension-modulus reduction allows manyqueries.Thereforeitiscustomarytoanalyzesuch
+us to achieve a bootstrappable scheme, based on the schemes in the public key model where sending the
+LWEassumptionalone.WereferthereadertoSection3 public key does not count towards the communication
+for the formal presentation of the scheme, and the full complexity. Gentry [12] proposes to use his somewhat
+version of this paper [8] for the detailed analysis. homomorphic scheme towards this end, which requires
+Asanicebyproductofthistechnique,theciphertexts O(log3N) bit communication.15 We show how, using
+oftheresultingfullyhomomorphicschemebecomevery oursomewhathomomorphicscheme,inadditiontonew
+short! They now consist of (k+1)logp = O(klogk) ideas, we can bring down communication complexity
+bits. This is a desirable property which is also helpful to a near optimal logN ·polyloglogN (one cannot do
+in achieving efficient private information retrieval pro- better than logN). To obtain the best parameters, one
+tocols (see below). needs to assume 2Ω (cid:2) (k)-hardness of polynomial-factor
+approximation for short vector problems in arbitrary
+1.3. Near-Optimal Private Information Retrieval dimension k lattices, which is supported by current
+In (single-server) private information retrieval (PIR) knowledge. Details follow.
+protocols, a very large database is maintained by a A major obstacle in the naive use of somewhat
+sender (the sender is also sometimes called the server, homomorphicencryptionforPIRisthathomomorphism
+or the database). A receiver wishes to obtain a specific is obtained with respect to the Boolean representa-
+entryinthedatabase,withoutrevealinganyinformation
+about the entry to the server. Typically, we consider
+13ItishardtocomparetheperformanceofdifferentPIRprotocols
+databases that are exponential in the security parameter
+due to the multitude of parameters. To make things easier to grasp,
+we compare the protocols on equal grounds: We assume that the
+11A subtle technical point refers to the use of an error term e, database size and the adversary’s running time are exponential in
+insteadof2easwedidforre-linearization.Thereasonisroughlythat thesecurityparameterandassumethemaximalpossiblehardnessof
+q ·2 is non-integer. Therefore we “divide by 2” before performing the underlying assumption against known attacks. We also assume
+p
+thedimension-reductionand“multiplyback”by2after. that each query retrieves a single bit. We will explicitly mention
+12For the informed reader we mention that while k,p are smaller special properties of individual protocols that are not captured by
+thann,q andthereforeseemtoimplylessersecurity,weareableto thiscomparison.
+use much higher relative noise in our k,p scheme since it does not 14Tobeprecise,oneneedssub-exponentiallysecuresuchschemes.
+needtosupporthomomorphicoperations.Hencethetwoassumptions 15Gentry does not provide a detailed analysis of this scheme, the
+areofroughlythesamehardness. aboveisbasedonouranalysisofitsperformance.
+1118800099111
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
+--- Page 6 ---
+tion of the evaluated function. Therefore, the receiver scheme works over the integers and relies on a new
+needs to encrypt the index to the database in a bit- assumption which, roughly speaking, states that finding
+by-bit manner. The query is then composed of logN a number p given many “noisy” multiples of p is
+ciphertexts, which necessitate at least log2N bits of computationally hard. They cannot, however, reduce
+communication. As a first improvement, we notice that their assumption to worst-case hardness. The second is
+the index need not be encrypted under the somewhat arecentworkofBrakerskiandVaikuntanathan[7],who
+homomorphic scheme. Rather, we can encrypt using construct a somewhat homomorphic encryption scheme
+any symmetric encryption scheme. The database will based on the ring LWE problem [25] whose security
+receive, an encrypted symmetric key (under the ho- can be reduced to the worst-case hardness of problems
+momorphic scheme), which will enable it to convert on ideal lattices.
+symmetric ciphertexts into homomorphic ciphertexts The efficiency of implementing Gentry’s scheme has
+withoutadditionalcommunication.Theencryptedsecret alsogainedmuchattention.SmartandVercauteren[36],
+key can be sent as a part of the public key as it is inde- as well as Gentry and Halevi [16] conduct a study on
+pendent of the query. This, of course, requires that our reducing the complexity of implementing the scheme.
+somewhat homomorphic scheme can homomorphically Inarecentindependentwork,GentryandHalevi[15]
+evaluatethedecryptioncircuitofthesymmetricscheme. showed how the sparse subset sum assumption can be
+Fully homomorphic schemes will certainly be adequate replaced by either the (decisional) Diffie-Hellman as-
+for this purpose, but known somewhat homomorphic sumptionoranideallatticeassumption,byrepresenting
+schemesarealsosufficient(dependingonthesymmetric the decryption circuit as an arithmetic circuit with only
+scheme to be used). Using the most communication one level of (high fan-in) multiplications.
+efficient symmetric scheme, we bring down the query
+complexity to O(logN). As for the sender’s response,
+2. PRELIMINARIES
+We will let D denote a distribution over some finite
+our dimension-modulus reduction technique guarantees
+set S. Then, the notation x ←$ D means that x is
+very short ciphertexts (essentially as short as non-
+chosen from the distribution D, and x ←$ S, means
+homomorphicLWEbasedschemes).Thistranslatesinto
+logN·polyloglogN bitsperciphertext,andthecommu- that x is chosen from the uniform distribution over S.
+nicationcomplexityofourprotocolfollows.Weremark
+We consider all logarithms to base 2.
+In this work, we utilize “noise” distributions over
+that in terms of retrieving large blocks of consecutive
+data, one can slightly reduce the overhead to O(logN) integers. The only property of these distributions we
+use is their magnitude. Hence, we define a B-bounded
+bits of communication for every bit of retrieved data.
+distribution to be a distribution over the integers where
+We leave it as an open problem to bring the amortized
+the magnitude of a sample is bounded with high prob-
+communication down to a constant. We refer the reader
+ability. A definition follows.
+to the full version [8] for more details.
+Prior to this work, it was not at all known how Definition2.1(B-boundeddistributions). Adistribution
+to achieve even polylogarithmic PIR under the LWE ensemble {χ n } n∈N, supported over the integers, is
+assumption. Westress that even ifthe size of the public called B-bounded if Pr [|e|>B]≤2 −Ω (cid:2) (n).
+key does count towards the communication complexity,
+e←$χ
+n
+our protocol still has polylogarithmic communication.
+Wedenotescalarsinplain(e.g.x)andvectorsinbold
+lowercase (e.g. v), and matrices in bold uppercase (e.g.
+1.4. Other Related Work A). We will treat all vectors as column vectors. The (cid:5) i
+Aside from Gentry’s scheme (and a variant thereof norm of a vector is denoted by (cid:13)v(cid:13) . Inner product is
+i
+by Smart and Vercauteren [36] and an optimization by denoted by (cid:4)v,u(cid:5), recall that (cid:4)v,u(cid:5) = vT ·u. Let v
+Stehle´ and Steinfeld [37]), there are two other fully be an n dimensional vector. For all i = 1,...,n, the
+homomorphic encryption schemes [11], [7]. The inno- ith element in v is denoted v[i]. We use the convention
+vationinboththeseschemesistheconstructionofanew that v[0](cid:2)1.
+somewhat homomorphic encryption scheme. Both these
+2.1. Learning With Errors (LWE)
+works then invoke Gentry’s squashing and bootstrap-
+pingtransformationtoconvertittoafullyhomomorphic The LWE problem was introduced by Regev [33] as
+scheme, and thus the security of both these schemes a generalization of “learning parity with noise”. For
+relies on the sparse subset-sum assumption (plus other positive integers n and q ≥ 2, a vector s ∈ Zn q , and
+assumptions). The first of these schemes is due to van a probability distribution χ on Z q, let A s,χ be the
+Dijk, Gentry, Halevi and Vaikuntanathan [11]. Their distribution obtained by choosing a vector a ←$ Zn
+q
+1119900000222
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
+--- Page 7 ---
+uniformly at random and a noise term e ←$ χ, and towards public key generation, and L ∈ N which is an
+outputting(a,(cid:4)a,s(cid:5)+e)∈Zn
+q
+×Z q.Aformaldefinition upper bound on the maximal multiplicative depth that
+follows. theschemecanhomomorphicallyevaluate.Themessage
+space of the encryption scheme is GF(2).
+Definition 2.2 (LWE). For an integer q =q(n) and an
+We encourage the reader to consider the following
+error distribution χ=χ(n) over Z q, the learning with
+(non-optimal, but easier to understand) settings as a
+√
+errorsproblemLWEn,m,q,χ isdefinedasfollows:Given running example: k = κ, n = k4, q ≈ 2 n, p =
+m independent samples from A s,χ (for some s ∈ Zn q ), (n2logq) · poly(k) = poly(k), m = O(nlogq) and
+output s with noticeable probability. L = 1/3logn = 4/3logk. The distributions χ,χˆ can
+The (average-case) decision variant of the LWE be thought of as being n- and k-bounded, respectively.
+problem, denoted DLWEn,m,q,χ, is to distinguish (with
+non-negligibleadvantage)msampleschosenaccording
+to A s,χ (for uniformly random s ←$ Zn q ), from m Key generation BTS.Keygen(1 κ ):
+samples chosen according to the uniform distribution The key generation algorithm first samples L + 1
+over Zn q ×Z q. “long vectors” s 0 ,...,s L ←$ Zn q , and computes, for all
+For cryptographic applications we are primarily in- (cid:5) ∈ [L], 0 ≤ i ≤ j ≤ n, and τ ∈ {0,...,(cid:9)logq(cid:10)}, the
+terested in the average case decision problem DLWE, value ψ (cid:6),i,j,τ:=(a (cid:6),i,j,τ ,b (cid:6),i,j,τ)∈Zn q ×Z q where:
+wheres←$ Zn q .Thereareknownquantum[33]andclas- b (cid:6),i,j,τ:=(cid:4)a (cid:6),i,j,τ ,s (cid:6) (cid:5)+2·e (cid:6),i,j,τ +2 τ ·s (cid:6)−1 [i]·s (cid:6)−1 [j]
+sical[32]reductionsfromtheproblemofapproximating
+(1)
+short vector problems on lattices in the worst-case to Here, a (cid:6),i,j,τ ←$ Zn q , e (cid:6),i,j,τ ←$ χ (recall that, according
+t t a s h h o p e e l p v s r e G i o n p a g r r e u i d s a D s u t i e c L a t W n B io E n . d n s i W s , t m t r e a i , k b q o e u ,χ n t l i χ y o ( n o t n , o n o w t b e t h e h i h e c ( e d h r a i e s v i c s e t r h r e B a a t g i t - z e b t e ) h o d . e un S v b d e p e r e e s s d c t i i o k fi f n o n c s r o al w o l a y f n n ) , t t o o h f e o 2 u p τ r ai · r n s o ( (cid:6) t − a at (cid:6) 1 i , o [ i i , n j ] , a τ · l , s b c (cid:6) (cid:6) o − , n i 1 , v j [ , e j τ n ] ) ti ( o i m s n o , s d s im (cid:6) q − i ) l 1 a [ r 0 v ] ia to (cid:2) a a n 1 n ). L e W N nc E o r t - y e b p a t t s i h o e a n d t
+scheme,exceptthis“ciphertext”isnotdecryptablesince
+algorithms for these problems run in time nearly expo-
+the “message” is not a single bit value. Thus, we
+nentialinthedimensionn[3],[29].Moregenerally,the
+prefer to call them “pseudo-encryptions”. Let Ψ (cid:2)
+b th e e st n a o l i g s o e r i i s th a m 1 s /2 th k a f t r s a o c l t v io e n L o W ft E he w m he o r d e u t l h u e sq m , a r g u n n it i u n d t e im o e f {ψ (cid:6),i,j,τ } (cid:6),i,j,τ be the set of all these values.
+Secondly, sample a “short” vector ˆs ←$ Zk and
+2
+O˜(n/k). p
+compute additional parameters: For all i ∈ [n], τ ∈
+We refer the reader to [8, Section 3] for definitions
+of bootstrappable and (leveled) fully homomorphic en-
+{0,...,(cid:9)logq(cid:10)}, sample aˆi,τ ←$ Zk
+p
+, eˆi,τ ←$ χˆ, and
+compute
+cryption schemes, and [13], [12] for an exposition of (cid:6) (cid:7)
+p (cid:8) (cid:9)
+Gentry’s bootstrapping theorem. ˆb i,τ:=(cid:4)aˆi,τ ,ˆs(cid:5)+eˆi,τ +
+q
+· 2 τ ·s L[i] (mod p) .
+3. THE NEW FHE SCHEME (cid:10) (cid:11)
+We first describe our bootstrappable encryption Set ψˆ i,τ:= aˆi,τ ,ˆb i,τ ∈Zk p ×Z p, and
+scheme BTS in Section 3.1. In Section 3.2, we apply
+the bootstrapping theorem to BTS, and obtain a fully
+Ψˆ:={ψˆ
+i,τ
+}
+i∈[n],τ∈{0,...,(cid:3)logq(cid:4)}
+.
+homomorphic scheme based on LWE. We refer the The key-generation algorithm proceeds to choose a
+reader to the full version of this paper [8] for a detailed uniformlyrandommatrixA←$ Zm×n andavectore←$
+q
+description and analysis. χm, and compute b:=As +2e.
+0
+It then outputs the secret key sk =ˆs, the evaluation
+3.1. BTS: A Bootstrappable Encryption Scheme
+key evk =(Ψ,Ψˆ), and the public key pk =(A,b).16
+Let κ ∈ N be the security parameter. The scheme
+is parameterized by dimensions n,k ∈ N, a positive Encryption BTS.Encpk(μ):
+integer m ∈ N, odd moduli q,p ∈ N (note that q and Recall that pk = (A,b). To encrypt a message μ ∈
+p need not be prime) and noise distributions χ (over GF(2), sample a vector r ←$ {0,1}m and set (just like
+Z q) and χˆ (over Z p). n and q are referred to as the in Regev’s scheme)
+“long” dimension and modulus respectively, while k v:=ATr and w:=bTr+μ .
+and p are the “short” dimension and modulus. χ and
+χˆ are the long and short noise distributions. Additional 16The public key pk is essentially identical to the public key in
+parameters of the scheme are m ∈ N which is used Regev’sscheme.
+1119900011333
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
+--- Page 8 ---
+The output ciphertext contains the pair (v,w), in ad- Informally, one can see that
+(cid:4)
+dition to a “level tag” which is used during homomor-
+phic evaluation and indicates the “multiplicative depth” w add −(cid:4)v add ,s (cid:6) (cid:5) = (w i −(cid:4)v i ,s (cid:6) (cid:5))
+where the ciphertext has been generated. For freshly (cid:4) (cid:4)i (cid:4)
+encryptedciphertext,therefore,theleveltagiszero.For- = (μ i+2e i) = μ i+2 e i ,
+mally, the encryption algorithm outputs c:=((v,w),0). i i i
+Homomorphic evaluation BTS.Evalevk(f,c
+1
+,...,c t): where μ i is the plaintext corresponding to c i (thus,
+satisfying the invariant Equation 2). The output of
+Here,thefunctionf :{0,1}t →{0,1}isrepresented
+the homomorphic evaluation, thus, corresponds to
+byabinaryarithmeticcircuitwith’+’gatesofarbitrary
+the sum of the inputs, with the noise term being the
+fan-in and ’×’ gates with fan-in 2. We further require
+sum of input noises.
+that the circuit is layered, namely that it is composed
+− Multiplication gates. We show how to multiply
+of homogenous layers of either all ’+’ gates or all ’×’ ciphertexts c,c(cid:2) where c = ((v,w),(cid:5)) and c(cid:2) =
+gates (it is easy to see that any arithmetic circuit can ((v(cid:2),w(cid:2) ),(cid:5)) (recall that multiplication gates have
+be converted to this form). Lastly, we require that the
+fan-in 2), to obtain an output ciphertext c mult =
+multiplicative depth of the circuit (the total number of
+‘×‘ layers) is exactly L. ((v mult ,w mult),(cid:5) + 1). Note that the level tag in-
+creases by 1.
+We homomorphically evaluate the circuit f gate
+We first consider an n-variate symbolic polynomial
+by gate. Namely, we will show how to perform ho-
+over the unknown vector x:
+momorphic addition (of arbitrarily many ciphertexts)
+and homomorphic multiplication (of two ciphertexts). φ(x)=φ
+(w,v),(w(cid:2),v(cid:2))
+(x)(cid:2)(w−(cid:4)v,x(cid:5))·(w(cid:2)−(cid:4)v(cid:2),x(cid:5)).
+Combiningthetwo,wewillbeabletoevaluateanysuch (3)
+function f. The last step in homomorphic evaluation is We symbolically open the parenthesis of this
+the “dimension and modulus reduction” step. Looking quadratic polynomial, and express it as
+ahead, we note that it is this final step that makes the (cid:4)
+scheme bootstrappable.
+φ(x)= h
+i,j
+·x[i]·x[j] ,
+0≤i≤j≤n
+Ciphertext structure during evaluation: During the ho-
+momorphic evaluation, we will generate ciphertexts of where h i,j ∈ Z q are known (we can compute
+the form c = ((v,w),(cid:5)), where the tag (cid:5) indicates the them from (v,w),(v(cid:2),w(cid:2) ) by opening parenthesis
+multiplicative level at which the ciphertext has been in Eq. (3)).17
+generated (hence fresh ciphertexts are tagged with 0). For technical reasons (related to keeping the error
+The requirement that f is layered will make sure that growth under control), we want to express φ(·) as a
+throughout the homomorphic evaluation all inputs to polynomial with small coefficients. We consider the
+a gate have the same tag. In addition, we will keep binary representation of h i,j, letting h i,j,τ be the
+the invariant that the output of each gate evaluation τ (cid:5) th bit in this representation. In other words h i,j =
+c=((v,w),(cid:5)), is such that (cid:3) τ l = og 0 q(cid:4)h i,j,τ ·2 τ, for h i,j,τ ∈{0,1}.
+We can express φ therefore as
+w−(cid:4)v,s (cid:6) (cid:5)=μ+2·e (mod q) , (2) (cid:4) (cid:8) (cid:9)
+where μ is the correct plaintext output of the gate, φ(x)= h i,j,τ · 2 τ ·x[i]·x[j] .18
+and e is a noise term that depends on the gate’s input 0≤i≤j≤n
+τ∈{0,...,(cid:3)logq(cid:4)}
+ciphertexts. Note that it always holds that (cid:5) ≤ L due
+to the bound on the multiplicative depth, and that the We recall that the evaluation key evk =Ψ contains
+output of the homomorphic evaluation of the entire elements of the form ψ (cid:6),i,j,τ = (a (cid:6),i,j,τ ,b (cid:6),i,j,τ)
+circuit is expected to have (cid:5)=L. such that
+Homomorphic evaluation of gates: 2 τs (cid:6)[i]s (cid:6)[j]≈b (cid:6)+1,i,j,τ −(cid:4)a (cid:6)+1,i,j,τ ,s (cid:6)+1 (cid:5) .
+− Addition gates. Homomorphic evaluation of a ’+’
+gate on inputs c 1 ,...,c t, where c i = ((v i ,w i),(cid:5)), 17We once again remind the reader that because of the notational
+is performed by outputting trick of setting x[0](cid:2)1, this expression captures the constant term
+(cid:12)(cid:12) (cid:13) (cid:13) intheproduct,aswellasallthelinearterms,thushomogenizingthe
+(cid:4) (cid:4) polynomialφ(x).
+c add =((v add ,w add),(cid:5)):= v i , w i ,(cid:5) . 18This can be interpreted as a polynomial with small coefficients
+i i
+whosevariablesare(2τ ·x[i]·x[j]).
+1119900022444
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
+--- Page 9 ---
+Thehomomorphicmultiplicationalgorithmwillthus Thefollowingtheoremsummarizesthehomomorphic
+set properties of BTS. For a proof, see the full version [8].
+(cid:4)
+v mult:= h i,j,τ ·a (cid:6)+1,i,j,τ , and Theorem 3.1. Let n = n(κ) ≥ 5 be any polynomial,
+0≤i≤j≤n q ≥ 2 n(cid:2) ≥ 3 for some (cid:3) ∈ (0,1) be odd, χ be any
+τ∈{0,...,(cid:3)logq(cid:4)} n-bounded distribution, and m = (n+1)logq +2κ.
+(cid:4)
+w mult = h i,j,τ ·b (cid:6)+1,i,j,τ , L
+k-
+e
+b
+t
+o
+k
+und
+=
+ed
+κ,
+di
+p
+str
+=
+ibut
+1
+io
+6
+n
+n
+.
+k
+T
+lo
+h
+g
+e
+(
+n
+2q
+B
+)
+T
+(
+S
+od
+c
+d
+a
+)
+n
+an
+h
+d
+om
+χˆ
+om
+b
+o
+e
+rp
+a
+h
+n
+i
+y
+-
+0≤i≤j≤n
+τ∈{0,...,(cid:3)logq(cid:4)} cally evaluate Boolean circuits of multiplicative depth
+A(cid:5)simplecalculationshowsthatw
+mult
+−(cid:4)v
+mult
+,s
+(cid:6)+1
+(cid:5)= O((cid:3)logn). Furthermore, under the DLWEn,q,χ and the
+i,j,τ h i,j,τ(b (cid:6)+1,i,j,τ − (cid:4)a (cid:6)+1,i,j,τ ,s (cid:6)+1 (cid:5)) = φ(s (cid:6)) + DLWEk,p,χˆ assumptions, the scheme BTS is also CPA
+2e = μμ(cid:2) +2e , where e and e are “small” error secure.
+1 2 1 2
+terms (thus, satisfying Invariant 2). 3.2. Bootstrapping and Full Homomorphism
+DimensionandModulusReduction.Afterhomomorphic We now show how to apply Gentry’s bootstrapping
+evaluation of f, we reduce the dimension and modulus theorem [13, Theorem 1] to achieve full homomor-
+of the resulting ciphertext c f (from (n,q) to (k,p)) as phism. In order to do this, we first need to bound the
+follows. Consider the following function from Zn into complexityofthe(augmented)decryptioncircuit.Since
+the rationals modulo p ourdecryptionisessentiallythecomputationofaninner
+(cid:14) (cid:15)
+product,wefirstboundthecomplexityofthisoperation.
+p q+1
+φ(x)(cid:2)φ v,w(x)(cid:2) q · 2 ·(w−(cid:4)v,x(cid:5)) (mod p). Lemma 3.2. Let (vˆ,wˆ) ∈ Zk p × Z p. There exists an
+arithmetic circuit over GF(2) with fan-in 2 gates and
+Rearranging, one can find h 0 ,...,h n ∈Z q such that O(logk+loglogp)depth,thatoninputˆs∈Zk (written
+p
+(cid:4)n p in binary) computes (wˆ−(cid:4)vˆ,ˆs(cid:5) (mod p)) (mod 2).
+φ(x)= h i ·( q ·x[i]) (mod p) ,
+We can now apply the bootstrapping theorem to
+i=0
+obtainafullyhomomorphicscheme.Inparticular,there
+Leth
+i,τ
+betheτth bitofh i,forallτ ∈{0,...,(cid:9)logq(cid:10)}.
+is a constant C ∈N such that setting n=kC/(cid:3) and the
+Then
+rest of the parameters as in Theorem 3.1, we see that
+(cid:4)n (cid:3)l(cid:4)ogq(cid:4) p BTS can homomorphically evaluate its own decryption
+φ(x)= h
+i,τ
+·(
+q
+·2 τ ·x[i]) .
+circuit (and then some). This shows that BTS is a
+i=0 τ=0
+bootstrappable encryption scheme. Applying Gentry’s
+UsingtheparametersinΨˆ,wecreateanewciphertext bootstrapping theorem [13, Theorem 1], we get:
+cˆ=(vˆ,wˆ)∈Zk p ×Z p by setting Theorem 3.3. There exists a leveled FHE scheme
+(cid:4)n (cid:3)l(cid:4)ogq(cid:4) based on the DLWEn,q,χ and DLWEk,p,χˆ assumptions.
+vˆ := 2· h i,τ ·aˆi,τ (mod p) ∈Zk p Furthermore, if BTS is weakly circular secure (see [8]
+i=0 τ=0 foraformaldefinition),thenthereexistsanFHEscheme
+(cid:4)n (cid:3)l(cid:4)ogq(cid:4) based on the same assumptions.
+wˆ := 2· h i,τ ·ˆb i,τ (mod p) ∈Z p . REFERENCES
+i=0 τ=0
+[1] S. Agrawal, D. Boneh, and X. Boyen, “Efficient lattice
+By a similar calculation as above, one can verify that
+(H)IBE in the standard model,” in EUROCRYPT, 2010,
+the ciphertext (vˆ,wˆ) satisfies Invariant 2. pp. 553–572.
+The output of BTS.Eval is the new ciphertext cˆ ∈ [2] M. Ajtai, “The shortest vector problem in (cid:2) 2 is NP-
+Zk p ×Z p. Note that the bit-length of cˆis (k+1)logp. hard for randomized reductions (extended abstract),” in
+STOC, 1998, pp. 10–19.
+Decryption BTS.Dec ˆs(cˆ):
+[3] M. Ajtai, R. Kumar, and D. Sivakumar, “A sieve algo-
+To decrypt cˆ = (vˆ,wˆ) ∈ Zk p × Z p (recall, again, rithm for the shortest lattice vector problem,” in STOC,
+2001, pp. 601–610.
+that we only need to decrypt ciphertexts that are out-
+putbyBTS.Eval),computeμ∗ :=(wˆ−(cid:4)vˆ,ˆs(cid:5) (mod p)) [4] A. Akavia, S. Goldwasser, and V. Vaikuntanathan, “Si-
+multaneoushardcorebitsandcryptographyagainstmem-
+(mod 2).
+ory attacks,” in TCC, ser. Lecture Notes in Computer
+If indeed wˆ−(cid:4)vˆ,ˆs(cid:5)=μ+2eˆ (mod p) then μ∗ =μ Science, O. Reingold, Ed., vol. 5444. Springer, 2009,
+so long as eˆis small enough. pp. 474–495.
+1119900033555
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
+--- Page 10 ---
+[5] B.Applebaum,D.Cash,C.Peikert,andA.Sahai,“Fast [22] Y.IshaiandA.Paskin,“Evaluatingbranchingprograms
+cryptographic primitives and circular-secure encryption onencrypteddata,”inTCC,ser.LectureNotesinCom-
+based on hard learning problems,” in CRYPTO, ser. puter Science, S. P. Vadhan, Ed., vol. 4392. Springer,
+LectureNotesinComputerScience,S.Halevi,Ed.,vol. 2007, pp. 575–594.
+5677. Springer, 2009, pp. 595–618. [23] A. K. Lenstra, H. W. Lenstra, and L. Lovsz, “Fac-
+[6] D.Boneh,E.-J.Goh,andK.Nissim,“Evaluating2-DNF toring polynomials with rational coefficients,” Math-
+formulas on ciphertexts,” in Theory of Cryptography - ematische Annalen, vol. 261, pp. 515–534, 1982,
+TCC’05, ser. Lecture Notes in Computer Science, vol. 10.1007/BF01457454.
+3378. Springer, 2005, pp. 325–341. [24] H. Lipmaa, “An oblivious transfer protocol with log-
+[7] Z. Brakerski and V. Vaikuntanathan, “ Fully homomor- squared communication,” in ISC, ser. Lecture Notes in
+phic encryption from ring-LWE and security for key Computer Science, J. Zhou, J. Lopez, R. H. Deng, and
+dependent messages,” in CRYPTO, vol. 6841, 2011, p. F. Bao, Eds., vol. 3650. Springer, 2005, pp. 314–328.
+501. [25] V. Lyubashevsky, C. Peikert, and O. Regev, “On ideal
+[8] ——, “Efficient fully homomorphic encryption from lattices and learning with errors over rings,” in EU-
+(standard) LWE,” Cryptology ePrint Archive, Report ROCRYPT, 2010, pp. 1–23, draft of full version was
+2011/344, 2011, http://eprint.iacr.org/2011/344. provided by the authors.
+[9] C. Cachin, S. Micali, and M. Stadler, “Computationally [26] C. A. Melchor, P. Gaborit, and J. Herranz, “Addi-
+private information retrieval with polylogarithmic com- tively homomorphic encryption with d-operand multi-
+munication,” in EUROCRYPT, 1999, pp. 402–414. plications,” in CRYPTO, 2010, pp. 138–154.
+[10] D.Cash,D.Hofheinz,E.Kiltz,andC.Peikert,“Bonsai [27] D.Micciancio,“Theshortestvectorinalatticeishardto
+trees, or how to delegate a lattice basis,” in EURO- approximatetowithinsomeconstant,”SIAMJ.Comput.,
+CRYPT, 2010, pp. 523–552. vol. 30, no. 6, pp. 2008–2035, 2000.
+[11] M. Dijk, C. Gentry, S. Halevi, and V. Vaikuntanathan, [28] ——, “A first glimpse of cryptography’s holy grail,”
+“Fully homomorphic encryption over the integers,” in Commun. ACM, vol. 53, pp. 96–96, March 2010.
+EUROCRYPT, 2010, pp. 24–43, full Version in http:// [Online].Available:http://doi.acm.org/10.1145/1666420.
+eprint.iacr.org/2009/616.pdf. 1666445
+[12] C. Gentry, “A fully homomorphic encryption scheme,” [29] D. Micciancio and P. Voulgaris, “A deterministic single
+Ph.D. dissertation, Stanford University, 2009, http:// exponential time algorithm for most lattice problems
+crypto.stanford.edu/craig. based on voronoi cell computations,” in STOC, L. J.
+[13] ——, “Fully homomorphic encryption using ideal lat- Schulman, Ed. ACM, 2010, pp. 351–358.
+tices,” in STOC, 2009, pp. 169–178. [30] R. Ostrovsky and W. E. Skeith III, “A survey of single-
+[14] ——,“Towardbasingfullyhomomorphicencryptionon database private information retrieval: Techniques and
+worst-case hardness,” in CRYPTO, 2010, pp. 116–137. applications,” in Public Key Cryptography, ser. Lecture
+Notes in Computer Science, T. Okamoto and X. Wang,
+[15] C. Gentry and S. Halevi, “Fully homomorphic encryp-
+Eds., vol. 4450. Springer, 2007, pp. 393–411.
+tionwithoutsquashingusingdepth-3arithmeticcircuits,”
+Cryptology ePrint Archive, Report 2011/279, 2011, to [31] P.Paillier,“Public-keycryptosystemsbasedoncompos-
+appear in FOCS 2011. ite degree residuosity classes,” in EUROCRYPT, 1999,
+pp. 223–238.
+[16] ——, “Implementing gentry’s fully-homomorphic en-
+cryption scheme,” in EUROCRYPT, ser. Lecture Notes [32] C. Peikert, “Public-key cryptosystems from the worst-
+in Computer Science, K. G. Paterson, Ed., vol. 6632. case shortest vector problem: extended abstract,” in
+Springer, 2011, pp. 129–148. STOC, 2009, pp. 333–342.
+[17] C. Gentry, S. Halevi, and V. Vaikuntanathan, “i-hop [33] O. Regev, “On lattices, learning with errors, random
+homomorphic encryption and rerandomizable Yao cir- linearcodes,andcryptography,”inSTOC,H.N.Gabow
+cuits,” in CRYPTO, 2010, pp. 155–172. and R. Fagin, Eds. ACM, 2005, pp. 84–93.
+[18] ——,“AsimpleBGN-typecryptosystemfromLWE,”in [34] R. Rivest, L. Adleman, and M. Dertouzos, “On data
+EUROCRYPT, 2010, pp. 506–522. banks and privacy homomorphisms,” in Foundations of
+Secure Computation. Academic Press, 1978, pp. 169–
+[19] C.Gentry,C.Peikert,andV.Vaikuntanathan,“Trapdoors
+177.
+for hard lattices and new cryptographic constructions,”
+in STOC, C. Dwork, Ed. ACM, 2008, pp. 197–206. [35] T. Sander, A. Young, and M. Yung, “Non-interactive
+1
+[20] C. Gentry and Z. Ramzan, “Single-database private in- cryptocomputing for NC ,” in FOCS, 1999, pp. 554–
+formation retrieval with constant communication rate,” 567.
+in ICALP, ser. Lecture Notes in Computer Science, [36] N. P. Smart and F. Vercauteren, “Fully homomorphic
+L. Caires, G. F. Italiano, L. Monteiro, C. Palamidessi, encryption with relatively small key and ciphertext
+andM.Yung,Eds.,vol.3580. Springer,2005,pp.803– sizes,” in Public Key Cryptography, ser. Lecture Notes
+815. inComputerScience,P.Q.NguyenandD.Pointcheval,
+[21] S. Goldwasser and S. Micali, “Probabilistic encryption Eds., vol. 6056. Springer, 2010, pp. 420–443.
+and how to play mental poker keeping secret all partial [37] D. Stehle´ and R. Steinfeld, “Faster fully homomorphic
+information,” in STOC. ACM, 1982, pp. 365–377. encryption,” in ASIACRYPT, 2010, pp. 377–394.
+1119900044666
+Authorized licensed use limited to: NANKAI UNIVERSITY. Downloaded on March 18,2026 at 01:47:06 UTC from IEEE Xplore. Restrictions apply.
