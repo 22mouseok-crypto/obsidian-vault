@@ -33,8 +33,6 @@ updated: 2026-06-03
 - **工具**: Obsidian（笔记管理）、Claude Code（AI 辅助开发）
 - **技术栈**: 算法竞赛、密码学理论学习
 
-
-
 ## 兴趣与偏好
 
 - 关注 AI 开发工具生态（Claude Code Skills、自动化工作流）
