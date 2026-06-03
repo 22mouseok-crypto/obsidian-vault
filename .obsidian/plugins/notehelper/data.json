@@ -55,6 +55,10 @@
     "desktop-mpnox15x-h1lo": {
       "frequency": 0,
       "syncOnStart": false
+    },
+    "desktop-mpnygfle-g4fc": {
+      "frequency": 0,
+      "syncOnStart": false
     }
   },
   "deviceAutoSyncMigrated": true,

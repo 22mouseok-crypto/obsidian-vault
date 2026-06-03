@@ -1,5 +1,76 @@
 [
   {
+    "timestamp": "2026-06-03T11:33:39.268Z",
+    "version": "2.10.7",
+    "settings": {
+      "dateHighlightedFormat": "yyyy-MM-dd HH:mm:ss",
+      "dateSavedFormat": "yyyy-MM-dd HH:mm:ss",
+      "apiKey": "",
+      "filter": "ALL",
+      "syncAt": "",
+      "customQuery": "in:all",
+      "template": "{{{content}}}",
+      "highlightOrder": "LOCATION",
+      "folder": "笔记同步助手/{{{date}}}",
+      "folderDateFormat": "yyyy-MM-dd",
+      "endpoint": "https://obsidian.notebooksyncer.com/api/graphql",
+      "filename": "{{{title}}}",
+      "filenameDateFormat": "yyyy-MM-dd",
+      "attachmentFolder": "笔记同步助手/attachments",
+      "version": "2.10.7",
+      "mergeMode": "messages",
+      "messageSortOrder": "desc",
+      "messageFolder": "",
+      "frequency": 0,
+      "intervalId": 0,
+      "frontMatterVariables": [],
+      "frontMatterTemplate": "author: {{{author}}}\nsource: {{{siteName}}}\nurl: {{{originalUrl}}}\nsaved: {{{dateSaved}}}\ntags: [笔记同步助手]{{#labels}}[{{{name}}}]{{/labels}}",
+      "syncOnStart": false,
+      "enableHighlightColorRender": false,
+      "highlightManagerId": "omni",
+      "highlightColorMapping": {
+        "yellow": "#fff3a3",
+        "red": "#ff5582",
+        "blue": "#adccff",
+        "green": "#bbfabb"
+      },
+      "singleFileName": "同步助手_{{{date}}}",
+      "singleFileDateFormat": "yyyy-MM-dd",
+      "sectionSeparator": "%%{{{dateSaved}}}_start%%",
+      "sectionSeparatorEnd": "%%{{{dateSaved}}}_end%%",
+      "wechatMessageTemplate": "---\n#### {{{heading}}}\n## 📅 {{{dateSaved}}}\n{{{content}}}",
+      "imageMode": "local",
+      "enablePngToJpeg": false,
+      "jpegQuality": 85,
+      "imageDownloadRetries": 3,
+      "imageAttachmentFolder": "笔记同步助手/images",
+      "imageUploadRelay": "none",
+      "enableDiaryLinks": false,
+      "diaryFolder": "Daily Notes",
+      "diaryDateFormat": "yyyy-MM-dd",
+      "diaryAnchor": "notehelper-links",
+      "diaryLinkType": "all",
+      "autoCreateDiaryNote": false,
+      "diaryLinkPrefix": "- ",
+      "diaryLinkMaxLength": 0,
+      "deviceSyncCursors": {},
+      "initialSyncCompleted": false,
+      "deviceAutoSync": {
+        "desktop-mpnox15x-h1lo": {
+          "frequency": 0,
+          "syncOnStart": false
+        },
+        "desktop-mpnygfle-g4fc": {
+          "frequency": 0,
+          "syncOnStart": false
+        }
+      },
+      "deviceAutoSyncMigrated": true,
+      "escapeHashtags": false,
+      "enableDebugLog": false
+    }
+  },
+  {
     "timestamp": "2026-06-03T07:33:20.090Z",
     "version": "2.10.7",
     "settings": {
