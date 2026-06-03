@@ -1,13 +1,9 @@
 {
   "dateHighlightedFormat": "yyyy-MM-dd HH:mm:ss",
   "dateSavedFormat": "yyyy-MM-dd HH:mm:ss",
-  "apiKey": "o56E766OI0ZhPdtHa1XDJhX8bpNM",
+  "apiKey": "",
   "filter": "ALL",
-<<<<<<< HEAD
-  "syncAt": "2026-06-01T21:52:34.413+08:00",
-=======
-  "syncAt": "2026-05-28T21:36:32.066+08:00",
->>>>>>> origin/master
+  "syncAt": "",
   "customQuery": "in:all",
   "template": "{{{content}}}",
   "highlightOrder": "LOCATION",
@@ -21,11 +17,11 @@
   "mergeMode": "messages",
   "messageSortOrder": "desc",
   "messageFolder": "",
-  "frequency": 15,
+  "frequency": 0,
   "intervalId": 0,
   "frontMatterVariables": [],
   "frontMatterTemplate": "author: {{{author}}}\nsource: {{{siteName}}}\nurl: {{{originalUrl}}}\nsaved: {{{dateSaved}}}\ntags: [笔记同步助手]{{#labels}}[{{{name}}}]{{/labels}}",
-  "syncOnStart": true,
+  "syncOnStart": false,
   "enableHighlightColorRender": false,
   "highlightManagerId": "omni",
   "highlightColorMapping": {
@@ -53,21 +49,10 @@
   "autoCreateDiaryNote": false,
   "diaryLinkPrefix": "- ",
   "diaryLinkMaxLength": 0,
-  "deviceSyncCursors": {
-<<<<<<< HEAD
-    "desktop-mpnox15x-h1lo": "2026-06-01T21:52:34.413+08:00"
-=======
-    "desktop-mpnox15x-h1lo": "2026-05-27T14:39:05.872+08:00",
-    "desktop-mpnygfle-g4fc": "2026-05-28T21:36:32.066+08:00"
->>>>>>> origin/master
-  },
-  "initialSyncCompleted": true,
+  "deviceSyncCursors": {},
+  "initialSyncCompleted": false,
   "deviceAutoSync": {
     "desktop-mpnox15x-h1lo": {
-      "frequency": 15,
-      "syncOnStart": true
-    },
-    "desktop-mpnygfle-g4fc": {
       "frequency": 0,
       "syncOnStart": false
     }
