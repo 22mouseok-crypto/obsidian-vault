@@ -1,7 +1,7 @@
 ---
 title: "Claude Code Skills 清单"
 created: 2026-05-31
-updated: 2026-06-01
+updated: 2026-06-03
 auto-maintained: update-skill-inventory
 tags:
   - claude-code
@@ -33,6 +33,8 @@ tags:
 | **`ffmpeg-usage`** | 音视频全链路处理：格式转换、拼接、压缩、GIF、字幕、转录 | 提到视频、音频、ffmpeg、mp4、gif、转码、媒体处理 |
 | **`paper-to-ppt`** | 论文 → 汇报 PPT：深度分析 PDF 论文，基于模板逐页生成演示文稿 | 提到"论文汇报""组会 PPT""答辩PPT""paper presentation"，涉及 .pdf + .pptx |
 | **`update-skill-inventory`** | 自动扫描所有 Skill 并更新此清单笔记 | 安装/卸载 Skill 时自动触发；手动调用刷新 |
+| **`user-profile`** | 自进化个人画像：跨会话识别并记录用户信息到 "This is me" | 用户表达偏好、习惯、背景、兴趣等可记录信息 |
+| **`agentmemory`** | 持久化记忆：跨会话记忆项目上下文、技术决策、代码约定 | 多会话切换项目、提到"上次说的"、"继续昨天的" |
 
 ---
 
@@ -65,6 +67,12 @@ tags:
 | **`webapp-testing`** | Web 应用 Playwright 自动化测试：截图、调试、验证 | 提到测试 Web 应用、浏览器截图、UI 调试 |
 | **`skill-creator`** | Skill 创建/优化/评测：从零创建、改进触发、基准测试 | 提到创建 Skill、优化 Skill、测量 Skill 性能 |
 
+### 🧠 记忆与推理类
+
+| Skill | 能力 | 自动触发条件 |
+|-------|------|-------------|
+| **`deep-research`** | 深度研究：多源搜索、交叉验证、综合报告 | 需要深度调研、事实核查、多源综合 |
+
 ### 📝 内容写作类
 
 | Skill | 能力 | 自动触发条件 |
@@ -84,14 +92,22 @@ tags:
 
 ## 📊 统计
 
-| 分类 | 数量 |
-|------|:--:|
-| 项目 Skills | 0 |
-| 个人 Skills | 5 |
-| 插件 Skills | 17 |
-| **总计** | **22** |
+| 分类 | 数量 | 新增 |
+|------|:--:|------|
+| 项目 Skills | 0 | — |
+| 个人 Skills | **9** | +4（agentmemory, user-profile, paper-to-ppt, update-skill-inventory） |
+| 插件 Skills | 17 | 新增 8 个（pdf, docx, xlsx, pptx, frontend-design, mcp-builder, webapp-testing, skill-creator） |
+| **总计** | **26** | +12 |
 
 ---
+
+## 🔧 已安装的外部工具
+
+| 工具 | 状态 | 备注 |
+|------|:---:|------|
+| `agentmemory` (npm) | ✅ 已安装 + Skill 封装 | MCP 服务器运行在端口 3111 |
+| `local-deep-research` (Docker) | ⏳ 等待启动 Docker Desktop | Docker Compose 已下载 |
+| `superpowers` (插件) | ❌ 需手动安装 | `/plugin install superpowers@claude-plugins-official` |
 
 ## 🔍 如何验证 Skill 是否被正确调用？
 
