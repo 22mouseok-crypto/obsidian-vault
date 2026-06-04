@@ -184,11 +184,10 @@ g++ -fPIC -shared -o libope.so Node.cpp UDF.cpp \
 8条记录全部正常插入，没有触发任何分裂或Recode。local\_table正确记录了各明文的出现频率：apple出现2次、pear出现1次、banana出现1次、orange出现2次、cherry出现2次。这个阶段数据量远小于节点容量（M=128），符合预期。
 
 \begin{figure}[H]
-\centering
-% 【需要截图】阶段1终端输出：8次Insert的日志，显示每次插入的明文、local_table频率统计、以及"正常"状态
-\fbox{\parbox{0.85\textwidth}{\vspace{2cm}\centering 此处请插入阶段1的终端输出截图\\（从"阶段1：混合插入多类型数据"到第8条插入完成，第9-16行）}}
-\caption{阶段1：混合插入输出}
-\label{fig:phase1}
+    \centering
+    \includegraphics[width=1\linewidth]{datasecuritylab4/混合插入输出.png}
+    \caption{阶段1：混合插入输出}
+    \label{fig:phase1}
 \end{figure}
 
 \subsection{阶段2：重复插入'x'}
@@ -198,11 +197,10 @@ g++ -fPIC -shared -o libope.so Node.cpp UDF.cpp \
 阶段2结束后执行Search('b', 'p')，成功返回了banana、cherry（2条）、orange（2条）共5条记录的密文，且解密正确，说明重复插入没有破坏范围查询功能。
 
 \begin{figure}[H]
-\centering
-% 【需要截图】阶段2终端输出：30次插入'x'的日志 + Search('b','p')的结果 + 阶段4的'y'插入日志
-\fbox{\parbox{0.85\textwidth}{\vspace{3.5cm}\centering 此处请插入阶段2的终端输出截图\\（从"阶段2"到"阶段2后范围查询"的解密结果，第18-41行）}}
-\caption{阶段2：重复插入'x'及范围查询}
-\label{fig:phase2}
+    \centering
+    \includegraphics[width=1\linewidth]{datasecuritylab4/重复插入‘x’及范围查询.png}
+    \caption{阶段2：重复插入'x'及范围查询}
+    \label{fig:phase2}
 \end{figure}
 
 \subsection{阶段3：编码分布观察}
@@ -237,12 +235,43 @@ y & 20 & $1.14\times 10^{18} \sim 1.15\times 10^{18}$ \\
 \end{tabular}
 \end{table}
 
+
+
 \begin{figure}[H]
-\centering
-% 【需要截图】阶段3终端输出：编码分布 + 阶段4插入日志 + 最终编码分布
-\fbox{\parbox{0.85\textwidth}{\vspace{4cm}\centering 此处请插入阶段3~4的终端输出截图\\（从"阶段3：大量重复插入"到"最终数据库编码分布"，第43-153行）}}
-\caption{阶段3：数据库编码分布}
-\label{fig:phase3}
+    \centering
+    \includegraphics[width=1\linewidth]{datasecuritylab4/大量重复插入1.png}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{datasecuritylab4/大量重复插入.png}
+    \caption{大量重复插入}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{datasecuritylab4/数据库编码分布.png}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{datasecuritylab4/数据库编码分布2.png}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{datasecuritylab4/数据库编码分布3.png}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{datasecuritylab4/数据库编码分布4.png}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
 \end{figure}
 
 \section{运行结果}
