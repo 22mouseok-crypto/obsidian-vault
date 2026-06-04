@@ -1,0 +1,280 @@
+\documentclass[a4paper]{article} 
+ \usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry} 
+ \input{style/ch_xelatex.tex} 
+ \input{style/scala.tex} 
+ \lstset{frame=, basicstyle={\footnotesize\ttfamily}} 
+ \graphicspath{ {images/} } 
+ \usepackage{ctex} 
+ \usepackage{array}
+ \usepackage{amsmath} % 用于专业公式排版 
+ \usepackage{amsthm} % 引入 amsthm 宏包 
+ \usepackage{longtable} % 跨页长表格核心宏包
+ \usepackage{booktabs} 
+ \usepackage{xcolor} 
+ \usepackage{colortbl} 
+ \usepackage{graphicx} % 引入图片处理宏包 
+\usepackage{subcaption}  % 用于实现子图
+\usepackage{float}       % 用于[H]强制位置选项（可选）
+ \usepackage{listings} 
+ \usepackage{caption} 
+ \usepackage{xeCJK} % 中文支持（可选） 
+ \usepackage{graphicx} % 加载图片宏包 
+ %-----------------------------------------BEGIN DOC---------------------------------------- 
+ \newtheorem{lemma}{引理} 
+ \newtheorem{definition}{定义} 
+ \newtheorem{corollary}{推论} 
+ \lstset{ 
+     language=Python,        
+     basicstyle=\small\ttfamily, % 字体大小和类型 
+     numbers=left,            % 行号在左侧 
+     numberstyle=\tiny,       % 行号字体大小 
+     breaklines=true,         % 自动换行 
+     frame=single,            % 代码框 
+     showstringspaces=false,  % 不显示空格标记 
+     commentstyle=\color{gray}, % 注释颜色（需配合xcolor宏包） 
+     keywordstyle=\color{blue}\bfseries % 关键字颜色 
+ } 
+\begin{document}
+\renewcommand{\contentsname}{目\ 录}
+\renewcommand{\appendixname}{附录}
+\renewcommand{\appendixpagename}{附录}
+\renewcommand{\refname}{参考文献} 
+\renewcommand{\figurename}{图}
+\renewcommand{\tablename}{表}
+\renewcommand{\today}{\number\year 年 \number\month 月 \number\day 日}
+
+%-------------------------封面----------------
+\begin{titlepage}
+    \begin{center}
+    \includegraphics[width=0.8\textwidth]{NKU.png}\\[1cm]
+    \vspace{20mm}
+		\textbf{\huge{\kaishu{数据安全}}}\\[2.3cm]
+		{\fontsize{36pt}{43.2pt}\selectfont\textbf{\kaishu{频率隐藏OPE方案实现}}}\\[1.5cm] % 增加行距和间距
+
+		\vspace{\fill}
+    
+
+    \centering
+    \textsc{\LARGE \kaishu{姓名\ :\ 李子恒}}\\[0.5cm]
+    \textsc{\LARGE \kaishu{学号\ :\ 2312114}}\\[0.5cm]
+    \textsc{\LARGE \kaishu{专业\ :\ 密码科学与技术}}\\[0.5cm]
+    
+    \vfill
+    {\Large \today}
+    \end{center}
+\end{titlepage}
+
+ \begin{center} 
+ \tableofcontents\label{c} 
+ \end{center} 
+ \newpage 
+ %------------------------------------------TEXT-------------------------------------------- 
+ 
+ \label{section:purpose}
+\section{实验内容}
+
+本次实验参照教材7.3.3节"FH-OPE实现"的内容，完成频率隐藏保序加密（Frequency-Hiding Order-Preserving Encryption，FH-OPE）方案的复现。具体来说，需要用C++实现一棵用于管理编码映射的B+树，将其编译为MySQL的用户自定义函数（UDF），并在Python客户端中实现随机化加密和位置计算。在此基础上，通过反复插入相同明文数值的测试，观察编码树的分裂、重编码（Recode）过程以及频率隐藏的实际效果。
+
+\section{实验原理}
+
+\subsection{OPE与FH-OPE}
+
+保序加密（Order-Preserving Encryption，OPE）是一类特殊的加密方案，它能保证密文的数值顺序与明文的顺序保持一致——对于任意两个明文$m_1 < m_2$，加密后的密文满足$c_1 < c_2$。这个性质让数据库可以在不解密的情况下直接对密文进行范围查询和排序，在云数据库场景下有很好的应用前景。
+
+但传统OPE方案有一个明显的安全缺陷：频率泄露。相同的明文每次加密得到的密文是相同的（或高度近似的），攻击者通过观察密文的频率分布就能推断明文信息。比如一张表里"apple"出现了100次而"pear"只出现了1次，即使看不到明文，也能从密文分布猜出哪个对应"apple"。
+
+FH-OPE正是为了解决频率泄露问题而提出的。它的核心思路是在客户端侧和服务器侧分别做两件事：客户端使用随机化加密（本实验中是AES-CBC配合随机IV），使得同一个明文每次加密产生完全不同的密文，从根源上隐藏频率信息；服务器侧维护一棵B+树，为每条记录的密文分配一个叫"编码"（encoding）的整数值，这些编码整体保持字典序，但编码之间的间隔不反映频率。简单打个比方——随机化加密好比给每个学生发一件图案完全随机的外套，谁也看不出谁和谁穿的是"同款"；而B+树编码好比给每人分配一个学号，学号有序但跟外套没有半毛钱关系。
+
+从安全性的角度，教材中证明了FH-OPE可以达到IND-FAOCPA（频率分析下的有序选择明文攻击不可区分性）安全。通俗地说，就是攻击者即使可以自适应地选择明文并拿到密文和编码，也无法从密文分布中获取比"顺序"更多的信息。
+
+\subsection{重复插值测试}
+
+重复插值测试是指向系统中反复插入同一个明文（每次加密产生不同密文），观察B+树编码的动态变化。这个测试在实验中非常关键，主要有三个目的：
+
+\begin{enumerate}
+    \item \textbf{验证频率隐藏}：如果同一个明文的多个密文获得了分散在不同位置的编码值，就说明攻击者确实无法从编码分布推断频率。
+    \item \textbf{观察树分裂}：随着插入量增加，B+树的叶子节点会逐渐填满，达到阈值后触发分裂（rebalance），这是树结构自我维护的基本机制。
+    \item \textbf{观察Recode过程}：当某个叶子节点的编码区间$[lower, upper]$不够分配新编码时（即区间宽度小于2，没有整数可用），系统需要把该节点及相邻兄弟节点收集起来，在更宽的范围内重新均匀分配编码。这是整个FH-OPE方案中最核心的动态调整操作。
+\end{enumerate}
+
+\subsection{B+树编码机制}
+
+FH-OPE的编码管理依赖于一棵定制化的B+树，它和数据库课程里学的经典B+树大体相似但有一些针对性的设计：
+
+\textbf{节点类型}：分为InternalNode（内部节点）和LeafNode（叶子节点）。内部节点不存数据，只记录每个子节点包含的密文数量（child\_num），用于在插入和搜索时做路由导航；叶子节点存实际的密文字符串和对应的编码值，还有两个关键属性lower和upper，界定该节点的编码值可用范围。
+
+\textbf{分裂（rebalance）}：当节点的数据量达到上限$M=128$时，将后半部分数据拆分到新节点，并调整父节点的索引。如果连根节点都需要分裂，就创建一个新的内部节点作为根，树高加一。
+
+\textbf{Recode（重编码）}：这是FH-OPE特有的操作。当在某个叶子节点中分配新编码时发现区间已满（$right-left<2$），系统把该节点加入"待重编码列表"，检查当前区间是否足以容纳所有密文。如果不够，就向左右兄弟节点扩展，甚至倍增上界（upper*2），直到找到足够空间，然后在整个区间内等间隔地重新分配所有编码值。Recode完成后会更新一个全局的update映射表，客户端通过存储过程批量更新数据库中受影响的记录。
+
+叶子节点之间用left\_bro和right\_bro指针串成双向链表，正是为了方便Recode时向两侧扩展查找可用空间。
+
+\section{实验环境}
+
+实验在一台Ubuntu 22.04虚拟机上进行，具体软件环境如下：
+
+\begin{itemize}
+    \item 操作系统：Ubuntu 22.04 LTS（VMware Workstation 虚拟机）
+    \item 数据库：MySQL 8.0.36
+    \item C++ 编译器：g++ 11.4.0
+    \item MySQL 开发库：libmysqlclient-dev（编译UDF所需）
+    \item Python 版本：3.10.12
+    \item Python 依赖：pymysql（数据库连接）、pycryptodome（AES加解密）
+\end{itemize}
+
+编译UDF动态库的命令大致如下：
+
+\begin{lstlisting}[language=bash]
+g++ -fPIC -shared -o libope.so Node.cpp UDF.cpp \
+    $(mysql_config --cflags) $(mysql_config --libs)
+\end{lstlisting}
+
+编译后将生成的\texttt{libope.so}复制到MySQL插件目录（可通过\lstinline|SHOW VARIABLES LIKE 'plugin_dir'|查看），然后在MySQL中执行import.sql脚本即可完成建表和UDF注册。
+
+\section{实验步骤}
+
+\subsection{FH-OPE的复现}
+
+复现过程按照"数据结构$\rightarrow$UDF接口$\rightarrow$数据库配置$\rightarrow$客户端"的顺序推进：
+
+\begin{enumerate}
+    \item \textbf{编写B+树数据结构}（Node.h 和 Node.cpp）。实现InternalNode和LeafNode两种节点类型，以及insert、search、rebalance、Encode和Recode等核心方法。其中Encode方法负责在叶子节点的$[lower, upper]$区间内为新密文分配合适的编码值，当区间不足时触发Recode流程。
+
+    \item \textbf{编写MySQL UDF接口}（UDF.cpp）。将B+树的操作封装为5个MySQL函数，供SQL语句直接调用：
+    \begin{itemize}
+        \item \texttt{FHInsert(pos, ciphertext)}：向B+树指定位置插入密文，返回分配的编码值
+        \item \texttt{FHSearch(pos)}：根据位置查询编码值（用于范围查询的边界转换）
+        \item \texttt{FHUpdate(ciphertext)}：Recode发生后，根据密文查询更新后的编码
+        \item \texttt{FHStart() / FHEnd()}：返回最近一次Recode的编码更新范围边界
+    \end{itemize}
+
+    \item \textbf{数据库配置}。执行import.sql脚本，完成三件事：创建example表（含encoding和ciphertext两个字段）、注册上述5个UDF函数、创建pro\_insert存储过程。存储过程的逻辑是：先调用FHInsert获取编码，将记录插入表中；如果返回值为0（说明触发了Recode），则用UPDATE批量修正受影响记录的编码值。
+
+    \item \textbf{编写Python客户端}（client.py）。实现随机化AES加密（每次使用随机IV确保同一明文产生不同密文）、基于local\_table频率统计的位置计算、以及Insert和Search两个核心操作的封装。
+
+    \item \textbf{运行基础测试}。混合插入多种水果名称（apple、pear、banana、orange、cherry，部分重复），验证基本的插入、编码分配和范围查询是否正常工作。
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+% 【需要截图】系统整体架构示意图：客户端(随机加密+位置计算) ↔ MySQL(存储过程+UDF) ↔ B+树(编码管理)
+\fbox{\parbox{0.8\textwidth}{\vspace{3cm}\centering 此处请插入系统架构示意图\\（客户端$\leftrightarrow$MySQL$\leftrightarrow$B+树的交互关系）}}
+\caption{系统整体架构}
+\label{fig:arch}
+\end{figure}
+
+\subsection{重复插值测试}
+
+在基础功能验证通过后，在client.py的\lstinline|__main__|中分四个阶段进行测试：
+
+\begin{enumerate}
+    \item \textbf{阶段1——混合插入}：依次插入apple、pear、banana、orange、cherry、apple、cherry、orange共8条记录，观察local\_table的频率统计和插入返回状态。
+
+    \item \textbf{阶段2——重复插入'x'}：循环30次插入'x'，每次打印是否触发了分裂/Recode。插入完成后执行范围查询Search('b', 'p')，验证在大量重复插入后范围查询仍能正确工作。
+
+    \item \textbf{阶段3——编码分布观察}：直接查询数据库中所有记录的encoding和ciphertext，在客户端解密后按编码排序打印，观察频率隐藏的实际效果。
+
+    \item \textbf{阶段4——继续插入'y'}：再插入20次'y'触发更多分裂，最后再次查看编码分布的变化。
+\end{enumerate}
+
+\section{运行结果}
+
+\subsection{阶段1：混合插入}
+
+8条记录全部正常插入，没有触发任何分裂或Recode。local\_table正确记录了各明文的出现频率：apple出现2次、pear出现1次、banana出现1次、orange出现2次、cherry出现2次。这个阶段数据量远小于节点容量（M=128），符合预期。
+
+\begin{figure}[H]
+\centering
+% 【需要截图】阶段1终端输出：8次Insert的日志，显示每次插入的明文、local_table频率统计、以及"正常"状态
+\fbox{\parbox{0.85\textwidth}{\vspace{2.5cm}\centering 此处请插入阶段1的终端输出截图\\（8次混合插入，全部显示"正常"）}}
+\caption{阶段1：混合插入输出}
+\label{fig:phase1}
+\end{figure}
+
+\subsection{阶段2：重复插入'x'}
+
+30次插入'x'的过程中，始终没有发生分裂（每次Insert返回False）。原因有三：一是初始编码空间非常大（$[0, 2^{62}]$），30个编码完全不会耗尽区间；二是每次取区间中点，间隔非常充裕；三是30远未达到节点容量128。这也从侧面说明，在正常使用场景下Recode并不会频繁触发。
+
+插入后执行Search('b', 'p')，成功返回了banana、cherry、orange的密文，且解密正确，说明重复插入没有破坏范围查询功能。
+
+\begin{figure}[H]
+\centering
+% 【需要截图】阶段2终端输出：30次插入'x'的日志（显示频率递增），以及Search('b','p')的范围查询结果（4条解密后的记录）
+\fbox{\parbox{0.85\textwidth}{\vspace{3cm}\centering 此处请插入阶段2的终端输出截图\\（30次插入'x' + 范围查询结果）}}
+\caption{阶段2：重复插入'x'及范围查询}
+\label{fig:phase2}
+\end{figure}
+
+\subsection{阶段3：编码分布观察}
+
+表\ref{tab:encoding}整理了数据库中的编码分布（简化表示）。可以清楚地看到：
+
+\begin{itemize}
+    \item 两个"apple"记录的编码值相差巨大（$7.21\times 10^{16}$ vs $2.88\times 10^{17}$），无法从编码推断它们对应同一明文。
+    \item 30条"x"记录分布在约$3.06\times 10^{17}$到$3.07\times 10^{18}$的宽阔区间内，编码之间有明显的间隔，频率信息被完全隐藏。
+    \item 不同明文的编码在整体上保持了与插入位置一致的顺序。由于CalPos函数根据字典序计算位置（apple < banana < cherry < orange < pear < x），每个新插入的明文都会被分配到正确的区间，因此编码值整体上反映了这一顺序关系。需要注意的是，编码值只保证$\le$关系与B+树中的位置一致，并不一定是严格连续或完全等间距的。另外，从数据中可以看到，同一明文的多个副本（如两个cherry、两个orange）的编码值分别位于'x'编码区的两侧，这是因为它们在阶段1中先于'x'被插入，B+树在为后续的'x'分配编码时，在它们各自所在的叶子节点区间内取了中间值，导致了编码值的穿插。但这不影响保序性——范围查询时通过FHSearch定位的是B+树中的位置，而非直接比较编码值。
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{数据库编码分布概览}
+\label{tab:encoding}
+\begin{tabular}{lrl}
+\toprule
+明文 & 出现次数 & 编码范围（近似） \\
+\midrule
+apple & 2 & $7.21\times 10^{16} \sim 2.88\times 10^{17}$ \\
+banana & 1 & $3.06\times 10^{17}$ \\
+cherry & 2 & $3.07\times 10^{17} \sim 3.07\times 10^{18}$ \\
+orange & 2 & $3.10\times 10^{17} \sim 3.11\times 10^{17}$ \\
+x & 30 & $3.07\times 10^{17} \sim 3.07\times 10^{18}$ \\
+pear & 1 & $3.60\times 10^{17}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+% 【需要截图】阶段3终端输出：数据库中所有记录的 encoding 和 plaintext 对照表
+\fbox{\parbox{0.85\textwidth}{\vspace{3cm}\centering 此处请插入阶段3的编码分布完整输出截图\\（所有记录的 encoding 和对应明文）}}
+\caption{阶段3：数据库编码分布}
+\label{fig:phase3}
+\end{figure}
+
+\subsection{程序异常分析与修复}
+
+在阶段3的编码分布查询末尾，程序抛出了异常：
+
+\begin{lstlisting}[basicstyle=\small]
+ValueError: Padding is incorrect.
+\end{lstlisting}
+
+错误发生在客户端AES解密时，PKCS7去填充校验失败，说明拿到的密文无法用当前密钥正确解密。
+
+排查后定位到两个问题：
+
+\begin{enumerate}
+    \item \textbf{重复调用FHInsert}。client.py的Insert函数中，第61行先执行了一次\lstinline|select FHInsert(...)|来判断是否分裂，紧接着第63行调用\lstinline|call pro_insert(...)|，而存储过程内部又会调用一次FHInsert。这导致同一条密文被插入了B+树两次——B+树的记录数和数据库表的记录数不一致，随着插入增多，两者之间的状态偏差越来越严重，最终在查询编码时出现了无法解密的情况。修复方法是去掉第一次FHInsert调用，改为在存储过程执行后通过FHStart()的返回值判断是否发生了Recode。
+
+    \item \textbf{数据库残留数据}。client.py启动时没有清理example表中的旧数据。如果上一次运行使用了不同的AES密钥（key和base\_iv是程序每次启动时随机生成的），旧密文自然无法解密。修复方法是在测试代码开头加上\lstinline|TRUNCATE TABLE example|。
+\end{enumerate}
+
+此外，在解密循环中添加了try-except异常处理，避免单条记录解密失败导致整个程序崩溃，提高了测试代码的健壮性。
+
+\section{心得体会}
+
+这次实验让我对FH-OPE的理解从课本上的定义变成了可以亲手跑通的代码，有几个感受比较深的地方。
+
+首先是"频率隐藏"和"保序"这两个看似冲突的目标是怎么被分开解决的。之前看教材一直觉得这两件事搅在一起很难想清楚，但写成代码之后就很直观了——客户端管加密（随机化，隐藏频率），服务器管编码（B+树，维持顺序），两边各司其职，合在一起才构成完整的方案。这种"职责分离"的思路在安全系统设计里应该很常见。
+
+其次是Recode操作的设计确实巧妙。编码空间不够的时候不去硬塞，而是拉上兄弟节点在更大范围里重新"排排坐"，同时对客户端和数据库来说几乎透明（只需批量更新一次编码值）。当然代价也是有的——Recode一旦触发，要更新的记录可能很多。如果在生产环境中用这个方案，怎么在"空间利用率"和"Recode频率"之间找一个平衡点，是个值得琢磨的工程问题。
+
+第三，写UDF这件事让我对"跑在数据库进程里的代码"有了更直接的敬畏。UDF运行在MySQL的进程空间内，一次空指针或数组越界就直接把整个MySQL搞挂。实验中调试的时候MySQL崩溃了好几次，每次都要重启服务，确实挺折磨人的，但也确实让人记住了写C++时要多小心边界条件。
+
+另外，客户端的local\_table实际上承担了"明文$\rightarrow$位置"的映射，它存储了频率信息。这提醒我FH-OPE的安全性建立在"客户端可信、服务器不可信"的模型之上——local\_table绝不能泄露给服务器，否则频率隐藏就前功尽弃了。
+
+总的来说，这次实验除了让我掌握了FH-OPE的具体实现，也锻炼了C++和Python混合编程、MySQL UDF开发这类比较"跨界"的工程能力。如果时间允许，后续还可以试试多线程并发插入的安全性、测量Recode的性能开销、或者尝试不同的编码分配策略（比如非均匀间隔）来优化空间利用率。
+
+\end{document}
+
+
