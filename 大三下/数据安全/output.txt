@@ -1,8 +1,10 @@
 liziheng@liziheng-virtual-machine:~/Desktop/lab4$ python3 client1.py
+已清理旧数据，开始测试。
+
 ============================================================
 阶段1：混合插入多类型数据
 ============================================================
-/home/liziheng/Desktop/lab4/client1.py:91: DeprecationWarning: 'passwd' is deprecated, use 'password'
+/home/liziheng/Desktop/lab4/client1.py:103: DeprecationWarning: 'passwd' is deprecated, use 'password'
   split = Insert(ciphertext)
   插入 'apple   ' -> local_table频次: {'apple': 1} -> 正常
   插入 'pear    ' -> local_table频次: {'apple': 1, 'pear': 1} -> 正常
@@ -16,7 +18,7 @@ liziheng@liziheng-virtual-machine:~/Desktop/lab4$ python3 client1.py
 ============================================================
 阶段2：反复插入相同值 'x' 观察频率隐藏和分裂
 ============================================================
-/home/liziheng/Desktop/lab4/client1.py:102: DeprecationWarning: 'passwd' is deprecated, use 'password'
+/home/liziheng/Desktop/lab4/client1.py:114: DeprecationWarning: 'passwd' is deprecated, use 'password'
   split = Insert('x')
   第 1次插入 'x' -> local_table['x']=1 -> 正常
   第 2次插入 'x' -> local_table['x']=2 -> 正常
@@ -30,61 +32,127 @@ liziheng@liziheng-virtual-machine:~/Desktop/lab4$ python3 client1.py
   第30次插入 'x' -> local_table['x']=30 -> 正常
 
 --- 阶段2后范围查询 'b' ~ 'p' ---
-/home/liziheng/Desktop/lab4/client1.py:113: DeprecationWarning: 'passwd' is deprecated, use 'password'
+/home/liziheng/Desktop/lab4/client1.py:125: DeprecationWarning: 'passwd' is deprecated, use 'password'
   Search('b', 'p')
-ciphtertext: Ar6gFxDcC+nMAzL6mfDFnzRQT0dy1MaezyH35dasuLwFnz58lBiOI2J8DrGF8jgW plaintext: apple
-ciphtertext: WH8JNl1D0zjElNp7cILPoNpftxRQwyO9DpOGSIjUlBNV7eu+cfpLpWsjRxwiXctZ plaintext: banana
-ciphtertext: DOjmQdhtEOX/ckGO2oh2KduHBH2JI5V3YKiIAetXpY1Ma1xp8cEg7PQ2KhZCM+fz plaintext: cherry
-ciphtertext: hXO7tCPGkM4MO0Y38feApuFuA2XVb17eAI+9o2+aqffEPehQn+fFDxHfym1wyqnB plaintext: orange
+ciphtertext: iauoDqK8QI5mWlYUHYFi7FOR0tvF7T1RURyTFdXxkklHq9aPngmjD6PPf3GYjUqT plaintext: banana
+ciphtertext: Aox5wioHvCVvBNFG/4W4Lza3ANouYs8HBQJJ1z/8ha7JhJoJSKMcf2jvbdYaPp1o plaintext: orange
+ciphtertext: fqPrkO9+Pgouk7ia9KBAeDq6FEqFdU0GRVOHl2vz9zwDoGNSjUQnO7CyezurpJJB plaintext: cherry
+ciphtertext: YjA8mlkhDFCCFG5+offyORmUFM+OWIOh16c5if2C37dsEE8otrfcnrA2FYvMkOo5 plaintext: cherry
+ciphtertext: 4gsreZmD0YwEI7XnfDHfDE0s7dw5DU4ZMcMJUOvq6vW/9tYDL2RYgbiazPV5dFQ6 plaintext: orange
 
 ============================================================
 阶段3：大量重复插入后观察数据库编码分布
 ============================================================
-  encoding=72057594037927936 -> plaintext='apple'
   encoding=288230376151711744 -> plaintext='apple'
-  encoding=306244774661193728 -> plaintext='banana'
-  encoding=306526249637904384 -> plaintext='cherry'
-  encoding=306596618382082048 -> plaintext='orange'
-  encoding=306809923637870592 -> plaintext='x'
-  encoding=306810061076824064 -> plaintext='x'
-  encoding=306810473393684480 -> plaintext='x'
-  encoding=306812397539033088 -> plaintext='x'
-  encoding=306812414718902272 -> plaintext='x'
-  encoding=306812440488706048 -> plaintext='x'
-  encoding=306812442636189696 -> plaintext='x'
-  encoding=306812466258509824 -> plaintext='x'
-  encoding=306812569337724928 -> plaintext='x'
-  encoding=306812809855893504 -> plaintext='x'
-  encoding=306812844215631872 -> plaintext='x'
-  encoding=306813016014323712 -> plaintext='x'
-  encoding=306813222172753920 -> plaintext='x'
-  encoding=306814871440195584 -> plaintext='x'
-  encoding=306816520707637248 -> plaintext='x'
-  encoding=306829714847170560 -> plaintext='x'
-  encoding=306830814358798336 -> plaintext='x'
-  encoding=306832463626240000 -> plaintext='x'
-  encoding=306842908986703872 -> plaintext='x'
-  encoding=306845108009959424 -> plaintext='x'
-  encoding=306847581911121920 -> plaintext='x'
-  encoding=306848406544842752 -> plaintext='x'
-  encoding=306851705079726080 -> plaintext='x'
-  encoding=306879192870420480 -> plaintext='x'
-  encoding=306879467748327424 -> plaintext='x'
-  encoding=306882491405303808 -> plaintext='x'
-  encoding=306883590916931584 -> plaintext='x'
-  encoding=306883865794838528 -> plaintext='x'
-  encoding=306895685544837120 -> plaintext='x'
-  encoding=306948462102970368 -> plaintext='x'
-  encoding=307370674568036352 -> plaintext='cherry'
-  encoding=310748374288564224 -> plaintext='orange'
-  encoding=360287970189639680 -> plaintext='pear'
-Traceback (most recent call last):
-  File "/home/liziheng/Desktop/lab4/client1.py", line 126, in <module>
-    pt = Random_Decrypt(ct)
-  File "/home/liziheng/Desktop/lab4/client1.py", line 34, in Random_Decrypt
-    plaintext = AES_DEC(base64.b64decode(ciphertext.encode('utf-8')) ,base_iv)
-  File "/home/liziheng/Desktop/lab4/client1.py", line 23, in AES_DEC
-    plaintext = unpad(padded_data, AES.block_size, style='pkcs7')
-  File "/home/liziheng/.local/lib/python3.10/site-packages/Crypto/Util/Padding.py", line 98, in unpad
-    raise ValueError("Padding is incorrect.")
-ValueError: Padding is incorrect.
+  encoding=576460752303423488 -> plaintext='apple'
+  encoding=720575940379279360 -> plaintext='banana'
+  encoding=738590338888761344 -> plaintext='cherry'
+  encoding=756604737398243328 -> plaintext='cherry'
+  encoding=774619135907725312 -> plaintext='orange'
+  encoding=792633534417207296 -> plaintext='orange'
+  encoding=864691128455135232 -> plaintext='pear'
+  encoding=882705526964617216 -> plaintext='x'
+  encoding=884957326778302464 -> plaintext='x'
+  encoding=887209126591987712 -> plaintext='x'
+  encoding=891712726219358208 -> plaintext='x'
+  encoding=896216325846728704 -> plaintext='x'
+  encoding=900719925474099200 -> plaintext='x'
+  encoding=909727124728840192 -> plaintext='x'
+  encoding=918734323983581184 -> plaintext='x'
+  encoding=936748722493063168 -> plaintext='x'
+  encoding=954763121002545152 -> plaintext='x'
+  encoding=963770320257286144 -> plaintext='x'
+  encoding=972777519512027136 -> plaintext='x'
+  encoding=1008806316530991104 -> plaintext='x'
+  encoding=1013309916158361600 -> plaintext='x'
+  encoding=1017813515785732096 -> plaintext='x'
+  encoding=1022317115413102592 -> plaintext='x'
+  encoding=1026820715040473088 -> plaintext='x'
+  encoding=1035827914295214080 -> plaintext='x'
+  encoding=1044835113549955072 -> plaintext='x'
+  encoding=1053842312804696064 -> plaintext='x'
+  encoding=1058345912432066560 -> plaintext='x'
+  encoding=1060597712245751808 -> plaintext='x'
+  encoding=1061723612152594432 -> plaintext='x'
+  encoding=1062849512059437056 -> plaintext='x'
+  encoding=1067353111686807552 -> plaintext='x'
+  encoding=1071856711314178048 -> plaintext='x'
+  encoding=1080863910568919040 -> plaintext='x'
+  encoding=1116892707587883008 -> plaintext='x'
+  encoding=1125899906842624000 -> plaintext='x'
+  encoding=1134907106097364992 -> plaintext='x'
+
+============================================================
+阶段4：再持续插入 'y' 触发更多分裂
+============================================================
+/home/liziheng/Desktop/lab4/client1.py:151: DeprecationWarning: 'passwd' is deprecated, use 'password'
+  split = Insert('y')
+  插入 'y' 第 5次 -> local_table['y']=5 -> 正常
+  插入 'y' 第10次 -> local_table['y']=10 -> 正常
+  插入 'y' 第15次 -> local_table['y']=15 -> 正常
+  插入 'y' 第20次 -> local_table['y']=20 -> 正常
+
+--- 最终数据库编码分布 ---
+  encoding=288230376151711744 -> plaintext='apple'
+  encoding=576460752303423488 -> plaintext='apple'
+  encoding=720575940379279360 -> plaintext='banana'
+  encoding=738590338888761344 -> plaintext='cherry'
+  encoding=756604737398243328 -> plaintext='cherry'
+  encoding=774619135907725312 -> plaintext='orange'
+  encoding=792633534417207296 -> plaintext='orange'
+  encoding=864691128455135232 -> plaintext='pear'
+  encoding=882705526964617216 -> plaintext='x'
+  encoding=884957326778302464 -> plaintext='x'
+  encoding=887209126591987712 -> plaintext='x'
+  encoding=891712726219358208 -> plaintext='x'
+  encoding=896216325846728704 -> plaintext='x'
+  encoding=900719925474099200 -> plaintext='x'
+  encoding=909727124728840192 -> plaintext='x'
+  encoding=918734323983581184 -> plaintext='x'
+  encoding=936748722493063168 -> plaintext='x'
+  encoding=954763121002545152 -> plaintext='x'
+  encoding=963770320257286144 -> plaintext='x'
+  encoding=972777519512027136 -> plaintext='x'
+  encoding=1008806316530991104 -> plaintext='x'
+  encoding=1013309916158361600 -> plaintext='x'
+  encoding=1017813515785732096 -> plaintext='x'
+  encoding=1022317115413102592 -> plaintext='x'
+  encoding=1026820715040473088 -> plaintext='x'
+  encoding=1035827914295214080 -> plaintext='x'
+  encoding=1044835113549955072 -> plaintext='x'
+  encoding=1053842312804696064 -> plaintext='x'
+  encoding=1058345912432066560 -> plaintext='x'
+  encoding=1060597712245751808 -> plaintext='x'
+  encoding=1061723612152594432 -> plaintext='x'
+  encoding=1062849512059437056 -> plaintext='x'
+  encoding=1067353111686807552 -> plaintext='x'
+  encoding=1071856711314178048 -> plaintext='x'
+  encoding=1080863910568919040 -> plaintext='x'
+  encoding=1116892707587883008 -> plaintext='x'
+  encoding=1125899906842624000 -> plaintext='x'
+  encoding=1134907106097364992 -> plaintext='x'
+  encoding=1135470056050786304 -> plaintext='y'
+  encoding=1135751531027496960 -> plaintext='y'
+  encoding=1136033006004207616 -> plaintext='y'
+  encoding=1136595955957628928 -> plaintext='y'
+  encoding=1137158905911050240 -> plaintext='y'
+  encoding=1139410705724735488 -> plaintext='y'
+  encoding=1139973655678156800 -> plaintext='y'
+  encoding=1140255130654867456 -> plaintext='y'
+  encoding=1140395868143222784 -> plaintext='y'
+  encoding=1140536605631578112 -> plaintext='y'
+  encoding=1141662505538420736 -> plaintext='y'
+  encoding=1142225455491842048 -> plaintext='y'
+  encoding=1142788405445263360 -> plaintext='y'
+  encoding=1143914305352105984 -> plaintext='y'
+  encoding=1144477255305527296 -> plaintext='y'
+  encoding=1145040205258948608 -> plaintext='y'
+  encoding=1146166105165791232 -> plaintext='y'
+  encoding=1148417904979476480 -> plaintext='y'
+  encoding=1150669704793161728 -> plaintext='y'
+  encoding=1151795604700004352 -> plaintext='y'
+
+============================================================
+测试完成！共发生 0 次编码树分裂
+最终 local_table = {'apple': 2, 'pear': 1, 'banana': 1, 'orange': 2, 'cherry': 2, 'x': 30, 'y': 20}
+============================================================
