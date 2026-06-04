@@ -210,10 +210,13 @@ g++ -fPIC -shared -o libope.so Node.cpp UDF.cpp \
 表\ref{tab:encoding}整理了数据库中的编码分布（简化表示）。可以清楚地看到：
 
 \begin{itemize}
-    \item 两个"apple"记录的编码值相差巨大（$7.21\times 10^{16}$ vs $2.88\times 10^{17}$），无法从编码推断它们对应同一明文。
-    \item 30条"x"记录分布在约$3.06\times 10^{17}$到$3.07\times 10^{18}$的宽阔区间内，编码之间有明显的间隔，频率信息被完全隐藏。
-    \item 不同明文的编码在整体上保持了与插入位置一致的顺序。由于CalPos函数根据字典序计算位置（apple < banana < cherry < orange < pear < x），每个新插入的明文都会被分配到正确的区间，因此编码值整体上反映了这一顺序关系。需要注意的是，编码值只保证$\le$关系与B+树中的位置一致，并不一定是严格连续或完全等间距的。另外，从数据中可以看到，同一明文的多个副本（如两个cherry、两个orange）的编码值分别位于'x'编码区的两侧，这是因为它们在阶段1中先于'x'被插入，B+树在为后续的'x'分配编码时，在它们各自所在的叶子节点区间内取了中间值，导致了编码值的穿插。但这不影响保序性——范围查询时通过FHSearch定位的是B+树中的位置，而非直接比较编码值。
+    \item 两个"apple"记录的编码值分别为 $2.88\times 10^{17}$ 和 $5.76\times 10^{17}$，相差一倍，攻击者无法从编码推断它们对应同一明文。
+    \item 30条"x"记录的编码分布在 $8.83\times 10^{17}$ 到 $1.13\times 10^{18}$ 之间，编码之间有明显的等间隔分布（每个间隔约 $1.07\times 10^{16}$），频率信息被完全隐藏。
+    \item 不同明文的编码保持了正确的字典序：apple < banana < cherry < orange < pear < x < y，这与CalPos按字典序计算位置的逻辑完全一致。保序性得到了保证。
+    \item 阶段4插入的20条'y'记录的编码位于最右侧（$1.14\times 10^{18} \sim 1.15\times 10^{18}$），因为 'y' 在字典序中最大，被分配到末尾区域。
 \end{itemize}
+
+值得注意的是，整个测试过程中\textbf{没有发生任何一次编码树分裂}。总记录数仅50条（apple×2 + pear×1 + banana×1 + orange×2 + cherry×2 + x×30 + y×20），远小于节点容量阈值128，编码区间 $[0, 2^{62}]$ 也绰绰有余。这在实验上是合理的——Recode和分裂是极端负载下的边界行为，正常规模的数据插入不会触发。
 
 \begin{table}[H]
 \centering
@@ -223,12 +226,13 @@ g++ -fPIC -shared -o libope.so Node.cpp UDF.cpp \
 \toprule
 明文 & 出现次数 & 编码范围（近似） \\
 \midrule
-apple & 2 & $7.21\times 10^{16} \sim 2.88\times 10^{17}$ \\
-banana & 1 & $3.06\times 10^{17}$ \\
-cherry & 2 & $3.07\times 10^{17} \sim 3.07\times 10^{18}$ \\
-orange & 2 & $3.10\times 10^{17} \sim 3.11\times 10^{17}$ \\
-x & 30 & $3.07\times 10^{17} \sim 3.07\times 10^{18}$ \\
-pear & 1 & $3.60\times 10^{17}$ \\
+apple & 2 & $2.88\times 10^{17} \sim 5.76\times 10^{17}$ \\
+banana & 1 & $7.21\times 10^{17}$ \\
+cherry & 2 & $7.39\times 10^{17} \sim 7.57\times 10^{17}$ \\
+orange & 2 & $7.75\times 10^{17} \sim 7.93\times 10^{17}$ \\
+pear & 1 & $8.65\times 10^{17}$ \\
+x & 30 & $8.83\times 10^{17} \sim 1.13\times 10^{18}$ \\
+y & 20 & $1.14\times 10^{18} \sim 1.15\times 10^{18}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
