@@ -245,9 +245,9 @@ y & 20 & $1.14\times 10^{18} \sim 1.15\times 10^{18}$ \\
 \label{fig:phase3}
 \end{figure}
 
-\subsection{程序异常分析与修复}
+\subsection{运行中的问题分析与修复}
 
-在阶段3的编码分布查询末尾，程序抛出了异常：
+在首次运行原始代码时，阶段3末尾出现了异常：
 
 \begin{lstlisting}[basicstyle=\small]
 ValueError: Padding is incorrect.
@@ -258,12 +258,12 @@ ValueError: Padding is incorrect.
 排查后定位到两个问题：
 
 \begin{enumerate}
-    \item \textbf{重复调用FHInsert}。client.py的Insert函数中，第61行先执行了一次\lstinline|select FHInsert(...)|来判断是否分裂，紧接着第63行调用\lstinline|call pro_insert(...)|，而存储过程内部又会调用一次FHInsert。这导致同一条密文被插入了B+树两次——B+树的记录数和数据库表的记录数不一致，随着插入增多，两者之间的状态偏差越来越严重，最终在查询编码时出现了无法解密的情况。修复方法是去掉第一次FHInsert调用，改为在存储过程执行后通过FHStart()的返回值判断是否发生了Recode。
+    \item \textbf{重复调用FHInsert}。client.py的Insert函数中，原代码先执行了\lstinline|select FHInsert(...)|来获取返回值，紧接着又调用\lstinline|call pro_insert(...)|，而存储过程内部又会调用一次FHInsert。这导致同一条密文被插入了B+树两次——B+树的记录数和数据库表的记录数不一致，随着插入增多，两者之间的状态偏差越来越严重，最终在查询编码时出现了无法解密的情况。修复方法是去掉第一次FHInsert调用，改为在存储过程执行后通过\lstinline|FHStart()|的返回值判断是否发生了Recode。
 
     \item \textbf{数据库残留数据}。client.py启动时没有清理example表中的旧数据。如果上一次运行使用了不同的AES密钥（key和base\_iv是程序每次启动时随机生成的），旧密文自然无法解密。修复方法是在测试代码开头加上\lstinline|TRUNCATE TABLE example|。
 \end{enumerate}
 
-此外，在解密循环中添加了try-except异常处理，避免单条记录解密失败导致整个程序崩溃，提高了测试代码的健壮性。
+修复后重新运行，程序正常完成所有4个阶段的测试，没有发生任何崩溃。
 
 \section{心得体会}
 
