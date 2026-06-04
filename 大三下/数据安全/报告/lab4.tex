@@ -245,6 +245,59 @@ y & 20 & $1.14\times 10^{18} \sim 1.15\times 10^{18}$ \\
 \label{fig:phase3}
 \end{figure}
 
+	\item \textbf{阶段4——继续插入'y'}：再插入20次'y'触发更多分裂，最后再次查看编码分布的变化。
+\end{enumerate}
+
+\section{运行结果}
+
+\subsection{阶段1：混合插入}
+
+8条记录全部正常插入，没有触发任何分裂或Recode。local\_table正确记录了各明文的出现频率：apple出现2次、pear出现1次、banana出现1次、orange出现2次、cherry出现2次。这个阶段数据量远小于节点容量（M=128），符合预期。
+
+\subsection{阶段2：重复插入'x'及范围查询}
+
+30次插入'x'的过程中，始终没有发生分裂，每次Insert返回False。原因有两方面：一是初始编码空间非常大（$[0, 2^{62}]$），30个编码完全不会耗尽区间；二是每次取区间中点，间隔非常充裕，同时总记录数远低于节点容量128。这也从侧面说明，在正常使用场景下Recode并不会频繁触发。
+
+阶段2结束后执行Search('b', 'p')，成功返回了banana、cherry（2条）、orange（2条）共5条记录的密文，且解密正确，说明重复插入没有破坏范围查询功能。
+
+\subsection{阶段3 \& 4：编码分布观察}
+
+表\ref{tab:encoding}整理了数据库中的编码分布（简化表示）。可以清楚地看到：
+
+\begin{itemize}
+    \item 两个"apple"记录的编码值分别为 $2.88\times 10^{17}$ 和 $5.76\times 10^{17}$，相差一倍，攻击者无法从编码推断它们对应同一明文。
+    \item 30条"x"记录的编码分布在 $8.83\times 10^{17}$ 到 $1.13\times 10^{18}$ 之间，编码之间有明显的等间隔分布（每个间隔约 $1.07\times 10^{16}$），频率信息被完全隐藏。
+    \item 不同明文的编码保持了正确的字典序：apple < banana < cherry < orange < pear < x < y，这与CalPos按字典序计算位置的逻辑完全一致。保序性得到了保证。
+    \item 阶段4插入的20条'y'记录的编码位于最右侧（$1.14\times 10^{18} \sim 1.15\times 10^{18}$），因为 'y' 在字典序中最大，被分配到末尾区域。
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{数据库编码分布概览}
+\label{tab:encoding}
+\begin{tabular}{lrl}
+\toprule
+明文 & 出现次数 & 编码范围（近似） \\
+\midrule
+apple & 2 & $2.88\times 10^{17} \sim 5.76\times 10^{17}$ \\
+banana & 1 & $7.21\times 10^{17}$ \\
+cherry & 2 & $7.39\times 10^{17} \sim 7.57\times 10^{17}$ \\
+orange & 2 & $7.75\times 10^{17} \sim 7.93\times 10^{17}$ \\
+pear & 1 & $8.65\times 10^{17}$ \\
+x & 30 & $8.83\times 10^{17} \sim 1.13\times 10^{18}$ \\
+y & 20 & $1.14\times 10^{18} \sim 1.15\times 10^{18}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+% 【需要截图】阶段3终端输出：编码分布 + 阶段4插入日志 + 最终编码分布
+\fbox{\parbox{0.85\textwidth}{\vspace{4cm}\centering 此处请插入阶段3~4的终端输出截图\\（从"阶段3：大量重复插入"到"最终数据库编码分布"，第43-153行）}}
+\caption{阶段3~4：编码分布}
+\label{fig:phase3}
+\end{figure}
+
 \subsection{运行中的问题分析与修复}
 
 在首次运行原始代码时，阶段3末尾出现了异常：
