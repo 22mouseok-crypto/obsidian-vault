@@ -13,14 +13,14 @@
   "filename": "{{{title}}}",
   "filenameDateFormat": "yyyy-MM-dd",
   "attachmentFolder": "笔记同步助手/attachments",
-  "version": "2.10.7",
+  "version": "2.11.1",
   "mergeMode": "messages",
   "messageSortOrder": "desc",
   "messageFolder": "",
   "frequency": 1800,
-  "intervalId": 1690,
+  "intervalId": 220,
   "frontMatterVariables": [],
-  "frontMatterTemplate": "author: {{{author}}}\nsource: {{{siteName}}}\nurl: {{{originalUrl}}}\nsaved: {{{dateSaved}}}\ntags: [笔记同步助手]{{#labels}}[{{{name}}}]{{/labels}}",
+  "frontMatterTemplate": "author: {{{author}}}\nsource: {{{siteName}}}\nurl: {{{originalUrl}}}\nsaved: {{{dateSaved}}}\ntags: [笔记同步助手{{#labels}}, {{{name}}}{{/labels}}]",
   "syncOnStart": true,
   "enableHighlightColorRender": false,
   "highlightManagerId": "omni",
@@ -65,5 +65,8 @@
   },
   "deviceAutoSyncMigrated": true,
   "escapeHashtags": false,
-  "enableDebugLog": false
+  "enableDebugLog": false,
+  "burnAfterReading": false,
+  "burnAfterReadingEnabledAt": "",
+  "pendingBurnDeletes": []
 }
