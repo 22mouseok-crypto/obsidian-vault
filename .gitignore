@@ -12,3 +12,9 @@ Desktop.ini
 
 # Obsidian 同步助手备份
 .obsidian/.obsidian-sync-helper-backup/
+
+
+
+
+# Ignore Smart Environment folder
+.smart-env
