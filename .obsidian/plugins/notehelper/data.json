@@ -1,7 +1,7 @@
 {
   "dateHighlightedFormat": "yyyy-MM-dd HH:mm:ss",
   "dateSavedFormat": "yyyy-MM-dd HH:mm:ss",
-  "apiKey": "",
+  "apiKey": "o56E766OI0ZhPdtHa1XDJhX8bpNM",
   "filter": "ALL",
   "syncAt": "",
   "customQuery": "in:all",
@@ -17,11 +17,11 @@
   "mergeMode": "messages",
   "messageSortOrder": "desc",
   "messageFolder": "",
-  "frequency": 0,
-  "intervalId": 0,
+  "frequency": 1800,
+  "intervalId": 1682,
   "frontMatterVariables": [],
   "frontMatterTemplate": "author: {{{author}}}\nsource: {{{siteName}}}\nurl: {{{originalUrl}}}\nsaved: {{{dateSaved}}}\ntags: [笔记同步助手]{{#labels}}[{{{name}}}]{{/labels}}",
-  "syncOnStart": false,
+  "syncOnStart": true,
   "enableHighlightColorRender": false,
   "highlightManagerId": "omni",
   "highlightColorMapping": {
@@ -53,8 +53,8 @@
   "initialSyncCompleted": false,
   "deviceAutoSync": {
     "desktop-mpnox15x-h1lo": {
-      "frequency": 0,
-      "syncOnStart": false
+      "frequency": 1800,
+      "syncOnStart": true
     },
     "desktop-mpnygfle-g4fc": {
       "frequency": 0,
