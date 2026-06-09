@@ -19,11 +19,11 @@
       "template": ""
     }
   ],
-  "enable_file_templates": false,
+  "enable_file_templates": true,
   "file_templates": [
     {
-      "regex": ".*",
-      "template": ""
+      "regex": "dailynote/.+",
+      "template": ".templates/daily-note-template.md"
     }
   ],
   "syntax_highlighting": true,
