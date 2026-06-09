@@ -15,17 +15,12 @@
   "enable_folder_templates": true,
   "folder_templates": [
     {
-      "folder": "",
-      "template": ""
-    }
-  ],
-  "enable_file_templates": true,
-  "file_templates": [
-    {
-      "regex": "dailynote/.+",
+      "folder": "dailynote",
       "template": ".templates/daily-note-template.md"
     }
   ],
+  "enable_file_templates": false,
+  "file_templates": [],
   "syntax_highlighting": true,
   "syntax_highlighting_mobile": false,
   "enabled_templates_hotkeys": [
