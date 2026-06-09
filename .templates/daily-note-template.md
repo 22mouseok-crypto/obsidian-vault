@@ -1,5 +1,8 @@
-{{date:dddd}} {{date:YYYY-MM-DD}} {{date:DDDD}}
-天气：{{t=await tp.user.weather(); t}}
-心情：
-今日事项：
-
+<%*
+try {
+  const weather = await tp.user.weather();
+  tR.append(`\n天气：${weather}`);
+} catch(e) {
+  tR.append(`\n天气：获取失败（${e.message}）`);
+}
+%>
