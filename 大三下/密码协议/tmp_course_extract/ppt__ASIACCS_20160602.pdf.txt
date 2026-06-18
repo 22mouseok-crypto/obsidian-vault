@@ -1,0 +1,423 @@
+===== PAGE 1 =====
+典型协议攻击分析
+The Request for Better Measurement:
+A Comparative Evaluation of 2FA Schemes
+（ ）
+ASIACCS 2016
+汪 定
+南开大学 密码与网络空间安全学院
+年 月 日
+2025 5 15
+1
+
+===== PAGE 2 =====
+Outline
+o Introduction
+o Preliminaries
+n System architecture
+n Adversary model
+n Evaluation criteria
+o A taxonomy of smart-card-loss attacks
+o Attacks on representative schemes
+n On Li et al.’s scheme
+n On Kumari-Khan’s scheme
+n On Odelu et al.’s scheme
+n On Muhaya’s scheme
+o Conclusion
+
+===== PAGE 3 =====
+Introduction
+o User authentication
+n A process to verify whether someone is with
+the claimed identity.
+n Basic techniques:
+(1) what a user knows, such as passwords, PINs;
+(2) what a user has, such as smart cards, tokens;
+(3) what a user is, such as fingerprints;
+User
+
+===== PAGE 4 =====
+Password-based authentication
+o The most prevalent authentication method
+o In the 2000s, it is widely believed that passwords
+will be replaced by some other techniques.
+o Since 2010, there has been wide disillusionment.
+o Today, we are faced with the same problem that
+confronted us twenty years ago.
+
+===== PAGE 5 =====
+Some inherent problems with passwords
+o Selection of popular passwords
+how popular are our passwords?
+o Password reuse
+n
+In 2007, each user has about 6.5 passwords and 25
+accounts .(According to Florencio et al., WWW 2007)
+n Our 2015 survey: 9.74 unique passwords and 3.15 different
+types of passwords.
+o Password creation using personal info
+o Password leakage
+n Server compromise (2000+ popular sites leaked last year ）
+n Shoulder-surfing, Key-logging, malwares and Trojan horse
+
+===== PAGE 6 =====
+How to enhance password-based authentication
+o Two solutions
+n Password + Token +
+TPAKE+ LRPS
+n
+1) Threshold PAKE to prevent sever-side leakage
+2) leakage-resilient password systems (LRPS)
+to prevent user-side leakage
+At NDSS 2012, Yan et al.
+show e d that LRPS is
+inherently infeasible
+with o u t incorporating
+certain trusted devices.
+
+===== PAGE 7 =====
+Smart-card-based password authentication
+o Essential aim: ensuring two-factor security
+
+===== PAGE 8 =====
+Not an easy task
+—— A history of “break-fix-break-fix”
+
+===== PAGE 9 =====
+Challenges (continue)
+o Have to reconcile many design goals
+
+===== PAGE 10 =====
+Challenges (continue)
+o Trade-offs
+o Conflicts
+Security
+Performance
+Usability
+
+===== PAGE 11 =====
+Contributions of this paper
+o We revisit 19 improvements over Xu et al.’s
+2009 scheme and show most of them are lack
+of fair, thorough measurement.
+o We show that some criteria in the evaluation
+metric are unworkable due to a number of
+ambiguities and redundancies.
+o We show that there are at least 8 different
+types of strategies for smart-card-loss-attack.
+o We provide an evaluation of 26 two-factor
+schemes based on the refined metric.
+
+===== PAGE 12 =====
+Outline
+o Introduction
+o System model, attacker model and metric
+o A taxonomy of smart-card-loss attacks
+o Attack on previous schemes
+o Conclusion
+
+===== PAGE 13 =====
+System architecture
+o User U is with a password and a smartcard.
+o Serves S stores some info （ no passwod) about U.
+o Serves S may be with a public-private key pair (pk,
+sk).
+o User U and serves S share some paramters
+through the smartcard.
+
+===== PAGE 14 =====
+Adversarial model
+o powerful adversary
+(1) Have full control of the communication channel
+(2) May either
+(i) Obtain victim’s password , or
+(ii) Get access to victim’s smart card and breach it
+Note that, when
+but not both i and ii to avoid trivial cases.
+evaluating privacy ,
+victim’s identity
+(3) Enumerate offline all the items in the Cartesian
+is considered sensitive.
+product <10^12.
+(4) Learn victim’s identity when evaluating security.
+
+===== PAGE 15 =====
+Evaluation metric
+o Security goals
+o Desirable features
+o Performance
+n Computation cost
+n Communication cost
+n Storage cost
+
+===== PAGE 16 =====
+Defects in the metric
+o Ambiguities [Wang et al. IEEE TDSC’15]
+n DA1: no password-related verifier table
+DA1-Weak, DA1-Strong
+n DA2: freely user password choice
+DA2-Local-Insecure, DA2-Local-Secure , DA2-Interactive
+n DA8: User anonymity
+DA8-Weak , DA8-Strong
+n SR6 and other security requirements (discussed later ）
+
+===== PAGE 17 =====
+Defects in the metric(2)
+o Redundancies
+n DA4 SR6
+n DA3 SR9
+
+===== PAGE 18 =====
+Outline
+o Introduction
+o System model, attacker model and metric
+o A taxonomy of smart-card-loss attacks
+o Attack on previous schemes
+o Conclusion
+
+===== PAGE 19 =====
+SR6: Resist smart-card-loss attack
+o Explication
+n SR6 relates to any attacker who has gained the
+victim’s smart card
+n All the other 8 security requirements deal with
+an attacker without the victim’s smartcard.
+o Classificaton
+n Whether need to extract the card
+n Whether need to return the card
+n # of online interactions with the server
+
+===== PAGE 20 =====
+SR6: smart-card-loss attack (2)
+o Highlights
+n We, for the first time, show that there are at
+least 8 kinds of smart-card-loss-attacks.
+n This also make the measurement of SR6 to be
+more fine-grained.
+
+===== PAGE 21 =====
+Outline
+o Introduction
+o System model, attacker model and metric
+o A taxonomy of smart-card-loss attacks
+o Attacks on representative schemes
+o Conclusion
+
+===== PAGE 22 =====
+Notations and abbreviations
+
+===== PAGE 23 =====
+Revisting 19 improvements over
+Xu et al.’s scheme in 2009
+o Using Kumari-Khan’s scheme for
+presentation
+
+===== PAGE 24 =====
+Review of Kumari-Khan’s scheme
+o Kumari-Khan’s scheme
+n the registration phase
+n the login and verification phase
+n the password update phase
+Yang, G., Wong, D., Wang, H., Deng, X.: Two-factor mutual
+authentication based on smart cards and passwords. Int.
+J. Commun. Syst., 27(12):3939–3955, 2014.
+
+===== PAGE 25 =====
+Review of Kumari-Khan’s scheme (1/3)
+—— User registration phase
+Master secret p, q;
+Choose ID
+i;
+
+===== PAGE 26 =====
+Review of Kumari-Khan’s scheme (2/3)
+—— Login and verification phase
+
+===== PAGE 27 =====
+Review of Kumari-Khan’s scheme (3/3)
+—— Password Change phase
+p Password can be locally changed
+p There is explicit verification of the old pw
+Change password
+
+===== PAGE 28 =====
+Type-II smart-card-loss attack
+on Kumari-Khan’s scheme
+obtains {B , F } in U ’s smart card
+i i i
+Costs $30.56 and 16.47 hours by
+resorting to the Amazon EC2
+C4.4X-large cloud computing
+service
+
+===== PAGE 29 =====
+Type-IV smart-card-loss attack
+on Kumari-Khan’s scheme
+obtains {B , h(.)} in U ’s smart card
+i i
+Interceptes from public channel
+Costs $30.56 and 16.47 hours by
+resorting to the Amazon EC2
+C4.4X-large cloud computing
+service
+
+===== PAGE 30 =====
+De-synchronization attack
+on Kumari-Khan’s scheme
+
+===== PAGE 31 =====
+Whether
+with
+formal
+proofs
+
+===== PAGE 32 =====
+Conclusion
+o We, for the first time, provide a taxonomy of
+smart-card-loss attacks.
+o We show that some critical criteria are unworkable
+due to a number of ambiguities and redundancies.
+o We further propose viable fixes and refinements
+to make an through measurement possible.
+o We provide a comparative evaluation of 26 two-
+factor schemes based on the refined metric,
+highlighting the design challenges and difficulties.
+
+===== PAGE 33 =====
+THANK YOU & QUESTIONS
+
+===== PAGE 34 =====
+A dilemma
+o The password change attack is simple
+n The only assumption made about attacker is that she can
+get temporary access to the victim’s card.
+o How to fix it is tricky
+n Suppose an additional parameter
+is now stored in the card memory.
+n Now, an offline guessing attack arises:
+o Our solution
+n make an acceptable trade-off
+
+===== PAGE 35 =====
+Effectiveness of our solution
+o Theoretical results
+n
+o Empirical results
+n Datasets
+— 32 million Rockyou passwords
+— 6.48 million CSDN passwords
+n Metric: guessing entropy (GE)
+
+===== PAGE 36 =====
+Outline
+o Introduction
+o System model and adversary model
+o Attacks on Yang et al.’s scheme
+o Attack on Li et al.’s scheme
+o Conclusion
+图1 802.11i安全框架
+
+===== PAGE 37 =====
+Attacking Li et al.’s PSCAV
+p Our attack on Yang et al.’s scheme
+n Exploits a vulnerability in the password change phase
+n Assumes the attacker has got the victim’s card
+n Consequence: the card cannot be usable
+p The following attack on Li et al.’s scheme
+n
+Exploits a vulnerability in the login phase
+n Assumes the attacker can control the communication channel
+n Consequence: the card cannot be usable
+
+===== PAGE 38 =====
+Review of Li et al.’s PSCAV
+o Li et al.’s PSCAV
+n the registration phase
+n the pre-computation phase
+n the login and verification phase
+n password change phase
+Li, X., Qiu, W., Zheng, D., Chen, K., Li, J.: Anonymity enhancement on robust
+and efficient password-authenticated key agreement using smart cards. IEEE
+Trans. Ind. Electron. 57(2), 793–800 (2010)
+
+===== PAGE 39 =====
+Review of Wang s scheme (1/2)
+’
+—— User registration
+
+Master secret ;
+Choose C，
+
+===== PAGE 40 =====
+Review of Wang s scheme(2/2)
+’
+—— Login and verification phase
+
+===== PAGE 41 =====
+De-synchronization attack
+on Li et al.’s scheme
+
+===== PAGE 42 =====
+Discussions on countermeasures
+o Attacking consequences
+— The card is completely unable
+o Fixes
+n D
+n
+
+===== PAGE 43 =====
+Conclusion
+o We introduce the concept of two-factor
+authentication, and elaborate on the
+challenges in designing this type of schemes.
+o Two practical attacks are demonstrated on Hsieh-
+Leu’s scheme and Wang’s scheme, respectively.
+o Two new security threats on two-factor
+authentication are highlighted:
+n Password change attack
+n De-synchronization attack
+
+===== PAGE 44 =====
+THANK YOU & QUESTIONS
+
+===== PAGE 45 =====
+Side-Channel Attack
+Side
+Channel
+Attacks
+
+===== PAGE 46 =====
+Various attacks
+o Offline password guessing attack
+o Smart card loss attack
+o Stolen verifier attack
+o User impersonation attack
+o Server masquerading attack
+o Replay attack
+o Parallel session attack
+o Denial of service attack
+o Password disclosure to server (Insider attack)
+o Forward secrecy
+o Key compromise impersonation attack
+o Unknown key share attack
+o …
+
+===== PAGE 47 =====
+Functionalities
+o key agreement
+o mutual authentication
+o local password change
+o user anonymity (initiator un-traceability)
+o no verifier table
+o support weak password
+o non-tamper resistant smart cards
+o repairability
+
+===== PAGE 48 =====
+Performance
+o Computation complexity ( a big hill )
+cryptographic operations are often computation-intensive, like
+modular exponentiation, modulo inversion, pairing …
+o Storage cost ( not a big problem)
+o Communication overhead (not a big
+problem)

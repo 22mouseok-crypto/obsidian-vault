@@ -1,0 +1,1779 @@
+===== PAGE 1 =====
+第11讲 从 到
+SSL 1.0 TLS 1.3
+汪 定
+南开大学 密码与网络空间安全学院
+wangding@nankai.edu.cn
+2026年5月21日
+1
+
+===== PAGE 2 =====
+登录网页时出现的一个锁形标志
+
+===== PAGE 3 =====
+HTTP Over SSL(TLS): TLS in IE
+2026-5-21
+
+===== PAGE 4 =====
+提 纲
+CONTENTS
+1 . 传 输 层 安 全 的 发 展 历 史
+2 . S S L 3 . 0 / T L S 1 . 0
+3 . T L S 1 . 2
+4 . T L S 1 . 3
+5 . 总 结
+4
+
+===== PAGE 5 =====
+回顾：TCP/IP网络协议栈
+应用层
+SMTP HTTP TELNET DNS SNMP
+传输层
+UDP
+TCP
+网络层 IP ICMP IGMP
+网络接口层 ARP RARP
+2026-5-21
+
+===== PAGE 6 =====
+网络安全协议栈
+Communication layers Security protocols
+，
+Application layer HTTPS, SSH, S/MIME, PGP, Kerberos
+SRP, EKE, SPEKE, HMQV, OPAQUE,…
+至今） （ ）
+Transport layer TLS (1999- , SSL 1994-1998
+Network layer IPSec
+Data Link layer [PPTP, L2TP], IEEE 802.1X,
+IEEE 802.1AE, IEEE 802.11i (WPA2)
+量子密钥分配）；利用信道物
+Physical layer QKD(
+理特征的认证和密钥交换协议
+
+===== PAGE 7 =====
+TCP/IP的安全性问题及其解决方法
+网络层安全
+应用层
+SMTP HTTP TELNET DNS SNMP
+传输层
+TCP UDP
+网络层
+IP ICIMPP / IIPGSMePc
+网络接口层
+ARP RARP
+
+===== PAGE 8 =====
+传输层安全
+应用层 SMTP, HTTP, TELNET, DNS,
+SNMP
+SSSSLl//TTLLSS
+传输层
+TCP
+UDP
+网络层
+IP, ICMP ,IGMP
+网络接口层
+ARP, RARP
+SSL: Secure Sockets Layer
+TLS: Transport Layer Security
+
+===== PAGE 9 =====
+SSL/TLS Protocol
+1. Application
+1. Application
+1. Application
+Change Cipher Spec
+SSL/TLS
+Handshake Alert
+2. Transport
+2. Transport
+Fragmentation
+TCP, UDP
+TCP, UDP Compression
+Authentication
+3. Internet 3. Internet
+Encrpytion
+4. Network 4. Network 2. Transport
+TCP, UDP
+ahsdnaH
+droceR
+reyaL
+ek
+reyaL
+Socket
+
+===== PAGE 10 =====
+TLS/SSL Protocol Layers
+Application Application Application
+Sockets
+TCP TLS/SSL Fragmentation
+IP TCP
+Compression
+IP
+Authentication
+Insecure Secure
+Encryption
+Transport Layer Transport Layer
+Transport
+
+===== PAGE 11 =====
+传输层安全的历史
+p 1994 年初 Netscape 公司内部开发 SSL 1.0
+l Lost in the mists of time
+p 1994 年底 Netscape 公司开发 SSL 2.0 和 3.0
+l SSL v2 released in 1995
+l SSL v3 also released in 1995 due to bugs in v2
+p 1996 年 IETF 成立工作组
+l Transport Layer Security (TLS) committee
+p 1999 年推出 TLS 1.0
+l Based on SSL 3.0, but not interoperable (uses different cryptographic
+algorithms)
+l http://www.ietf.org/rfc/rfc2246.txt
+p 2003 年推出 TLS 扩展
+
+===== PAGE 12 =====
+传输层安全的历史
+p 年推出
+2006 TLS 1.1
+lSome protection against CBC-mode attacks: explicit
+IV, better padding
+lhttp://www.ietf.org/rfc/rfc4346.txt
+p 年推出
+2008 TLS 1.2
+l First collusion attacks on MD5 in 2005; Certificate
+forging in 2008: finally, TLS changes to SHA 1 and
+SHA-256; Adds AES-GCM
+lhttp://www.ietf.org/rfc/rfc5246.txt
+p 年 月推出
+2018 8 TLS 1.3
+l http://www.ietf.org/rfc/rfc8446.txt
+
+===== PAGE 13 =====
+为什么需要
+TLS1.3
+p 2014 年启动修订， 2018 年 8 月正式推出 TLS1.3
+p 安全考量
+l RSA 密钥传输 —— 不支持前向安全性
+l CBC 加密模式 —— 易受 BEAST 和 Lucky 13 攻击
+l RC4 流密码 —— 在 HTTPS 中使用并不安全
+l SHA-1 哈希函数 —— 建议以 SHA-2 取而代之
+l 任意 Diffie-Hellman 组 —— CVE-2016-0701 漏洞
+l 密钥输出 —— 易受 FREAK 和 LogJam 攻击
+p 效率考量
+l 模幂运算慢  仅支持 ECC
+l 握手需要 2 轮（四次交互） 握手需要 1 轮
+
+===== PAGE 14 =====
+传输层安全协议的发展历程
+
+===== PAGE 15 =====
+协议概览
+SSL
+SSL Client
+SSL Server
+Port 443
+SSL Record Protocol
+当前状态 当前状态
+SSL Handshake Protocol
+预备状态 预备状态
+SSL Change Cipher Spec Protocol
+SSL Record Protocol
+当前状态 当前状态
+
+===== PAGE 16 =====
+Client Server
+协
+SSL
+议详述
+Pre_Master_secret
+2026-5-21
+
+===== PAGE 17 =====
+的目标
+SSL
+p 安全功能
+l SSL 被设计用来使用 TCP 提供一个可靠的端到端安全服务
+l 为两个通信实体之间提供
+保密性
+•
+完整性
+•
+身份认证
+•
+密钥交换
+•
+p 可扩展性
+l 新的密钥算法可以容易的加入
+p 高效性
+l 减少对 CPU 的使用
+p 透明性
+l 对应用层透明
+
+===== PAGE 18 =====
+的透明性
+SSL
+应用程序
+p 透明性
+..... 应用协议
+Telnet HTTP FTP
+明文数据流
+RSA DES RC4
+IDEA DH SHA 协议实现
+SSL
+.........
+密文数据流
+TCP ........ SPX
+可靠传输协议
+Ethernet Ethernet
+
+===== PAGE 19 =====
+的安全功能
+SSL
+p p ：
+Data Encryption: Key Exchange
+l RC2-40 l RSA
+l RC4-128 l Fixed Diffie-Hellman
+l DES l Ephemeral Diffie-Hellman
+l DES 40 l Anonymous Diffie-Hellman
+l 3DES l Fortezza
+l IDEA
+l AES 128
+l Fortezza
+p
+Data Compression:
+l PKZip
+p
+Message Digest: l WinZip
+l gzip
+l MD5
+l ....
+l SHA-1
+
+===== PAGE 20 =====
+中的通信实体
+SSL
+p 通信实体（ entity ）是指 SSL 的参与者
+p 在 SSL v3 中定义了两个通信实体
+客户
+l
+客户是协议的发起者
+•
+服务器
+l
+服务器是协议的响应者
+•
+（ 客户
+SSL Client SSL ） （ 服务器）
+SSL Server SSL
+2026-5-21
+
+===== PAGE 21 =====
+的协议分层
+SSL
+SSL SSL Change
+SSL Alert HTTP
+Handshake Cipher Spec
+Protocol Protocol
+Protocol Protocol
+SSL Record Protocol
+TCP
+IP
+握手协议：用来实现密钥交换和认证 密码规约修改协议：启用新的密码参数
+记录层协议：用来安全传输数据 报警协议：用来报警和处理异常
+2026-5-21
+
+===== PAGE 22 =====
+一个问题
+p Question ：
+为什么在 中存在两层：握手层和记录层？
+SSL
+p Answer ：
+两个协议功能相对独立，因此独立设计。
+2026-5-21
+
+===== PAGE 23 =====
+Key Terms of SSL
+p在 中，有几个关键概念：
+SSL
+l SSL Session （ SSL 会话）
+l SSL Connection （ SSL 连接）
+l SSL Session State （ SSL 会话状态）
+l SSL Connection State （ SSL 连接状态）
+2026-5-21
+
+===== PAGE 24 =====
+会话
+SSL
+（会话）
+p SSL session
+l An association between client & server
+（是客户和服务器之间的一个关联）
+l Created by the Handshake Protocol
+（通过握手协议来创建）
+l Define a set of cryptographic parameters
+（定义了一套加密参数）
+l May be shared by multiple SSL connections
+（可以被多个 连接共享）
+SSL
+2026-5-21
+
+===== PAGE 25 =====
+连接
+SSL
+p （连接）
+SSL connection
+l A transient, peer-to-peer, communications link （是一种通
+信实体具有对等关系的通信连接）
+l Associated with one SSL session
+（与一个 关联）
+SSL Session
+l 连接是暂时的，用后即消失
+2026-5-21
+
+===== PAGE 26 =====
+会话 连接
+SSL vs. SSL
+p 连接 & 会话的异同
+l 会话是用来协商安全参数的（如加密算法 , hash 函数等）
+l 连接是用来安全传输应用程序数据的（如加密传送消息）
+l 理论上，双方可以存在多个同时会话，但在实践中并未
+用到这个特性
+l 在任意一对通信双方之间，先后可以有多个安全连接
+l 每个连接都只和一个会话相关
+l 一个会话可能包含多个安全连接
+l 会话定义了一组可以被多个连接共用的密码安全参数，
+对于多个连接，可以利用同一会话来避免对新的安全参
+数进行代价昂贵的协商。
+2026-5-21
+
+===== PAGE 27 =====
+会话与连接的关系
+p 连接 & 会话
+Connection 1
+Session
+Connection 6
+
+===== PAGE 28 =====
+会话与会话状态
+SSL
+pSession States( 会话状态）：
+l标识一个具体的
+SSL
+会话的信息
+p客户和服务器必须存储已经建立的会话及其相
+应会话状态的信息，以供多个连接复用
+p会话状态信息供握手协议使用
+l特别是恢复一个会话时（避免重新建立会话）
+
+===== PAGE 29 =====
+会话和会话状态
+SSL
+p SSL 会话状态的具体内容
+lSession Identifier ( 会话标识符）
+lThe X.509 certificates of Peer Certificate Server (Client)
+（客户或服务器的 证书，如果不需要验证，则
+X.509
+该信息为空）
+lCompression Methods （压缩算法）
+lCipher Spec （握手协议已经协商的一套加密参数）
+对称加密算法
+•
+算法
+• MAC
+加密属性参数（包括 长度等）
+• Hash
+2026-5-21
+
+===== PAGE 30 =====
+连接状态
+SSL
+pConnection States ( 连接状态） contains all the
+；
+information in one specific connection
+pOnly when the connection exists, the connection
+states will be remembered
+2026-5-21
+
+===== PAGE 31 =====
+连接状态（ ）
+SSL 2
+p SSL 连接状态的具体内容：
+n Server and client randoms: 本次连接的随机数（包括客户和
+服务器的）
+n Server write MAC secret( 服务器 MAC 计算密钥）：服务器对
+要发送的数据进行 运算的秘密值，它也是客户接收时
+hash
+进行 运行的秘密值
+Hash
+n Client write MAC secret （客户端 MAC 计算密钥）：客户对
+要发送的数据进行 运算的秘密值 它也是服务器接收数
+Hash ,
+据时进行 运算的秘密值
+hash
+2026-5-21
+
+===== PAGE 32 =====
+连接状态
+SSL (3)
+n Server write key （服务器发送数据的加密密钥）：服务器
+用来加密数据、客户用来解密数据的对称加密密钥
+n Client write key （客户端发送数据的加密密钥） ：客户用
+来加密、服务器用来解密的对称加密密钥
+n Initialization Vectors (IV) ：采用密码反馈模式时的初始化
+向量
+n Sequence Vectors ：客户 / 服务器为其在一个连接中发送和
+接收消息分配的序列号
+2026-5-21
+
+===== PAGE 33 =====
+连接状态（ ）
+SSL 4
+p Write Key （实际就是会话密钥）
+Key1（M1）
+Client Different
+Server
+Connections
+Key2（M2）
+Client
+Server
+2026-5-21
+
+===== PAGE 34 =====
+连接状态（ ）
+SSL 5
+pMAC Secret （实际就是 MAC 运算的秘密值）
+MAC（S1， M1）
+Client Different
+Server
+Connections
+MAC（S2， M2）
+Client
+Server
+2026-5-21
+
+===== PAGE 35 =====
+的协议分层
+SSL
+SSL SSL Change
+SSL Alert HTTP
+Handshake Cipher Spec
+Protocol Protocol
+Protocol Protocol
+SSL Record Protocol
+TCP
+IP
+握手协议：用来实现密钥交换和认证 密码规约修改协议：启用新的密码参数
+记录层协议：用来安全传输数据 报警协议：用来报警和处理异常
+2026-5-21
+
+===== PAGE 36 =====
+记录协议
+SSL
+p记录协议的位置
+p建立在可靠的传输协议（如
+TCP
+）基础上
+p提供连接安全性
+l 保密性：使用对称加密算法
+l 完整性：使用 HMAC 算法
+2026-5-21
+
+===== PAGE 37 =====
+记录协议
+SSL
+p 根据当前会话状态，给出压缩算法， Cipher Spec 给出对称加
+密算法、 算法、密钥长度、 长度、 长度，以及连
+MAC Hash IV
+接状态中给出的 和 的随机数、加密密钥、 秘
+Client Server MAC
+密值、 ，消息序列号等，对将要传送的数据实施以下操作：
+IV
+l 压缩 / 解压
+l 加密 / 解密
+l MAC 计算 /MAC 校验
+2026-5-21
+
+===== PAGE 38 =====
+记录协议
+SSL
+p 用来封装高层的协议
+l Change Cipher Spec protocol
+l Alert protocol
+l Handshake protocol
+l Application protocol (HTTP, FTP, TELNET, et al)
+2026-5-21
+
+===== PAGE 39 =====
+Change Cipher Spec (Cont.)
+pQuestion ：在 Change Cipher Spec 中，如果发送该消
+息后，将使用新的加密、压缩和 算法，请问：
+MAC
+它和以前的这些信息是一个什么关系 换句话说，握
+(
+手层协商的加密参数等何时对记录层生效）
+?
+pAnswer: SSL 使用另外两个状态来管理这种关系
+l预备状态
+l当前操作状态
+2026-5-21
+
+===== PAGE 40 =====
+Change Cipher Spec (Cont.)
+pPending State （预备状态）
+l用来保存握手协议协商的密码信息（如压缩、加密、
+计算 的算法以及密钥等）
+MAC
+pCurrent State （当前状态）
+l用来保存记录层正在使用的密码信息（如压缩、加
+密、计算 的算法以及密钥等）
+MAC
+2026-5-21
+
+===== PAGE 41 =====
+Change Cipher Spec (Cont.)
+SSL Client SSL
+Server
+SSL Record Protocol
+当前状态
+当前状态
+SSL Handshake Protocol
+预备状态
+预备状态
+SSL Change Cipher Spec Protocol
+SSL Record Protocol
+当前状态
+当前状态
+2026-5-21
+
+===== PAGE 42 =====
+Alert protocol
+pAlert Protocol ： SSL 警报协议
+l用于将
+SSL
+握手或者数据加密等过程有关的告警传输
+给对方，向对方发出警告或者中止当前连接
+l根据错误程度，
+Alert
+消息分为两类：警告消息
+（ ）和致命消息（ ）
+warning Msg Fatal Msg
+致命消息将导致连接被立即中止，并将与这个连接相关的会话
+•
+（会话标识符）作废，以免这个会话被继续用来建立新的连接
+2026-5-21
+
+===== PAGE 43 =====
+Alert protocol (Cont.)
+p根据功能，
+Alert
+消息被分为两类：
+和
+Close_Notify Error Alerts
+lClose_Notify: 通知对方关闭该连接
+lAlert Error ：通知对方关闭该连接
+l区别：
+前者关闭的连接可以被恢复
+•
+后者不能
+•
+p Alert 消息被加密传输
+2026-5-21
+
+===== PAGE 44 =====
+Alert protocol (Cont.)
+p 警告消息（ Warning Msg ）
+l 结束通知
+l 无证书
+l 证书出错
+l 不支持的证书
+l 证书撤销
+l 证书过期
+l 未知证书
+2026-5-21
+
+===== PAGE 45 =====
+Alert protocol (Cont.)
+p 致命消息（ Fatal Msg ）
+l 意外消息
+l MAC 记录出错
+l 解压失败
+l 握手失败
+l 非法参数
+2026-5-21
+
+===== PAGE 46 =====
+Alert protocol (Cont.)
+p 警报协议格式
+Level Alert
+字段取值 含义
+警告
+Level 1
+即将关闭
+2 SSL
+均为严重警告消息
+Alert xx
+yy
+2026-5-21
+
+===== PAGE 47 =====
+Application protocol
+p 应用层协议
+l 加密传输
+不透明的内容（大于 字节）
+1
+2026-5-21
+
+===== PAGE 48 =====
+Working Process of Record layer
+p 发方
+l Step 1 分片：从上层接收任意大小的数据块（ Records ）
+l Step 2 压缩：用当前会话状态中给出的压缩算法明文结
+构 压缩为压缩记录
+SSLPlaintext SSLCompressed
+l Step 3 MAC 计算：用当前会话状态中指定的 MAC 算法
+对 计算消息摘要
+SSLCompressed
+l Step 4 加密：用加密算法加密压缩数据和消息摘要，形
+成密文结构
+SSL Ciphertext
+l Step 5 封装发送：将数据封装为可靠传输层协议的数据
+包，并发送到可靠传输层协议
+TCP
+2026-5-21
+
+===== PAGE 49 =====
+Working Process of Record layer (Cont.)
+2026-5-21
+
+===== PAGE 50 =====
+Working Process of Record layer (Cont.)
+p 第一步：分片
+2026-5-21
+
+===== PAGE 51 =====
+Working Process of Record layer (Cont.)
+p 第二步：压缩
+§
+无损压缩
+§
+不会增加 字节
+1024
+以上长度的内容 短消息）
+(
+§
+没有默认压缩算法
+2026-5-21
+
+===== PAGE 52 =====
+Working Process of Record layer (Cont.)
+p 第三步： MAC 计算
+消息摘要计算
+2026-5-21
+
+===== PAGE 53 =====
+Working Process of Record layer (Cont.)
+p 第四步：加密
+消息摘要计算
+2026-5-21
+
+===== PAGE 54 =====
+Working Process of Record layer (Cont.)
+p 第五步：封装发送
+消息摘要计算
+协议头
+SSL
+2026-5-21
+
+===== PAGE 55 =====
+Working Process of Record layer (Cont.)
+2026-5-21
+
+===== PAGE 56 =====
+记录协议的工作流程
+2026-5-21
+
+===== PAGE 57 =====
+记录协议的工作流程
+2026-5-21
+
+===== PAGE 58 =====
+问题
+p Question ：
+中使用的密码及相关信息如何得到？
+Record protocol layer
+p Answer ：
+由 协商并进一步计算得到。
+Handshake protocol
+2026-5-21
+
+===== PAGE 59 =====
+Handshake protocol
+p 握手协议
+l 握手协议时 SSL 中最复杂的部分
+l 此协议允许客户端和服务器相互认证、协商加密和
+算法、会话密钥，通过 记录传递
+MAC SSL
+l 握手协议在传递应用程序数据之前使用
+2026-5-21
+
+===== PAGE 60 =====
+功能回顾
+Handshake protocol
+p 握手协议层的功能
+l 客户和服务器之间相互身份认证
+l 协商密钥交换算法
+l 协商加密算法和密钥
+l 协商压缩算法
+l 生成密钥
+l 完成密钥交换
+2026-5-21
+
+===== PAGE 61 =====
+使用的协议
+Handshake protocol
+p 使用三个协议
+l SSL Handshake protocol
+核心协议
+•
+l SSL Change Cipher Spec
+改变参数时使用
+•
+l SSL Alert protocol
+出现错误时使用
+•
+2026-5-21
+
+===== PAGE 62 =====
+的作用
+Handshake protocol
+p 握手协议建立一个会话或者恢复一个会话
+p 握手协议中每次握手都会生成新的加密密钥， MAC
+秘密值和初始化向量等。
+p Client 和 Server 之间要建立一个连接，必须进行握手
+过程，每次握手都会存在一个会话和一个连接，连
+接一定是新的，但会话可能是已经存在的（比如，
+恢复的旧会话）。
+2026-5-21
+
+===== PAGE 63 =====
+握手协议的本质
+p 握手协议（ Handshake protocol ）本质上是一个密钥交换协
+议，但它也包含认证功能，因此可以视为认证和密钥交换协
+议
+p 握手协议主要由四个过程组成
+l 建立安全能力
+l 服务器认证和密钥交换
+l 客户端认证和密钥交换
+l 完成
+p Question ：为什么需要服务器密钥交换和客户端密钥交换两
+个过程？
+p Answer ：因为 SSL 在同一个连接的两个方向采用不同的密钥
+2026-5-21
+
+===== PAGE 64 =====
+握手协议概览
+SSL
+Client Server
+ClientHello -------->
+ServerHello
+<--------
+Certificate*
+ServerKeyExchange*
+CertificateRequest*
+<-------- ServerHelloDone
+Certificate*
+ClientKeyExchange
+CertificateVerify*
+[ChangeCipherSpec]
+Finished --------->
+[ChangeCipherSpec]
+Finished --------->
+[ChangeCipherSpec]
+<-------- Finished
+Application Data <-------> Application Data
+
+===== PAGE 65 =====
+的第一步
+Handshake protocol
+Client Server
+-------->
+ClientHello ServerHello
+<--------
+第一步完成：
+（ ）客户告诉服务器自己的要求或能力
+1
+（ ）服务器按照自己的要求或能力选择并回应客户
+2
+2026-5-21
+
+===== PAGE 66 =====
+的第二步
+Handshake protocol
+Client Server
+Certificate*
+ServerKeyExchange*
+CertificateRequest*
+<-------- ServerHelloDone
+Certificate*
+ClientKeyExchange
+CertificateVerify*
+[ChangeCipherSpec]
+Finished ---------->
+第二步完成（服务器）： 第二步完成（客户）：
+（ 1 ）向客户证明自己的身份 （ 1 ）向服务器证明自己的身份（可选）
+（ 2 ）完成密钥交换 （ 2 ）完成密钥交换
+（ 3 ）向客户提出自己的认证要求 （ 3 ）向服务器发送自己的认证校验信
+（可选） 息（可选）
+2026-5-21 （ 4 ）告诉客户自己本阶段结束 （ 4 ）告诉服务器自己本阶段结束
+
+===== PAGE 67 =====
+的第三步
+Handshake protocol
+Client Server
+[ChangeCipherSpec]
+Finished -------->
+[ChangeCipherSpec]
+<-------- Finished
+第三步完成（服务器）： 第三步完成（客户）：
+（ ）向客户通告启用新 （ ）向服务器通告启
+1 1
+的密码参数 用新的密码参数
+（ ）告诉客户自己本阶 （ ）告诉服务器自己
+2 2
+段结束 本阶段结束
+2026-5-21
+
+===== PAGE 68 =====
+的第四步
+Handshake protocol
+Client Server
+Application Data <-------> Application Data
+第四步完成（服务器）： 第四步完成（客户）：
+（ 1 ）利用启用的密码参 （ 1 ）利用启用的密码参
+数加密发送数据 数加密发送数据
+2026-5-21
+
+===== PAGE 69 =====
+总结
+SSL Handshake protocol
+Client Server
+ClientHello -------->
+ServerHello
+<--------
+Certificate*
+ServerKeyExchange*
+CertificateRequest*
+<-------- ServerHelloDone
+Certificate*
+ClientKeyExchange
+CertificateVerify*
+[ChangeCipherSpec]
+Finished --------->
+[ChangeCipherSpec]
+Finished --------->
+[ChangeCipherSpec]
+<-------- Finished
+Application Data <-------> Application Data
+
+===== PAGE 70 =====
+第一阶段： 建立安全能力（客户 服务器）
+->
+SSL Client
+SSL Server
+Client Hello
+Port 443
+The Client Hello message
+p SSL Version (highest) that is understood by the client. （ SSL 版本号）
+p A Random number to compute the secret key （随机数，防重放攻
+击，记为 ）
+ClientHello.random
+p Session Identifier （会话标识）
+l 0 ： 新建一个会话和连接
+l 非 0 ：在已有会话上建立连接
+p Data Encryption to identify the encryption methods available to the
+（密码组），包括两个部分
+Client
+l 密钥交换算法（ Key Exchange ）
+l 密码规范（ cihper Spec ）
+p Data Compression method for message exchange （压缩方法）
+
+===== PAGE 71 =====
+第一阶段： 建立安全能力（服务器 客户）
+->
+SSL Client
+SSL Server
+Server Hello
+Port 443
+The Server Hello message
+p SSL Version (highest) that is understood by the server. （ SSL 版
+本号）
+p A Random number to compute the secret key （随机数，防重放
+攻击，记为 ）
+ServerHello.random
+p Session Identifier （会话标识）
+p Data Encryption to identify the encryption methods （密码组）
+p Data Compression method for message compression （压缩方法）
+
+===== PAGE 72 =====
+问题 ：两个 消息如何产生？
+1 Hello
+p 客户端根据自己的实际情况构建 client Hello message
+p Question: How does the server compute the server hello
+message and send to client?
+p Answer:
+l SSL Version?
+The highest the client available
+l A Random number to compute the secret key?
+Server generate it and it is independent of client’s number
+l Session Identifier（会话标识）?
+If the client’s identifier is not 0 then the same as client’s, else
+generate a new identifier
+l Data Encryption to identify the encryption methods?
+The one chose from client’s encryption methods list.
+l Data Compression method for message compression?
+The one chose from client’s compression methods list.
+
+===== PAGE 73 =====
+问题 ：密码参数有哪些？
+2
+p 密钥交换算法 : l 1)RSA密钥交换协议客户端用服务
+l 固定DH：包含认证中心签发
+器的RSA公钥加密的密钥（此时，
+的Diffie-Hellman公钥参数的
+服务器证书（公钥证书包含
+客户端必须拥有服务器的公钥证书）
+2)DH密钥交换协议
+客户端Diffie-Hellman公钥参
+数，该参数由客户端在证书
+3)Fortezza密钥交换协议
+数中提供，或者在密钥交换
+消息中提供）
+p 密码规范 l 加密算法
+(CipherSpec)
+MAC算法 l 临时 Diffie-Hellman: 此技术用
+来创建一次性密钥。在这种
+密码类型：流密码或者分组密
+情况下， 公钥
+码是否可出口（只在美国以外 Diffie-Hellman
+在交换时使用服务器的 或
+使用） RSA
+者 私钥签名，客户端使用
+MAC长度 DSS
+服务器的相应公钥验证签名
+密钥材料
+IV大小
+l 匿名DH：使用基本的
+p 压缩算法
+Diffie-Hellman
+
+===== PAGE 74 =====
+问题（续）
+pQuestion ： Why does SSL use three kind of DH
+algorithms?
+pAnswer: Provides different security abilities
+l 临时 DH 安全最高（基于固定 DH, 实现 PFS)
+l 匿名 DH 安全性最差，容易受到中间人攻击
+
+===== PAGE 75 =====
+握手协议工作过程第一步
+Client Hello
+Server Hello
+SSL Client SSL Server
+
+===== PAGE 76 =====
+握手协议工作过程第二步
+p包含是否需要对客户端进行认证、服务器自己
+的证书消息等。该过程一般包含四条消息：
+l 证书消息（ Certificate ）
+l 服务器密钥交换消息（ Server_Key_Exchange)
+l 客户端证书请求消息（ Certificate_Request)
+l 服务器结束消息（ Server_Hello_Done)
+
+===== PAGE 77 =====
+第二阶段：服务器认证和密钥交换（服务器 客户）
+->
+SSL Client
+SSL Server
+Certificate
+Port 443
+The Server Certificate message
+p The server Identifier information
+p A Digital Certificate of the sever information encrypted with
+（也可能是一组证书）
+the CAs Private Key
+l This contains the server‘s Public Key （包含服务器公钥）
+说明：
+服务器证书消息是服务器向客户端传送自己的证书，
+使得客户端知道服务器的公钥以及其他信息。
+
+===== PAGE 78 =====
+第二阶段：服务器认证和密钥交换（服务器 客户）
+->
+SSL Client
+SSL Server
+Server_key_Exchange
+Port 443
+Server Key exchange message
+p The Certificate type to indicate the type of public key
+p The Certificate Authority is a list of distinguished names of
+Certificate Authorities acceptable to the Server
+说明：
+p 服务器密钥交换消息用来向客户端发送服务器自己的密钥信息
+p The Server Key exchange message 不是必须的
+如果使用了固定 或者 密钥交换，则不需要。
+Diffie-Hellman RSA
+反之，如果使用匿名 、瞬时 、 或
+Diffie-Hellman Diffie-Hellman Fortzza
+者服务器在使用 时仅用了 签名密钥。
+RSA RSA
+l RSA ：在第一阶段包含了服务器的公钥
+l 固定 DH ：由于在固定 DH 中，服务器在第一阶段发送的证书消息
+中包含了服务器自己的公钥
+
+===== PAGE 79 =====
+第二阶段：服务器认证和密钥交换（服务器 客户）
+->
+SSL Client
+Certificate_Request SSL Server
+Port 443
+The Client Certificate Request message
+p The Certificate type to indicate the type of public key ( 证书类型 )
+l RSA
+l DSS
+l Diffie-Hellman
+.....
+p The Certificate Authority is a list of distinguished names of
+认证中心 列表）
+Certificate Authorities acceptable to the Server( CA
+服务器可以接受的认证中心列表
+说明：
+如果服务器不使用匿名 ，则客户端证书请求消息是必
+Diffie-Hellman
+须的。它的目的是要求客户端向自己发送证书等消息，进行客户认证
+。
+
+===== PAGE 80 =====
+第二阶段：服务器认证和密钥交换（服务器 客户）
+->
+SSL Client
+SSL Server
+Server _Hello_Done
+Port 443
+Server Done message
+表明服务器的 阶段结束；
+hello
+在此消息之后，服务器将等待客户端的应答。
+
+===== PAGE 81 =====
+第二阶段：服务器认证和密钥交换（服务器 客户）
+->
+总结
+Server Certificate
+Server_key_Exchange
+Client Certificate Request
+SSL Client
+Server Done Message SSL Server
+2026-5-21
+
+===== PAGE 82 =====
+第三阶段：客户机验证和密钥交换
+p在接收到服务器完成消息（
+Sever done)
+之后
+l 客户端需要验证服务器是否提供了合法的证书
+l 检查 server_hello 参数是否可以接受
+l 如果所有条件满足，则客户端向服务器发回一个或者多个
+消息：
+客户端证书消息（ ：如果服务器请求了证书，必须有该
+• Certificate)
+消息
+客户端密钥交换消息 ：必须发送
+• (Client_Key_Exchange)
+客户端证书校验消息（ ：可以发送 便于服务器验
+• Ceritificate_Verify) (
+证自己的证书）
+2026-5-21
+
+===== PAGE 83 =====
+第三阶段：客户机验证和密钥交换（客户 服务器）
+->
+SSL Client
+SSL Server
+Certificate
+Port 443
+Client Certificate message
+p The Client Identifier information
+p A Digital Certificate of the client information
+说明：
+如果服务器请求了证书，但是客户端没有合适的证
+书，则发送”无证书警报“消息
+2026-5-21
+
+===== PAGE 84 =====
+第三阶段：客户机验证和密钥交换（客户 服务器）
+->
+SSL Client
+SSL Server
+Client Key Exchange
+Port 443
+Client Key Exchange message
+p The encrypted session key which will serve as a pre-
+master secret key encrypted with the server’s public key.
+说明：
+如果是 ，该消息包含客户端生成的 字节的预主密钥（
+• RSA 48 pre-master
+），并使用服务器证书中的公钥或者服务器密钥交换消息中
+secret key
+的临时 密钥加密，它用于生成主密钥（ ）
+RSA master secret key
+如果是 ，该消息包含客户端的 公钥参数
+• Diffie-Hellman Diffie-Hellman
+如果是 ，则包含客户端的 参数
+• Fortezza Fortezza
+2026-5-21
+
+===== PAGE 85 =====
+第三阶段：客户机验证和密钥交换（客户 服务器）
+->
+SSL Client
+SSL Server
+Certificate_Verify
+Port 443
+Certificate Verify Message
+p The Certificate Verify Message is composed of the
+Hash value of the client’s certificate.
+说明：
+证书验证消息很复杂，它对签名的所有消息即密钥信息等
+进行 运算，并用自己的私钥加密，从而即是有人盗用了
+Hash
+客户端证书，也无法发送该证书验证消息。
+2026-5-21
+
+===== PAGE 86 =====
+第三阶段：客户机验证和密钥交换（客户 服务器）
+->
+总结
+Certificate
+Client Key Exchange
+Certificate_Verify
+SSL Server
+SSL Client
+2026-5-21
+
+===== PAGE 87 =====
+第四阶段：完成
+p 此阶段完成 SSL 安全连接的设置，主要包含以下消息：
+l 客户端：
+客户端发送的修改密码规范消息（
+• Change_Cipher_Spec)
+客户端发送的完成消息（
+• Finished)
+l 服务器
+服务器发送的修改密码规范消息（
+• Change_Cipher_Spec)
+服务器发送的完成消息（
+• Finished)
+2026-5-21
+
+===== PAGE 88 =====
+第四阶段：完成（客户 服务器）
+->
+SSL Client
+SSL Server
+Change_Cipher_Spec
+Port 443
+The Client’s Change cipher spec
+说明：
+该消息不是握手协议的一部分，是使用修改密码规范协议来完成
+•
+的, 它通知服务器启用新的密钥和算法。
+在此之后，客户端使用新的算法、密钥和密码发送新的完成消息
+•
+2026-5-21
+
+===== PAGE 89 =====
+第四阶段：完成（客户 服务器）
+->
+SSL Client
+SSL Server
+Client Finish
+Port 443
+The Client Finish message
+p The Client Finish message is composed of
+l The client authenticates the server with a message encrypted
+（客户端用新建立的
+with the newly generated shared keys.
+会话密钥来认证服务器）
+l This validates to the server that a secure connection has been
+（确保连接的合法性）
+created .
+2026-5-21
+
+===== PAGE 90 =====
+第四阶段：完成（客户 服务器）
+->
+SSL Client
+SSL Server
+Change_Cipher_Spec
+Port 443
+The Server’s Change cipher spec
+说明：
+该消息不是握手协议的一部分，是使用修改密码规范协议
+•
+来完成的 。它通知客户端启用新的密钥和算法。
+在此之后，服务器端使用新的算法、密钥和密码发送新的
+•
+完成消息
+
+===== PAGE 91 =====
+第四阶段：完成（客户 服务器）
+->
+SSL Client
+SSL Server
+Server Finish
+Port 443
+Server Finish message
+p The Server Finish message is composed of
+l The server authenticates the client with a message encrypted with the
+（服务器用新的会话密钥来认证客户）
+newly generated shared keys .
+l This validates to the client that a secure connection has been created( 确
+保连接的合法性）
+说明
+:
+The Server and client can now begin to use their six shared keys for bulk
+（从此刻开始，
+data encryption utilizing the SSL Record Layer protocol
+客户端和服务器的记录层协议将启用新的密钥和算法进行数据加密）
+
+===== PAGE 92 =====
+第四阶段：完成（客户 服务器）
+->
+总结
+Change_Cipher_Spec
+Client Finish
+Change_Cipher_Spec
+SSL Client Server Finish SSL Server
+
+===== PAGE 93 =====
+问题
+p Question ：
+？
+Why does SSL need the finish operation
+p Answer ：
+从预备状态向当前状态改变
+
+===== PAGE 94 =====
+第四阶段：完成（客户 服务器）
+->
+SSL Client
+SSL Server
+Port 443
+SSL Record Protocol
+当前状态 当前状态
+SSL Handshake Protocol
+预备状态 预备状态
+SSL Change Cipher Spec Protocol
+SSL Record Protocol
+当前状态 当前状态
+
+===== PAGE 95 =====
+握手协议报文－总结
+SSL
+
+===== PAGE 96 =====
+SSL
+握手协议报文－总结
+
+===== PAGE 97 =====
+握手协议报文－总结
+SSL
+p 在握手协议中，服务器证书请求和客户端证书
+请求都是可选的，因此 的握手过程实际蕴
+SSL
+含三种验证方式：
+l 客户端和服务器均被认证
+l 只验证服务器
+l 客户端和服务器均未被认证（即匿名模式）
+
+===== PAGE 98 =====
+握手协议报文－总结
+SSL
+2026-5-21
+
+===== PAGE 99 =====
+问题
+p Question ：
+在 协议中，只交换了一个秘密（称为
+handshake
+预主秘密），那么 是如何得到数据通信所需要的
+SSL
+加密密钥、 计算密钥和加密算法需要的 值？
+MAC IV
+p Answer ：
+根据 的密钥派生规则。
+SSL
+2026-5-21
+
+===== PAGE 100 =====
+第 和 阶段交换结果：六对密钥
+SSL 2 3
+SSL Client SSL Server
+C > S S > C C > S S > C
+Encryption
+MAC
+IV
+2026-5-21
+
+===== PAGE 101 =====
+密钥的生成
+主密钥
+预主密钥
+（ ）
+（ ） master secret
+pre_master_secret
+Client write MAC secret
+Server write MAC secret
+Client write secret Server write secret
+Server write IV
+Client write IV
+2026-5-21
+
+===== PAGE 102 =====
+主密钥的创建
+p 经过 Handshake Protocol 之后 ，双方共享预主密钥
+（ ），然后派生出一个 字节值
+pre_master_secret 48
+（ ）的主秘密 ，由客户机和
+384 bit (Master Secret)
+服务器共享：
+l 预主密钥 pre_master_secret 的交换方法主要有两种：
+：客户端和服务器同时生成
+• Diffie-Hellman Diffie-
+临时公钥，密钥交换后双方执行
+Hellman Diffie-
+计算，创建共享预主密钥
+Hellman
+：由客户端生成 字节的预主密钥，并用服
+• RSA 48
+务器的 公钥加密后发送到服务器，服务器用
+RSA
+其密钥解密，得到密钥
+p Master Secret 分两个步骤生成：
+（交换预主密钥）
+l Exchange pre_master_secret
+l Compute the master_secret （双方计算主密钥）
+2026-5-21
+
+===== PAGE 103 =====
+主密钥的创建
+p For asymmetric cryptographic computations （非对称密
+码算法计算）
+l The asymmetric algorithms are used in the handshake
+protocol to authenticate parties and to generate shared
+keys and secrets.
+p The pre_master_secret should be deleted from memory
+（计算后需
+once the master_secret has been computed
+从内存中删除）
+master_secret =
+MD5(pre_master_secret + SHA('A' + pre_master_secret +
+ClientHello.random + ServerHello.random)) +
+MD5(pre_master_secret + SHA('BB' + pre_master_secret +
+ClientHello.random + ServerHello.random)) +
+MD5(pre_master_secret + SHA('CCC' + pre_master_secret +
+ClientHello.random + ServerHello.random));
+
+===== PAGE 104 =====
+主密钥的创建： 交换
+DH
+p 对于 Diffie-Hellman
+l A conventional Diffie-Hellman computation is performed
+to compute the empheral K;
+l The negotiated key K=g^xy is used as the pre_master_secret
+and is converted into the master_secret, as specified above.
+master_secret =
+MD5(pre_master_secret + SHA('A' + pre_master_secret +
+ClientHello.random + ServerHello.random)) +
+MD5(pre_master_secret + SHA('BB' + pre_master_secret +
+ClientHello.random + ServerHello.random)) +
+MD5(pre_master_secret + SHA('CCC' + pre_master_secret +
+ClientHello.random + ServerHello.random));
+2026-5-21
+
+===== PAGE 105 =====
+主密钥的创建（续）
+p 对于 RSA
+l When RSA is used for server authentication and key
+exchange
+• A 48-byte pre_master_secret is generated by the client
+• Encrypted under the server's public key, and sent to the server
+• The server uses its private key to decrypt the
+pre_master_secret
+• Both parties then convert the pre_master_secret into the
+master_secret, as specified above.
+p The pre_master_secret should be deleted from memory
+（计算后需
+once the master_secret has been computed
+从内存中删除）
+master_secret =
+MD5(pre_master_secret + SHA('A' + pre_master_secret +
+ClientHello.random + ServerHello.random)) +
+MD5(pre_master_secret + SHA('BB' + pre_master_secret +
+ClientHello.random + ServerHello.random)) +
+MD5(pre_master_secret + SHA('CCC' + pre_master_secret +
+2026-5-21 ClientHello.random + ServerHello.random));
+
+===== PAGE 106 =====
+其他密码参数的创建
+p Symmetric cryptographic calculations and the
+（ 中的密码规约参数）
+CipherSpec SSL
+l The technique used to encrypt and verify the integrity of SSL
+密码规约）
+records is specified by the currently active CipherSpec( .
+l A typical example would be to encrypt data using DES and
+generate authentication codes using MD5.
+l The encryption and MAC algorithms are set to
+SSL_NULL_WITH_NULL_NULL at the beginning of the SSL
+Handshake Protocol, indicating that no message authentication or
+（ 协议开始是并不进行加密或完整性
+encryption is performed SSL
+验证）
+.
+l The handshake protocol is used to negotiate a more secure
+（握手协议用来协
+CipherSpec and to generate cryptographic keys
+商密码参数，并生成密钥）
+2026-5-21
+
+===== PAGE 107 =====
+其他密码参数的创建：加密密钥和 密钥
+MAC
+p Converting the master secret into keys and MAC
+secrets
+l The master secret is hashed into a sequence of secure bytes,
+which are assigned to the MAC secrets, encryption keys, and
+（当前的
+non-export IVs required by the current CipherSpec
+密码参数）
+.
+l CipherSpecs require a client write MAC secret, a server
+write MAC secret, a client write key, a server write key, a
+client write IV, and a server write IV, which are generated
+from the master secret in that order.
+l Unused values, such as FORTEZZA keys communicated in
+the KeyExchange message, are empty.
+2026-5-21
+
+===== PAGE 108 =====
+其他密码参数的创建：加密密钥和 密钥（续）
+MAC
+p The following inputs are available to the key
+definition process:
+l MasterSecret
+l ClientHello.random
+l ServerHello.random
+p
+When generating encryption keys and MAC secrets
+l The master secret is used as an entropy source （熵源）
+l The random values provide unencrypted salt material and IVs for
+exportable ciphers.
+2026-5-21
+
+===== PAGE 109 =====
+其他密码参数的创建：加密密钥和 密钥（续）
+MAC
+p To generate the key material （计算方法）：
+key_block =
+MD5(master_secret + SHA(`A' + master_secret +
+ServerHello.random +
+ClientHello.random)) +
+MD5(master_secret + SHA(`BB' + master_secret +
+ServerHello.random +
+ClientHello.random)) +
+MD5(master_secret + SHA(`CCC' + master_secret +
+ServerHello.random +
+ClientHello.random)) + [...];
+until enough output has been generated.
+2026-5-21
+
+===== PAGE 110 =====
+用户和服务器各自生成 个功能不同的密钥
+6
+p Then the key_block is partitioned as follows.
+client_write_MAC_secret[CipherSpec.hash_size]
+server_write_MAC_secret[CipherSpec.hash_size]
+client_write_key[CipherSpec.key_material]
+server_write_key[CipherSpec.key_material]
+client_write_IV[CipherSpec.IV_size] /* non-export ciphers */
+server_write_IV[CipherSpec.IV_size] /* non-export ciphers */
+2026-5-21
+
+===== PAGE 111 =====
+Client Server
+Pre_Master_secret
+2026-5-21
+
+===== PAGE 112 =====
+的具体实现
+SSL
+2026-5-21
+
+===== PAGE 113 =====
+与 安全
+SSL Web
+p
+HTTP
+Clear text communication.
+p
+HTTPS
+RFC 2817 and RFC 2818 describes HTTP over
+TLS
+2026-5-21
+
+===== PAGE 114 =====
+与 安全
+SSL web
+p
+First implementation of HTTP over SSL was
+issued in 1995 by Netscape
+p
+Netscape was prevented from choosing shttp
+l S-HTTP （ secure HTTP ） another protocol for
+securing messages
+l Treats each request – response pair as a single unit
+l Allows protect different messages between server-
+client differently
+2026-5-21
+
+===== PAGE 115 =====
+HTTP connection behavior
+pHTTP 1.0
+l Close connection after each response
+l Images: require response/request pair
+pHTTP 1.1
+l Connection : Keep-Alive (persistent connection)
+l Some browsers still open number of connections
+to load page with images in parallel
+l Large number of parallel connections is optimized
+by SSL session resumption.
+2026-5-21
+
+===== PAGE 116 =====
+Basic Technologies
+pHTTP (Hypertext Transfer Protocol)
+l First protocol to use SSL
+l Request/Response structure
+l Most browsers speak http protocol
+pHTML (Hypertext Markup Language)
+l Offers the ability to structure the document
+l Provide links to move to another documents
+pURL (Uniform Resource Locator)
+2026-5-21
+
+===== PAGE 117 =====
+－
+Security of web Summary
+
+===== PAGE 118 =====
+安全的特点
+Web
+p 提供双向的服务，攻击防范能力脆弱
+p 作为可视化窗口和商业交互平台，提供多种
+服务，事关声誉
+p 底层软件庞大，如 apache 约 10M ，历来是漏
+洞之最，攻击手段最多
+p 如果被攻破可能导致成为进入企业的跳板
+p 配置比较复杂
+
+===== PAGE 119 =====
+安全的组成部分
+Web
+p Browser 安全
+p Web Server 安全
+p Browser 与 Web Server 之间网络通信安全
+HTTP
+Brower
+Web Server
+2026-5-21
+
+===== PAGE 120 =====
+安全方案
+Web
+p 网络层： IPSec
+p 传输层： SSL/TLS
+p 应用层： SET/SHTTP
+2026-5-21
+
+===== PAGE 121 =====
+HTTP Over SSL(TLS): Protocol
+2026-5-21
+
+===== PAGE 122 =====
+HTTP Over SSL(TLS): Overview
+p Client makes connection to the server
+p Handshakes SSL
+p Transmits data over SSL channel
+l Assigned port 443
+l Special configuration of the server needed (mod_ssl),
+possible to configure another port
+p No client data is sent until SSL connection established
+p Long web pages require spanning multiple SSL records
+2026-5-21
+
+===== PAGE 123 =====
+HTTP Over SSL(TLS): Protocol Format
+SSL Record Content Encrypted Data
+version Length type and Mac
+Record Header Data
+p Content types:
+l ChangeCipherSpec
+l Handshake
+l Application Data
+l Alert (signaling error and closure)
+2026-5-21
+
+===== PAGE 124 =====
+HTTP Over SSL(TLS): Connection closure
+p
+When one side initiates closure
+l Must send close_notify
+l Optionally withholds its TCP FIN until
+close_notify received from other side.
+l If TCP FIN received without close_notify this
+may indicate possible attack
+2026-5-21
+
+===== PAGE 125 =====
+HTTP Over SSL(TLS): End-point Authentication
+p
+When user ’s browser receives certificate
+l CA is a known CA
+l Browser compares:
+• Name of the site that it intended to connect with
+• Hostname in certificate
+2026-5-21
+
+===== PAGE 126 =====
+HTTP Over SSL(TLS): Session Resumption
+p （会话恢复）
+Session resumption
+l Minimizes the number of SSL handshakes,
+within the same session
+l Both sides speak with already established keys
+l If the close was premature （过早） , in no case
+SSL implementation should resume session
+2026-5-21
+
+===== PAGE 127 =====
+HTTP Over SSL(TLS): Error Handling
+p Servers logs errors. Later maybe examined by
+administrator
+p Clients receive via dialog boxes
+l SSL implementation should:
+（报告合法错误）
+• Report legitimate errors
+（不致过渡影
+• Not overwhelm the user (hide unimportant)
+响用户）
+2026-5-21
+
+===== PAGE 128 =====
+HTTP Over SSL(TLS): TLS in IE
+2026-5-21
+
+===== PAGE 129 =====
+TLS 1.3 (basic)
+TLS 1.2 TLS 1.3
+Client Server* Client* Server
+CHello
+CHello
+CHshake
+SHello
+Get PMK,
+SCert
+keys
+Get PMK, SHello
+(DHE)
+keys
+SHshake {Scert}
+MS
+CS-shake Check
+SFinished
+Get PMK, keys Get PMK,
+(RSA, DH, DHE) keys
+CFinished
+Check
+CFinished
+Check
+SFinished
+Check
+
+===== PAGE 130 =====
+Key Derivation
+TLS 1.2 TLS 1.3
+CHshake SHshake CHshake SHshake
+SCert SCert
+HKDF.Extract
+PMK
+HKDF.Expand
+PRF (nonces)
+PMK = 
+MSK
+htk mES mSS fsk
+PRF (nonces)
+MSK
+HKDF.Extract
+Session keys
+MSK
+
+===== PAGE 131 =====
+More Features of TLS 1.3
+p Multiple operating modes
+l If the client wants to resume sessions: 0 RTT
+l If the client knows the server’s PK: different resumption
+l Full operation mode present too
+p Restricted cipher suites: no RC4, no CBC, no RSA
+p Independence of :
+l Better provable security
+htk, fsk, msk
+p Session hash used in key derivation:
+l Better freshness
+l Better security
+
+===== PAGE 132 =====
+What we Have and What we Want
+Desired Changes Actual Changes
+• Kill backward compatibility • Advertised for TLS 1.3
+• Kill CBC mode • Done; de-facto is AEAD
+• Kill RC4 • Done
+• Kill renegotiation • Modified it; unclear
+consequences
+• Kill finite fields (keep EC) • Done
+• Kill RSA mode • Done
+• Kill data compression • Partial
+
+===== PAGE 133 =====
+Evolution
+Key
+exchange
+and
+authen-
+tication
+
+===== PAGE 134 =====
+Cipher security
+against
+publicly known
+feasible attacks
+
+===== PAGE 135 =====
+Data integrity
+Website
+protocol
+support
+(Sept 2025)
+
+===== PAGE 136 =====
+请各位同学交流指正！

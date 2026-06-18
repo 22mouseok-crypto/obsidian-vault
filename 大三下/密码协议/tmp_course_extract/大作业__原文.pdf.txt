@@ -1,0 +1,1106 @@
+===== PAGE 1 =====
+Device-Enhanced Password Protocols with Optimal
+Online-Offline Protection
+Stanislaw Jarecki Hugo Krawczyk
+University of California Irvine IBM Research
+stasio@ics.uci.edu hugo@ee.technion.ac.il
+Maliheh Shirvanian Nitesh Saxena
+University of Alabama at University of Alabama at
+Birmingham Birmingham
+maliheh@uab.edu saxena@cis.uab.edu
+ABSTRACT word dictionaries from which a significant portion of passwords are
+chosen. Candidate passwords for authenticating a user to a server
+We introduce a setting that we call Device-Enhanced PAKE (DE-
+can be tested by an attacker through online interactions with the
+PAKE), where PAKE (password-authenticated key exchange) pro-
+server. Furthermore, an attacker breaking into a server can mount
+tocols are strengthened against online and offline attacks through
+an offline attack that uses information stored on the server (typi-
+the use of an auxiliary device that aids the user in the authentication
+cally, a salted one-way mapping of the password) to test the differ-
+process. We build such schemes and show that their security, prop-
+ent passwords in the dictionary. Such offline dictionary attacks are
+erly formalized, achieves maximal-attainable resistance to online
+a serious concern, especially in light of frequent attacks against ma-
+and offline attacks in both PKI and PKI-free settings. In particular,
+jor commercial vendors recently, such as PayPal [1], LinkedIn [4],
+an online attacker must guess the user’s password and also cor-
+Blizzard [2] and Gmail [3]. The offline attacks are particularly dev-
+rupt the user’s auxiliary device to authenticate, while an attacker
+astating because a single server break-in may lead to compromising
+who corrupts the server cannot learn the users’ passwords via an
+a huge number of user accounts [7]. Furthermore, since many users
+offline dictionary attack. Notably, our solutions do not require se-
+re-use their passwords across multiple services, compromising one
+cure channels, and nothing (in an information-theoretic sense) is
+service may compromise user accounts at other services.
+learned about the password by the device (or a malicious software
+In this paper we present solutions which enhance password pro-
+running on the device) or over the device-client channel, even with-
+tocols against both online and offline attacks by an active man-in-
+out any external protection of this channel. An attacker taking over
+the-middle attacker acting on user-server and user-device links, and
+the device still requires a full online attack to impersonate the user.
+capable of compromising devices and servers by learning their full
+Importantly, our DE-PAKE scheme can be deployed at the user end
+internal state (e.g., server’s password file and device’s secrets).
+without the need to modify the server and without the server having
+to be aware that the user is using a DE-PAKE scheme. In particu-
+1.1 Our Contributions
+lar, the schemes can work with standard servers running the usual
+password-over-TLS authentication. We introduce a setting of Device-Enhanced PAKE (DE-PAKE),
+We use these protocols to implement a practical DE-PAKE sys- where PAKE (password-authenticated key exchange) protocol is
+tem and we evaluate its performance. To improve usability the strengthened against online and offline attacks through the use of
+implemented system utilizes automated and user-transparent data an auxiliary device which aids the user in the authentication pro-
+channel between the mobile device and the client, falling back to cess. We build such scheme and show that its security, properly
+localized communication if the device looses primary connectivity. formalized, achieves maximal-attainable resistance to online and
+offline attacks in both PKI and PKI-free1 settings. Moreover, our
+DE-PAKE scheme can be deployed at the user end without the need
+1. INTRODUCTION
+to modify the server and without the server having to be aware that
+Today, passwords constitute the prevalent authentication mech- the user is using a DE-PAKE scheme. In particular, in the PKI
+anism for bootstrapping security in most online applications (and setting the scheme can work with unmodified servers running the
+many offline systems). A plethora of sensitive information stored usual password-over-TLS authentication. Finally, while we focus
+in many different contexts therefore depends on the security of the presentation on a setting where the auxiliary device is a physical
+password-based authentication. However, passwords are vulner- personal device, e.g. a phone, our protocols apply also to the set-
+able to both online and offline dictionary attacks that build on pass- ting where the device entity is implemented by an auxiliary on-line
+service. Indeed, since our solution is secure against a fully capa-
+Permission to make digital or hard copies of all or part of this work for personal or
+classroom use is granted without fee provided that copies are not made or distributed 1The PAKE notion was originally used for the peer-to-peer pass-
+for profit or commercial advantage and that copies bear this notice and the full cita- word setting (where the two peers share a password) but was later
+tion on the first page. Copyrights for components of this work owned by others than extended to the client-server setting too. In the latter case one
+ACM must be honored. Abstracting with credit is permitted. To copy otherwise, or re- differentiates between the PKI case, where the client possesses a
+publish, to post on servers or to redistribute to lists, requires prior specific permission server’s certificate in addition to the password, and the PKI-free
+and/or a fee. Request permissions from permissions@acm.org. case where no such certificate, or other form of secure channels,
+ASIA CCS ’16, May 30-June 03, 2016, Xi’an, China is assumed for user login. Password registration, being much less
+(cid:13)c 2016 ACM. ISBN 978-1-4503-4233-9/16/05. . . $15.00 frequent than regular login, can use special safeguards, such PKI-
+DOI: http://dx.doi.org/10.1145/2897845.2897880 based interactions or out-of-band channels.
+177
+
+===== PAGE 2 =====
+ble man in the middle and provides strong protection even in case 1.2 Related Work
+of device corruption, an implementation that uses an auxiliary web
+service in the role of the device is protected against both network Prior Work on Device-Enhanced Authentication. Our approach
+attacks and against the compromise of this service. is closely related to the work of Acar, Belenkiy, and Kupcu [8],
+and Boyen [13]. A close variant of the key ingredient of our so-
+Secure and Efficient DE-PAKE Protocols: We introduce efficient
+lution, a “Password-to-Random” (PTR) protocol, was proposed as
+DE-PAKE protocols with the following properties:
+a “Hidden Credential Retrieval” (HCR) scheme by [13]. Our DE-
+PAKE protocol has similar goals as the “Single Password Authen-
+• Resistance to online and offline attacks: Our DE-PAKE schemes
+tication” (SPA) scheme of [8], namely, strengthening password au-
+provide maximal-attainable security in terms of resistance to both
+thentication by making offline dictionary attack against the server
+online and offline attacks. That is, the only attack allowed by the
+infeasible. Moreover, one of their schemes does so in roughly the
+scheme is the unavoidable online guessing attack where the at-
+same way as we do, following an approach first suggested by Ford-
+tacker tests if a given value p is the user U’s password by inter-
+Kaliski [17], i.e. having the user “strengthen” her password into
+acting with both device and server in the role of U with password
+a strong secret via the HCR/PTR protocol with an auxiliary de-
+p and observing whether S accepts. In other words, each guess at-
+vice (or service), and then use this strong secret to authenticate to
+tempt requires the attacker to interact on both U-D and U-S links.
+the primary server. Despite these similarities, our work improves
+No amount of attacking on one link helps without a corresponding
+on [8, 13] in the following aspects: (1) Whereas [13] shows that
+attack on the other. Moreover, fully compromising D still requires
+HCR can be realized almost identically to our PTR, i.e. using the
+a full online guessing attack on the U-S link and fully compromis-
+same variant of the Ford-Kaliski protocol [17], the SPA scheme
+ing the server requires a full online guessing attack on the U-D link.
+of [8] did not show a general compiler from HCR, but assumed a
+And even if both S and D are compromised, a full offline dictionary
+stronger tool of unique blind signature which is costlier to realize
+attack is required. More formally, to have an impersonation prob-
+(moreover, in their scheme the user-device blind signature protocol
+ability of q/|Dict|, where Dict is the passwords dictionary, the at-
+goes over TLS, while in ours the PTR protocol goes over insecure
+tacker needs to either run q online interactions with D and q online
+links); (2) The SPA scheme of [8] is weaker than our DE-PAKE,
+interactions with S, or q online interactions with U impersonating
+in that it achieves only entity authentication rather than authenti-
+both D and S. Moreover, even when compromising D and finding
+cated key exchange as in our case and it assumes PKI while our
+all its secrets, the attacker still needs to run q online interactions
+DE-PAKE works in both PKI-free and PKI settings;2 (3) Very im-
+with either S or U, and if the server is compromised, q online in-
+portantly, our modular approach that treats PTR and PAKE as in-
+teractions with D or U. Finally, if both D and S are compromised
+dependent components and has no involvement of the server in the
+the adversary must stage a full offline dictionary attack to learn any
+PTR execution, allows us to obtain DE-PAKE security without any
+passwords. We formalize these properties through a security model
+modification to existing servers (e.g., those running password-over-
+that extends the traditional PAKE security setting, and then we use
+TLS authentication). In contrast, the SPA scheme of [8] requires
+this model to prove the security of our schemes.
+the server to perform additional public key operations.
+• PKI-agnostic: The above security is achieved even when the user-
+Relation to Work on Two-Factor Authentication. One important
+server channel is not protected by a server public key. On the other
+and increasingly common line of defense against password attacks
+hand, when such protection is available one obtains the additional
+is the use of two-factor password authentication (TFA) schemes.
+benefit that impersonating the server to the user is infeasible even
+TFA mechanisms are used for authenticating a user U to a server
+if the user’s password is disclosed. Luckily, our schemes can work,
+S, and establishing a session key between the two, where the user
+without modification and without having to be aware of it, with
+has a password and a personal device D (e.g., a smartphone) that
+PKI-based and PKI-free authentication protocols, providing in each
+contains some secret auxiliary information. This secret information
+case the best possible offline-online protection.
+is used to increase the security of password authentication by pre-
+• Modularity and server-transparency: Our design is modular al- venting online attacks for an adversary that does not have access to
+lowing for the use of independent device and server components, D. Typically, D displays a short one-time PIN (OTP), received di-
+in particular enabling the use of our scheme with existing password rectly from the server or computed by D based on a key shared with
+protocols and without the need to modify the server side. the server, that the user manually copies over to the authentication
+terminal in addition to providing her password.
+DE-PAKE Systems Design and Evaluation: To demonstrate the Traditionally, these TFA schemes have been used for increas-
+flexibility provided by our modular approach, we design, develop ing resistance to online dictionary attacks. However, as argued by
+and test a concrete instantiation of DE-PAKE scheme in the PKI- Shirvanian et al. [29], with the increasing vulnerabilities of servers
+free model. We develop server-side (PHP/JavaScript), client-side to compromise [5, 6], TFA schemes should also be enhanced to
+(Chrome browser extensions) and device-side (Android app) im- strengthen security against offline attacks. The work of [29] pre-
+plementations, and measure their computational performance and sented several schemes for achieving this goal. There are, however,
+communication delays. A key component of DE-PAKE system is two important aspects in which the schemes of [29] can be im-
+the D-U communication channel. To support this, we propose a proved, and we do so in this paper. First, all their schemes assume
+“hybrid model” whereby the primary channel is based on fast and a PKI setting, namely, the user (through a client application) must
+user-transparent data channel, and the secondary channel involves be in possession of an authentic public key of the server which is
+localized WiFi communications. Since the secondary channel can used to establish a secure channel, e.g., via TLS. If such public
+be potentially difficult for the user to establish, we use it only as key is not available or is compromised, the security of the scheme
+a fall-back when the primary channel is not available (e.g., when completely breaks down. Given the vulnerabilities of PKI to certifi-
+the user’s phone is out of network coverage). This approach will cation failures and man-in-the-middle (MitM) attacks (either due to
+significantly improve the user experience underlying DE-PAKE lo-
+gins. We design, implement and evaluate the performance of our 2Our DE-PAKE security model is also more precise, e.g. letting
+DE-PAKE construction (Section 6). adversary observe whether user authentication succeeds or not.
+178
+
+===== PAGE 3 =====
+programmatic errors or human mistakes), e.g., [15,20,30], reducing mation about protocol inputs, i.e. pwd and k. Note that we cannot
+the dependency of authentication security on public keys is an in- assume an authenticated or secret channel between the client and
+creasingly important goal. Second, the schemes of [29] require the D since this would either require knowing a device public key or
+authentication server to run a different protocol than currently stan- storing pwd-related information at D (the latter would open pwd to
+dard PKI-setting TFA schemes which can inhibit the deployment of an offline dictionary attack upon compromising D). We show that
+such schemes. For example, an individual user (or an application) in spite of the client-device link being unauthenticated, hence con-
+cannot adopt the schemes from [29] to protect her password stored trolled by the attacker, the “blinded DH" approach of Ford-Kaliski,
+by a web service without that service being modified to support the (see Section 4.1), can be used to implement the PTR protocol.
+new TFA method.
+The notion of DE-PAKE scheme we propose (and its efficient
+realization we construct) addresses many of the same concerns as
+TFA schemes, e.g. increased security against on-line attacks viz-a- 1. k 1. pwd 3. rwd 3. σ (U)
+d s
+viz solely-password based authentication, and it surpasses security
+offered by existing TFA schemes by offering maximal resistance PTR PAKE
+to off-line attacks, i.e. making offline dictionary search impossible
+in case of server compromise. However, traditional TFA schemes
+offer also increased security against compromise of the client ma- 2. rwd = F kd (pwd) 4. K
+chine (compared to solely-password authentication). A generic input
+output
+DE-PAKE scheme does not provide this, although the specific DE-
+PAKE scheme we propose can be extended to offer additional de-
+fenses against attacks on the client (see Section 5). Moreover, it is Figure 1: PTR-PAKE Authentication Phase
+possible to combine a DE-PAKE scheme with a traditional MFA
+mechanism (e.g. a one-time PIN delivered to or generated by the
+Hence, we obtain a DE-PAKE scheme, which we call PTR-PAKE,
+hand-held device) to extend the security properties of DE-PAKE to
+as the composition of a PTR protocol and a secure PAKE. We de-
+include the same level of resistance against client compromise as
+pict this generic construction of a DE-PAKE protocol in Figure 1.
+offered by traditional TFA schemes.
+The output K in step 4 denotes the session key established between
+1.3 Organization and Glossary the user and the server, i.e. the output of the DE-PAKE protocol,
+which is equal to the output of the PAKE subprotocol. The server’s
+We overview our design and proof methodology in Section 2,
+input σ (U) to the PAKE subprotocol denotes the user-specific in-
+with full details given in Section 4. Section 3 presents our formal S
+formation stored at S created in the PAKE initialization using rwd
+DE-PAKE security model on which we base our analysis. Section 5
+in the role of the password (e.g. in a common PKI-based PAKE
+presents protocol instantiations and extensions: A fully specified
+σ (U) would be a salted hash of rwd).
+DE-PAKE scheme secure in the PKI-free (i.e. CRS) model; a de- S
+In order to prove the security of such scheme, we first extend the
+scription of our approach for armoring existing servers against on-
+established security models for the PAKE functionality to the DE-
+line and offline attacks while keeping the servers unmodified; and
+PAKE setting (Section 3). For the DE-PAKE modeling we consider
+extensions which address issues related to client security (which are
+a fully capable man-in-the-middle attacker active on all the links
+not covered in our DE-PAKE model). In Section 6 we present our
+between all parties and one who is allowed to compromise servers
+system and implementation work and report on performance mea-
+and devices at will. No external source of authentication is assumed
+surements. For easy reference, in Table 1 we provide a summary of
+other than the user’s password (except for secure registration of a
+the main terms and acronyms used throughout the paper.
+user with the server and device). Second, we define the security
+requirements from a PTR protocol and show a PTR instantiation,
+2. OVERVIEW: DESIGN AND ANALYSIS
+FK-PTR, that satisfies this definition in the random oracle model.
+Our design follows the “password hardening” approach of Ford Finally, we prove a generic security composition theorem showing
+and Kaliski [17], but dispenses of authenticated channels (other that the composition of a secure PTR scheme (run between U and D
+than during a registration phase), multiple servers and/or other safe- on the basis of the user’s password pwd) with a secure PAKE pro-
+guards that were required for the secure use of these techniques in tocol (run between U and S on the basis of the hardened password
+prior work [17, 21]. rwd = F (pwd)) results in a secure DE-PAKE scheme, provided
+k
+The idea is simple: the user memorizes a regular password pwd that the PAKE protocol satisfies “security against server compro-
+but uses as her password with server S a value rwd = F (pwd) mise” or the more precise notion of KCI resistance introduced and
+k
+where F is a pseudorandom function and k is a key held by de- discussed in Section 3.1 (we note that typical protocols that store a
+vice (or an auxiliary on-line service) D (rwd is a mnemonics for salted version of the password satisfy this property).
+“randomized password"). Before authenticating to S, U contacts D Since our FK-PTR scheme does not require PKI, using a PKI-
+(through a client application) and obtains rwd via a special proto- free PAKE in the above composition results in a DE-PAKE protocol
+col with D (in which D learns nothing about pwd or rwd). U then that does not rely on public keys or other secure channels.
+authenticates to S via a (standard) PAKE protocol using rwd as a In order to demonstrate full standalone solutions, in Section 5
+password. Note that without knowledge of k, the value rwd has full we describe two instantiations of our PTR-PAKE construction of a
+entropy (in the range set of function F ) hence dictionary attacks do DE-PAKE scheme. First, we compose our FK-PTR scheme with
+not apply against rwd (neither online or offline attacks, not even if a specific PAKE protocol - a KCI-resistant version of the single-
+the server is compromised). Moreover, we will ensure that even if server variant of threshold PAKE from [22, 23]. Since this PAKE
+D (or S) is compromised, offline attacks against pwd are infeasi- protocol does not require PKI, neither does the resulting DE-PAKE
+ble. Thus, the challenge is in implementing the protocol between protocol. Secondly, we expand on the fact that since our PTR-
+U and D, to which we refer as PTR (for Password-to-Random), so PAKE construction can be used with any existing password proto-
+that U can compute F (pwd) but the protocol leaks no other infor- col with resistance to KCI attacks, one obtains DE-PAKE schemes
+k
+179
+
+===== PAGE 4 =====
+Table 1: Glossary
+Acronym Description
+Password-authenticated key exchange. We refer to password protocols by PAKE as well as to
+PAKE
+their security model (recalled in Section 3.1).
+A PAKE protocol that does not assume any secret or authenticated key carried by the user other
+PKI-Free PAKE than its own password. In particular, no PKI-based server-authentication is assumed.
+This is also known as the CRS or password-only model.
+A new notion of Device-Enhanced PAKE protocols that guarantees optimal resilience to offline and
+DE-PAKE online attacks upon compromise of device and/or server. We use DE-PAKE to refer to the security
+model (Section 3.2) as well as to the constructions satisfying this model (Sections 4 and 5) .
+A security notion and model for password hardening protocols. We use PTR (password-to-random) to
+PTR
+refer to the security model (Section 4.2) as well as to the constructions satisfying this model (Section 4.1).
+FK-PTR Specific PTR construction using the Ford-Kaliski password hardening technique (Section 4.1).
+Oblivious PRF (see Section 4.1) is the basis for the FK-PTR protocol.
+OPRF
+When implemented via the function F k (x) = H(x, (H(cid:48)(x))k) we obtain FK-PTR.
+A general name for DE-PAKE protocols built by composing a PTR and a PAKE protocols
+PTR-PAKE
+(their generic security is based on Theorem 3)
+A PTR-PAKE scheme where the PTR part is implemented with the FK-PTR construction. It is also the
+FK-PTR-PAKE
+name of the protocol in Fig 3 that combines FK-PTR with the PKI-free PAKE protocol of [22, 23].
+without changing the server that implements the PAKE protocol. Both users and servers may execute the protocol multiple times in a
+In particular, this allows us to use without any change a server that concurrent fashion. Each execution of the PAKE protocol by U or S
+implements the standard PKI-based password-over-TLS protocol. defines a (user or server) protocol instance, also referred to as a pro-
+A PTR scheme is a close variant of OPRF, and the potential of tocol session, denoted respectively ΠU or ΠS, where integer pointer
+i i
+OPRF to strengthen password authentication was recently used in i serves to differentiates between multiple protocol instances exe-
+the Pythia system [16], but their proposal differs from ours in at cuted by the same party. Each protocol session is associated with
+least three ways: (1) Their OPRF scheme is significantly more the following variables: a session identifier sid, which we equate
+costly than our PTR: it requires 6 exponentiations and a bilinear with the message transcript observed by this instance (where both
+map compared to 3 exponentiations in our PTR scheme (and we U and S order their interaction transcripts starting with U’s mes-
+can use elliptic curves without bilinear maps where exponentiations sage), a peer identity pid, and a session key sk. For a user instance
+are cheaper); (2) Their solution relies on PKI, while ours does not; the peer is always the user’s server while for a server instance the
+(3) Their solution does not offer a server-transparent instantiation. peer is the user authenticated in the session. The output of an exe-
+cution consists of the above three variables which can be set to ⊥ if
+3. SECURITY MODEL the party aborts the session (e.g., when authentication fails, a mis-
+formed message is received, etc.). When a session outputs sk (cid:54)=⊥
+We introduce the Device-Enhanced PAKE (DE-PAKE) security
+we say that the session accepts.
+model under which we prove the security of our schemes. The
+model extends the standard PAKE (Password Authenticated Key PAKE Security. To define security we consider a probabilistic at-
+Exchange) formalisms to include user-specific devices and formu- tacker A which schedules all actions in the protocol and controls
+lates a security definition that guarantees maximal online and of- all communication channels with full ability to transport, modify,
+fline security of password protocols. We start by recalling the PAKE inject, delay or drop messages. In addition, the attacker knows (or
+security model (adapted to the client-server setting) and then we even chooses) the dictionaries used by users. The model defines the
+present the extension of the PAKE model to the DE-PAKE setting. following queries or activations through which the adversary inter-
+acts with, and learns information from, the protocol’s participants.
+3.1 PAKE Security Model
+send(P, i, P (cid:48), M): Delivers message M to instance ΠP purport-
+i
+We recall the security model for PAKE (Password-based Authen- edly coming from P (cid:48). In response to a send query the instance
+ticated Key Exchange) protocols, based on the model of Bellare, takes the actions specified by the protocol and outputs a message
+Pointcheval and Rogaway [10] that extends authenticated key ex- given to A. When a session accepts, a message indicating accep-
+change models to account for the inherent vulnerability of pass- tance is given to A. A send message with a new value i (possibly
+word protocols to online guessing attacks. We adapt the PAKE with null M) creates a new instance at P with pid P (cid:48). For simplic-
+model to the client-server setting borrowing some of the formalism ity, we assume that the pair {P, P (cid:48)} in any send message contains
+from [22], and we recall an extension of this standard PAKE model a user and the server associated to that user (a non-compliant mes-
+to security against server compromise. sage causes the receiving instance to abort). The send query can
+Protocol participants. There are two types PAKE protocol partic- also create a new instance of party P : If ΠU i does not exist then
+ipants, users and servers. Each user U is associated with a unique query send(U, i, S, init) creates a new instance ΠU i which executes
+server S while servers may be associated with multiple users. with pid = S on U’s chosen password pwd. Similarly, if ΠS i does
+not exist then send(S, i, U, M) creates a new instance ΠS which
+Protocol execution. A PAKE protocol has two phases: initial- i
+executes with pid = U on S’s input σ (U), with U’s first message
+ization and key exchange. In the initialization phase each user U S
+set to M. (This formalism assumes that protocol exchanges are
+chooses a random password pwd from a given dictionary Dict and
+initiated by users, which is the operational setting in PAKE.)
+interacts with its associated server S producing a user’s state σ (U)
+S
+that S stores while U only remembers its password pwd. Initial- reveal(P, i): If instance ΠP i has accepted, outputs the respective
+ization is assumed to be executed securely, e.g., over secure chan- session key sk; otherwise outputs ⊥.
+nels. In the key exchange phase, users interact with servers over corrupt(P ): Outputs all data held by party P and A gains full con-
+insecure (adversary-controlled) channels to establish session keys. trol of P . We say that P is corrupted.
+180
+
+===== PAGE 5 =====
+compromise(S, U): Outputs state σ (U) at S. S is U-compromised. in our terminology) does not allow the attacker to authenticate that
+S
+test(P, i): If instance ΠP has accepted, this query causes ΠP to user to the server except after running an offline dictionary attack
+flip a random bit b. If b = i 1 the instance’s session key sk is ou i tput that recovers the password given the server’s state.3 In the key-
+and if b = 0 a string drawn uniformly from the space of session exchange literature an attack in which the compromise of a party P
+keys is output. A test query may be asked at any time during the allows the attacker to falsely authenticate another party P (cid:48) to P is
+execution of the protocol, but may only be asked once. We will called a Key-Compromise Impersonation (KCI) attack [12]. There-
+refer to the party P against which a test query was issued and to its fore, the above notion of security against server compromise can be
+peer as the target parties. seen as a weak form of KCI resistance, where impersonation of U
+The following notion taken from [22] is used in the security defi- to S is possible but only after running an offline dictionary attack.
+nition below to ensure that legitimate messages exchanged between We extend the above PAKE formalism to capture resistance to
+honest parties do not help the attacker in online password guess- weak KCI attacks (wKCI-resistance) through the following game
+ing attempts (only adversarially-generated messages count towards (which is well-suited to ROM-based implementations that hash the
+such online attacks). It has similar motivation as the execute query password). The security experiment is as before except for the fol-
+in [10], but the latter fails to capture the ability of the attacker to lowing changes. User U (associated with server S) chooses its pass-
+delay and interleave messages from different sessions. word at random from a dictionary Dict, where Dict is a random
+subset of {0, 1}τ of size 2d (for integers d<τ ). The attacker A
+Rogue send queries/activations: We say that a send(P, i, P (cid:48), M)
+is given a random subset of Dict of size q as well as the server’s
+query is rogue if it was not generated and/or delivered according to
+state σ (U), and it must choose the test session at an instance of
+the specification of the protocol, i.e. message M has been changed S
+S with peer U (in the regular case this is not allowed since S is U-
+or injected by the attacker, or the delivery order differs from what
+compromised). We call a PAKE scheme (cid:15)-wKCI-resistant if for any
+is stipulated by the protocol (delaying message delivery or inter- q ≤ 2d, the attacker’s advantage in this game is at most q/2d + (cid:15).
+leaving messages from different sessions is not considered a rogue
+A strong notion of KCI resistance is achieved in the DE-PAKE
+operation as long as internal session ordering is preserved). We also
+model as we will see next.
+consider as rogue any send(P, i, P (cid:48), M) query where P is uncor-
+rupted and P (cid:48) is corrupted. We refer to messages delivered through 3.2 DE-PAKE Security Model
+rogue send queries as rogue activations by A.
+We extend the PAKE model to the DE-PAKE setting. Besides
+Matching sessions. A session in instance ΠP and a session in in-
+i servers and users in the PAKE model, each user is associated with
+stance ΠP j (cid:48) are said to be matching if both have the same session a device D with which it communicates over a two-way link. (We
+identifier sid (i.e., their transcripts match), the first has pid = P (cid:48), stress that the role of D can be played by any data-connected en-
+the second has pid = P , and both have accepted. tity, including a hand-held device or an auxiliary web service.) The
+Fresh sessions. A session at instance ΠP with peer P (cid:48) s.t. {P, P (cid:48)} = initialization phase of PAKE is extended to include the user-device
+i
+{U, S} is called fresh if none of the queries corrupt(U), corrupt(S), communication that establishes the state stored at D. As before,
+compromise(S, U), reveal(P, i) or reveal(P (cid:48), i(cid:48)) were issued, where users only remember their passwords. As in the PAKE case, ini-
+ΠP(cid:48) is an instance whose session matches ΠP (if such ΠP(cid:48) exists). tialization (including the user-device interaction) is assumed to run
+i(cid:48) i i(cid:48)
+over secure channels. After initialization, the links between users
+Correctness. Matching sessions between uncorrupted peers output
+and devices are subject to the same man-in-the-middle adversar-
+the same session key.
+ial activity as in the links between users and servers. Device in-
+Attacker’s advantage. Let PAKE be a PAKE protocol and A be an stances ΠD are created similarly to user and server instances, and
+i
+attacker with the above capabilities running against PAKE. Assume are activated by A via send queries that include users and devices
+that A issues a single test query against a fresh session at a user or as senders and receivers. However, device instances do not pro-
+server and ends its run with an output bit b(cid:48). We say that A wins duce output other than the outgoing messages. In particular, reveal
+if b(cid:48) = b where b is the bit chosen internally by the test session. queries do not apply to them, but corrupt queries can be issued
+The advantage of A against PAKE is defined as Adv A PAKE = 2 · against devices, in which case the internal state of the device is
+P r [A wins against PAKE] − 1. revealed to A who then controls the device. The session-related
+notions, including the test query, do not apply to devices.
+Definition 1. A PAKE protocol PAKE is (q S , q U , T, (cid:15))-secure if it The attacker’s goal is the same as before, i.e. to win the test ex-
+is correct and for any password dictionary Dict and any attacker
+periment at a user or server instance, as in the PAKE setting. Also
+A that runs in time T , it holds that AdvPAKE ≤ qU +qS + (cid:15) where
+A |Dict| the correctness property is unchanged. However, to the attacker re-
+q U is the number of rogue send queries having the target user U sources we add the number of rogue send queries (see Section 3.1)
+as recipient and q S is the number of rogue send queries having the where the target user is the recipient and the device the sender (de-
+target S as recipient. noted q(cid:48) ) and the number of rogue send queries where the target
+U
+user is the sender and the device the recipient (denoted q ). We
+Dictionary size 2d. Our treatment works for any dictionary size, D
+refer to this more powerful adversary as a DE-PAKE attacker.
+but for notational convenience we denote it as 2d.
+Strong KCI resistance. The DE-PAKE model is intended to pro-
+Security against server compromise and KCI-resistance. In the
+vide a much stronger notion of security in case of server compro-
+asymmetric client-server setting of password authentication that
+mise than achievable in the PAKE case. While in the latter, imper-
+concerns us in this paper, plain passwords should not be stored at
+sonating U to S in case of U-compromise is possible (and unavoid-
+the server, so as to prevent the leakage of the password in case of
+able) through an offline dictionary attack, in DE-PAKE protocols
+server compromise. Instead, the server should store some other
+verification information corresponding to this password, such as
+3Recovering the password via an offline dictionary attack is un-
+the salted password hash. The security requirement in this case, avoidable in the PAKE model. Also unavoidable is impersonating
+often referred to as security against server compromise [19], is that S to U when S is U-compromised (except if one assumes, as in the
+access to the server’s state for a particular user (i.e, U-compromise PKI model, an independent authenticated channel from S to U).
+181
+
+===== PAGE 6 =====
+this is prohibited. In order to formalize this requirement we fol- Note on client security. The DE-PAKE model is designed to cap-
+low the treatment of KCI resistance from [27] and we strengthen ture (maximal) security against online and offline attacks where the
+the capabilities of a DE-PAKE attacker through a more liberal no- attacker fully controls all communication channels and can com-
+tion of fresh sessions at a server S. All sessions considered fresh in promise servers and devices. However, as it is customary in the
+the PAKE model are also considered fresh in the DE-PAKE model; PAKE setting, the model does not consider the security of the ma-
+in addition, in the DE-PAKE model, a session ΠS at server S with chine (the “client") into which the user enters the password. Yet,
+i
+peer U is considered fresh even if corrupt(S) or compromise(S, U) our solutions, while vulnerable to some forms of attack by an at-
+were issued as long as all other requirements for freshness are sat- tacker controlling the client machine, also provide defenses to com-
+isfied and the attacker A does not have access to the temporary mon attacks such as keyloggers or phishing attacks (see Section 5).
+state information created by session ΠS. This relaxation of the no- 4. A MODULAR DE-PAKE SCHEME
+i
+tion of freshness captures the case where the attacker A might have
+In this section we present and analyze our generic DE-PAKE
+corrupted S and gained access to S’s secrets (including long-term
+scheme, i.e. the PTR-PAKE shown in Figure 1, which results from
+ones), yet A is not actively controlling S during the generation of
+the composition of two independent cryptographic primitives, a
+session ΠS. In this case we would still want to prevent A from au-
+i PTR protocol and a PAKE protocol with resistance to wKCI attacks
+thenticating as U to S on that session. Definition 2 (item 2) below
+(see section 3.1). For a high-level description of the functionality
+ensures that this is the case for DE-PAKE secure protocols even
+of a PTR (password-to-random) scheme and its use for obtaining a
+when unbounded offline attacks against S are allowed.
+DE-PAKE scheme see Section 2. We start by describing a specific
+The following security definition captures the maximal-attainable
+efficient PTR implementation we call FK-PTR, with is based on the
+online and offline security from a DE-PAKE protocol as informally
+“password hardening” protocol of Ford-Kaliski [17] (Section 4.1).
+discussed in the introduction. Let DPK be a DE-PAKE protocol and
+We then use this protocol example to formalize the PTR notion
+A be an attacker with the above capabilities running against DPK.
+and its security requirements (Section 4.2), and we prove that the
+As in the PAKE model, we assume that A issues a single test query
+FK-PTR protocol satisfies the PTR security notion (Section 4.3).
+against some U or S session, that A output bit b(cid:48), and we say that
+Finally, we prove that the generic composition of any secure PTR
+A wins if b(cid:48) = b where b is the bit chosen by the test session. We
+define Adv
+A
+DPK = 2 · P r [A wins against DPK] − 1. s
+s
+c
+u
+h
+lt
+e
+s
+m
+in
+e
+a
+a
+s
+n
+e
+d
+c
+a
+u
+n
+re
+y
+D
+PA
+E-
+K
+P
+E
+AK
+sc
+E
+he
+s
+m
+ch
+e
+em
+wi
+e
+th
+(S
+r
+e
+e
+c
+s
+t
+i
+i
+s
+o
+ta
+n
+n
+4
+c
+.
+e
+4)
+to
+. T
+w
+h
+K
+us
+C
+,
+I
+o
+a
+u
+t
+r
+ta
+s
+c
+c
+k
+h
+s
+em
+re
+e
+-
+Definition 2. A DE-PAKE protocol is called (q , q , q(cid:48) , q , T, (cid:15))-
+S U U D can be instantiated with the FK-PTR scheme as the PTR part and
+secure if it is correct, and for any password dictionary Dict of size
+any secure wKCI-resistant PAKE protocol (e.g., [19, 22]). More-
+2d and any attacker that runs in time T , the following properties over, if the PAKE scheme is in the password-only model4 then the
+hold (for q , q , q(cid:48) , q as defined above):
+S U U D DE-PAKE scheme is also secure in this model.
+1. If S and D are uncorrupted, the following bound holds:
+4.1 The FK-PTR Scheme
+min{q + q , q(cid:48) + q }
+AdvDPK ≤ U S U D + (cid:15). (1) The instantiation of a PTR scheme we call FK-PTR is based on
+A 2d Ford-Kaliski’s “password hardening" [17] or its more general in-
+2. If D is corrupted then AdvDPK ≤ (q + q )/2d + (cid:15). terpretation as an Oblivious PRF (OPRF) [18,25,26]. Roughly, an
+A U S OPRF is a pseudorandom function that is computed by two parties,
+3. If S is corrupted then AdvDPK ≤ (q(cid:48) + q )/2d + (cid:15).
+A U D one that holds the key to the function and learns nothing from the
+4. When both D and S are corrupted, expression (1) holds but computation, and one that holds an input and learns the output of
+q D and q S are replaced by the number of offline operations the function on that input and nothing else.5 In Figure 2 we present
+performed based on D’s and S’s state, respectively. a particular instantiation of the PTR-PAKE protocol, which we call
+FK-PTR-PAKE, that results from a composition of FK-PTR, which
+Note that the bounds in items 3 and 4 hold also when S is U-
+is a specific instantiation of a PTR scheme, with a PAKE scheme.
+compromised (since being corrupted implies U-compromise for all
+Figure 2 fully specifies the FK-PTR protocol, which is an interac-
+users U associated with S).
+tion between U and D by which U retrieves a random value rwd
+Note on modeling DE-PAKE via a (2,2)-TPAKE. In a (t + 1, n) with the help of its password pwd. At initialization, U chooses and
+threshold-PAKE (TPAKE) (cf. [22]), a user holding a single pass- remembers password pwd while D chooses and stores k ← Z .
+q
+word can securely establish authenticated keys with a subset of n To retrieve rwd, U first blinds pwd by raising the hashed value
+servers as long as no more than t of them are corrupted (and the H(cid:48)(pwd) to a random exponent ρ, and send it to D. This perfectly
+user interacts with at least t + 1 well-behaving servers). One can hides pwd from D and from any eavesdropper on the U − D link.
+implement DE-PAKE on the basis of (2,2)-TPAKE by letting D and D checks that the received value is in the group G and if so it raises
+S act as the two servers in a (2,2)-TPAKE scheme (this would imply it to the secret exponent k. Now, U can de-blind this value by rais-
+the first three conditions of Definition 2 but the last one should be
+4This model assumes that user/password registration is imple-
+added as an additional requirement). Moreover, one can use (2,2)-
+mented over secure channels but user authentication after registra-
+TPAKE as the basis for the definition of DE-PAKE where the user
+tion does not assume public keys or secure channels for any party
+only authenticates to one of the parties. However, the dedicated in the system - only the existence of public parameters, e.g., for
+DE-PAKE definition we present, and its instantiations, provide sev- defining an elliptic curve, is assumed. These parameters are com-
+eral advantages: (1) It makes the security goals for the DE-PAKE mon to all users and are part of the client program run by a user;
+notion clearer; (2) It allows for a more precise specification of the they require the same integrity guarantees as the program itself.
+(strict) upper bounds on attacker’s advantage depending on the at- 5We use the PTR notion instead of existing OPRF definitions be-
+tack setting; and (3) It allows for more efficient implementations, cause game-based OPRF notions, e.g. [18, 25], do not seem to en-
+able our PTR-to-DEPAKE compiler, while the UC OPRF of [22]
+in particular enabling a server-transparent DE-PAKE implementa-
+includes verifiability, which is costlier to achieve than PTR. How-
+tion, which cannot be done using TPAKE. (A TPAKE cannot be ever, it is possible that the recent UC notion of non-verifiable OPRF
+server-transparent because if S runs the code as in PAKE then S’s [23] would suffice in our compiler. (Note that the FK-PTR scheme
+presence cannot help U to authenticate to D.) is identical to the OPRF construction in [23].)
+182
+
+===== PAGE 7 =====
+Setup
+• Group G. The scheme works over a cyclic group G of prime order q, |q| = (cid:96), with generator g.
+• Hash functions H, H(cid:48) map arbitrary-length strings into elements of {0, 1}τ and G, respectively, where τ is a security parameter.
+• OPRF. For a key k ← Zq, we define function F k as F k (x) = H(x, (H(cid:48)(x))k).
+• Parties. User U, Device D, Server S.
+• Dictionary Dict of size 2d (a power of 2 is used for notational convenience only).
+• Any PAKE protocol Π.
+Initialization Phase (assumed to be executed over secure links)
+• FK-PTR Initialization: U chooses password pwd ← Dict; D chooses and stores OPRF key k ← Zq; U interacts with D to compute rwd = F k (pwd).
+• PAKE Initialization: User U and server S are initialized with value rwd used as a password according to the specification of PAKE protocol Π.
+Login Phase
+• User-Device Interaction (FK-PTR)
+1. U chooses ρ ← Zq; sends α = (H(cid:48)(pwd))ρ to D.
+2. D checks that the received α ∈ G and if so it responds with β = αk.
+3. U sets rwd = H(pwd, β1/ρ).
+• User-Server Interaction (PAKE)
+Follows the specification of the PAKE protocol Π where U uses rwd as its password.
+Figure 2: The FK-PTR-PAKE Scheme
+ing it to the power 1/ρ to obtain H(cid:48)(pwd)k. Finally, U hashes this the PTR requirements to the minimum necessary is pivotal for ob-
+value with pwd to obtain the randomized password rwd. taining our very efficient FK-PTR implementation that would not
+Note that D contains no information related to pwd hence an be possible otherwise.
+attacker interacting with D or even breaking into it learns nothing
+Attack avenue 1: Leakage on rwd = F (pwd). Given that A can
+about pwd. Also, U does not run any test on the value reconstructed k
+obtain values in RDict by interacting with D on input any pass-
+in the FK-PTR protocol. Hence, an attacker that interacts with U
+word in Dict we need to assure that nothing in the scheme leaks
+in the role of D does not learn anything about pwd from watching
+information on the specific value of rwd = F (pwd) or otherwise
+the behavior of U. These “obliviousness" and minimality proper- k
+the attacker can use this information to gain advantage on guessing
+ties of FK-PTR are essential to achieve PTR security and make the
+which of the RDict values is more plausible to be the correct rwd
+security analysis challenging. We will use this scheme to moti-
+(e.g., it shouldn’t be possible for A to test a possible value p as a
+vate the security requirements from a PTR scheme as needed for
+candidate for pwd or to test a value r as a candidate for rwd). More
+composing it with a PAKE protocol and obtain a secure DE-PAKE
+generally, to apply PAKE we need to ensure that the view of the
+protocol. We establish these requirements in the next subsection
+attacker at the end of the PTR run is independent, computationally
+and then prove the security of FK-PTR.
+or statistically, from rwd.
+4.2 PTR Security Model To capture this property we define the following experiment re-
+ferred to as the distinguishing test. Define RDict as {F (p) : p ∈
+Here we present the security model for (generic) PTR schemes. k
+Dict} where k is D’s secret key. Let rwd = F (pwd) and choose
+We first define the adversarial game underlying this model and then k
+r ← RDict \ {rwd}. A is given both rwd, r (in random order) and
+use the FK-PTR scheme and explicit potential attacks against it to
+it needs to guess which one equals F (pwd).
+motivate the security definition. k
+PTR adversarial game. The game is parameterized by a function Attack avenue 2: Learning values in RDict. Since A can learn
+family F and a password dictionary Dict of size 2d for some d values in RDict by interacting with D, A can later interact with S
+(the power of two is chosen for notational convenience only). User in the PAKE protocol using these values. Thus, the best we can
+U is initialized with password pwd ← Dict and device D with a do is to require the PTR protocol not to leak to A more than one
+key k defining function F . Later, the parties interact so that in value in RDict for each interaction with D. We formalize this by
+k
+an undisturbed interaction between U and D, where U runs with defining a game where the attacker, at the end of its run, outputs
+input pwd, U outputs the secret rwd = F (pwd). Attacker A has a set of candidate values in RDict, and requiring that this set does
+k
+oracle access to U and D, calling these parties with any message not contain more than q D correct values where q D is the number of
+of its choice and receiving the corresponding response as defined rogue activations of D by A.
+by the scheme depending on the internal secrets and state of the
+Attack avenue 3: Using U to test passwords. Since the attacker can
+responding party. The security requirements are defined below in
+influence the values output by U in the PTR protocol, the possibility
+Definition 3 but we first motivate them as follows. exists, at least in principle, that A makes U output a value F (pwd(cid:48))
+k
+Attack avenues and PTR security requirements. We define se- where pwd(cid:48) ∈ Dict is known to A. In this case, A can observe the
+curity of a PTR scheme in a way that guarantees that the generic PAKE run of U with S and see if pwd(cid:48) is the correct password.
+composition of PTR and PAKE protocols results in a secure DE- This allows A to test passwords in Dict without having to act as
+PAKE scheme. The definition consists of several requirements that an active MitM in the PAKE protocol between U and S. While
+we motivate next via concrete attacks showing these requirements this attack is not possible against FK-PTR (as we will prove later),
+to be necessary (and by virtue of Thm. 3 also sufficient). Reducing one can show PTR schemes where this attack is feasible. There are
+183
+
+===== PAGE 8 =====
+two ways of dealing with this issue. We either show that any such 1. the probability that A passes the distinguishing test of attack
+“dictated password” requires a specific rogue activation of D (as in avenue 1 is at most 1/2 + (cid:15) ;
+1
+Attack 2 above) hence treating it as any other password in RDict 2. the probability that A outputs more than q D values in RDict
+that A may learn by interacting with D or we require that a secure following attack avenue 2 is at most (cid:15) 2 ;
+PTR scheme does not allow for such attack. The latter is better as it 3. the probability that U outputs F k (pwd(cid:48)) for pwd(cid:48) ∈ Dict \
+prevents A from testing passwords without a rogue activation of U {pwd} is at most (cid:15) 3 ;
+but the former can be acceptable in a protocol that allows the attack. 4. the probability that f c , as defined in attack avenue 4, is not
+Given that our FK-PTR protocol does not allow the attacker to use 1-1 is less than (cid:15) 4 .
+U as an oracle for testing passwords in RDict \ {rwd}, we choose where in all four cases the probability goes over random PTR key
+the stronger notion by adding an explicit requirement against such k and random pwd in Dict.
+possibility.
+4.3 Security of the FK-PTR Scheme
+To prevent this we require that U’s PTR output equals F (pwd(cid:48))
+k
+for pwd(cid:48) ∈ Dict \ {pwd} with at most negligible probability. Theorem 1 below summarizes the security of the FK-PTR scheme
+in terms of Definition 3. It uses the One-More Gap Diffie-Hellman
+Attack avenue 4: Running U on passwords outside RDict. The assumption defined next.
+PTR-PAKE composition presents an attack avenue not present in
+regular PAKE protocols: A can make U run the PAKE protocol Note on proofs: Proofs for all statements below are in [24].
+on a password from a dictionary RDict∗ different than RDict (note The One-More Gap DH (OMG-DH) Assumption [9, 26]: Let G
+that this is different from attack scenario 3). To see this, consider an be a group of prime order q and k a random value in Z q . Let DH k
+attack in which A impersonates D to U running the protocol with be an oracle7 that on input g ∈ G outputs gk, and let DDH k be
+a key k(cid:48) chosen by A. As a consequence, U will run the PAKE an oracle that on input a pair (a, b) answers whether b = ak. We
+protocol with the value F k(cid:48)(pwd), i.e., with a value uniformly dis- say that G satisfies the (cid:15) omg -OMG-DH assumption for function
+tributed over RDict∗ = {F k(cid:48)(p) : p ∈ Dict} where RDict∗ is (cid:15) omg if any attacker A that runs in time T has probability at most
+known to A. This allows A to attack the PAKE protocol as follows. (cid:15) omg (T, q dh , q ddh ) to win the following game: A is given access to
+It impersonates S to U as if the server’s state was initialized with the DH k and DDH k oracles, which it queries q dh and q ddh times,
+password F k(cid:48)(p) for p ∈ Dict. If p = pwd, A succeeds in the resp., and is given a set R of random elements in G. It wins if it
+impersonation and learns pwd.6 This attack is not contemplated outputs q dh + 1 different pairs (g, gk), g ∈ R.
+in standard PAKE models where the user is assumed to run with
+Theorem 1. Let G be a group where the (cid:15) (·)-One-More Gap
+a password from the specified dictionary and without adversarial omg
+DH holds. Let the hash functions H, H(cid:48) be modeled as random
+choice of the password. To illustrate the dangers of such attack,
+oracles and q be the number of invocations to H. Then, the FK-
+imagine that the family F has a key k∗ such that F k∗(·) is a con-
+PTR scheme r
+H
+un over group G with a dictionary Dict ⊂ {0, 1}τ is
+stant function (with an output known to A). This is a real possibil-
+(q , q , T, (cid:15))-secure where (cid:15) = max{(cid:15) , (cid:15) , (cid:15) , (cid:15) } with (cid:15) = 0,
+ity against FK-PTR if we define F (p) to be H((H(cid:48)(p)k) in which D U 1 2 3 4 1
+k (cid:15) ≤ T /2τ + (cid:15) (T, q , q ), (cid:15) ≤ 1/2τ , (cid:15) ≤ |Dict|2/2τ .
+case k∗ = 0 has exactly this effect. Similarly, if there is a key 2 omg D H 3 4
+k∗ for which F k∗ is a t-to-1 function, A could discard t passwords Note: The bound |Dict|2/2τ on (cid:15) 4 can be reduced significantly
+with each S-impersonation attempt against U. Again, this is possi- if one relaxes requirement 4 of PTR security to allow for some
+ble against FK-PTR with the modified F where A can choose β(cid:48), deviation from injectiveness, e.g., allowing RDict to be of size α ·
+k
+the response returned to U, to be in a group of small-order. (Such |Dict| for some α, say α = 1/2.
+an implementation of FK-PTR would require to test β(cid:48) ∈ G \ {1}.)
+Lemma 2. Let G be a group where the (cid:15) -One-More Gap DH
+To prevent this attack avenue we require that any attack strategy assumption holds and model hash function om s g H, H(cid:48) as random or-
+by A for generating a dictionary RDict∗ induces a 1-1 function.
+acles. Let A be a PTR-attacker against the FK-PTR scheme that
+We formalize this as follows. Let c denote a set of coins for parties
+runs time T and activates D q times with values chosen by A
+U, D, A in a PTR run. For any such c define f (p) as the output D
+c (i.e., rogue activations). Then, the probability that A outputs more
+from U if its password was p. We require that except for negligible
+than q values in RDict (as in attack avenue 2) is at most (cid:15) =
+probability over the choice of c, f c is 1-1. (Note that each such c T /2τ + D (cid:15) (T (cid:48), q , q ) where q is the number of invocat 2 ions
+defines a dictionary RDict∗ = {f c (p) : p ∈ Dict} of size |Dict|.) of H by A o a m n g d T (cid:48) ≈ D T . H H
+We are now ready to define PTR security.
+4.4 PTR-PAKE Composition Theorem
+Definition 3. We say that a PTR scheme is (q , q , T, (cid:15))-secure if
+D U We are now ready to prove the composition theorem showing
+for any PTR attacker A that runs time T and performs q and q
+D U that composing a secure PTR with a PAKE that offers the wKCI-
+rogue activations of D and U, respectively, (cid:15) is an upper bound on
+resistance property, results in a secure DE-PAKE scheme (with se-
+the values (cid:15) , (cid:15) , (cid:15) , (cid:15) defined as follows (these (cid:15) are functions of
+1 2 3 4 i curity definitions as presented in Section 3). As noted earlier, if the
+q , q , T and they correspond to the above attack avenues):
+D U PTR and PAKE schemes dispense of PKI so does our DE-PAKE
+protocol: An example of such composed scheme free of PKI (ex-
+6This attack recovers pwd with 2d impersonation attempts (of S)
+cept for initialization) is presented in Section 5.
+against U and it only requires one value F k(cid:48)(pwd) used by U as
+its PAKE password. This does not imply a break of the DE-PAKE Theorem 3. Let P be a (q , q(cid:48) , T , (cid:15) )-secure PTR scheme and
+D U P P
+scheme, since for each impersonation attempt against U, A needs Π be a (q , q , T , (cid:15) )-secure PAKE protocol that is also (cid:15) -
+S U Π Π KC
+to perform a rogue activation of U in PTR. If q U (cid:48) is the number of wKCI-resistant, then the DE-PAKE scheme C that uses the compo-
+rogue activation of U in PTR and q U is the number of rogue calls sition of both protocols is a (q , q , q(cid:48) , q , T , (cid:15) )-secure DE-
+to U in PAKE, then the probability of successful impersonation is S U U D C C
+PAKE protocol where (cid:15) = (cid:15) + (3q(cid:48) + 1)(cid:15) + (cid:15) + qU +qS .
+at most min{q , q(cid:48) }/2d. This implies that it is insecure for U C Π U P KC 2τ−1
+U U
+to cache the value retrieved from D for use in multiple sessions - 7DH is not defined over elements outside G hence one needs to
+k
+doing so allows the above attack without A having to act as a MitM check the input to the oracle - it can be done by an explicit group
+between U and D in each DE-PAKE session. membership check or by co-factor exponentiation.
+184
+
+===== PAGE 9 =====
+5. INSTANTIATIONS AND EXTENSIONS existing service is required. We refer to this mechanism as Server-
+In this section, we discuss several instantiations and extensions Transparent DE-PAKE.
+of our PTR-PAKE scheme showing the practicality and flexibility There are several advantages of this setting: (1) the user can
+of our approach. We first present a full and detailed instantiation of simply remember the short nominal pwd but register with a strong
+PTR-PAKE that is secure in the PKI-free setting and which we use high-entropy password that significantly increases resistance to on-
+as the basis for our implementation and evaluation work reported line and offline guessing attacks (in particular, offline-only attacks
+in Section 6. Then, we show how to provide transparent DE-PAKE on a compromised server are not possible); (2) nominal password
+support to currently deployed web services, namely, armoring an pwd can be the same or reused among multiple services, but the
+existing service against online and offline attacks without chang- OPRF key associated with each service stored on the device can
+ing the server. Finally, we comment on extensions that provide be different (hence also rwd would be different), and therefore the
+defenses against client-side and phishing attacks. compromise of the password rwd at one server will not reveal the
+actual password pwd and will not compromise the user’s accounts
+PKI-Free DE-PAKE. Figure 3 describes a full instantiation of with other services; (3) rather than asking the user to frequently
+a PKI-free PTR-PAKE protocol using the FK-PTR scheme from change the password and memorize the updated password, only the
+Figure 2 and a PKI-free PAKE protocol with resistance against key on the device can be changed, which improves the usability.
+wKCI attacks adapted from the threshold PAKE (TPAKE) proto- We are currently studying the application of this server-transparent
+col of [22, 23]. More precisely, the PAKE protocol we use is an FK-PTR-PAKE scheme to building a secure password manager.
+adaptation of the variant of the TPAKE protocol from [22, 23] with
+resistance against wKCI attacks, proven secure in the PKI-free (or Resisting Client-Side & Phishing Attacks. Malicious code and
+CRS) model, to the single-server case (i.e., a (1,1)-TPAKE). keyloggers remain a threat to browsers in spite of browser secu-
+The protocol as described in Figure 3 also requires a key-exchange rity enhancements. Because we use a keyed password hardening
+mechanism (the “KE formula") to set a session key between server scheme, an attacker who learns pwd by a key-logger or shoulder
+and user (in particular for the sake of mutual authentication). Dif- surfing can not authenticate to the service without interacting with
+ferent protocols can be used here, for example, based on shared the device. However, an attacker who compromises a client termi-
+keys or public keys, with or without forward secrecy, etc. However, nal can obtain rwd. By using service-specific keys at the device
+we note that in order to achieve security against server compromise we guarantee that an attacker who obtains rwd can only compro-
+(needed to provide the maximal security of a PTR-PAKE scheme) mise the particular service associated with it; even if pwd is used
+one must use a public key mechanism. Otherwise, the server would for multiple services, the rwd values derived for each service are
+be storing a secret authentication key for the user which would al- random and independent .
+low an attacker to impersonate the user to the server in case of Still, one can reduce the threat of the malware attack to the by
+server compromise. Thus, while we allow for different key ex- combining our scheme with the traditional two-factor authentica-
+change mechanisms through a general KE formula, we do require tion (TFA) mechanism, i.e., having D generate a PRF on a time
+these to be based on public keys for both parties (we also accom- value or a nonce under a key that D shares with S. Note that in
+modate ephemeral keys if forward secrecy is desired). For illus- a traditional TFA mechanism, compromising the client allows the
+tration, and as a concrete and efficient instantiation that preserves attacker to hijack the current login session of the user, but does not
+a minimal number of messages and provides forward secrecy, we allow the attacker to login in future sessions (due to the use of “one-
+define the key computation formulas corresponding to the HMQV time” PIN codes). Integrating our DE-PAKE protocol with tradi-
+protocol [27], where e = H(X , S), e = H(X , U): tional TFA could provide the same level of security in the event of
+u u s s
+client compromise, while providing all the other security properties
+For S: K = KE(p , x , P , X ) = H (cid:0) (X P eu)xs+esps (cid:1) of our DE-PAKE scheme.
+s s u u u u
+For U: K = KE(p , x , P , X ) = H (cid:0) (X P es)xu+eupu (cid:1) Resistance to phishing attacks can be achieved if rwd is com-
+u u S S s s puted on a concatenatation of pwd and the URL being accessed,
+The user attempts to log-in to a web service (S) from a browser i.e., if rwd = F Kd (pwd|url). This is similar to the PwdHash ap-
+running at the client (U), using her smartphone (D) to map her proach [28] except that in PwdHash, the attacker that obtains the
+password pwd to a random rwd. S and U run an instantiation of randomized password through phishing can mount a dictionary at-
+PAKE protocol on input rwd to authenticate the user. Although the tack to find the user’s password while in our case this is not feasible.
+scheme can be extended to other devices with same capabilities as
+smartphones, we targeted latter as the most common device. 6. DEVELOPMENT AND EVALUATION
+Server-Transparent DE-PAKE. An important implication of the We evaluate the feasibility and performance of our DE-PAKE
+modularity of our PTR-PAKE scheme is that the user can use any scheme, we pursue a proof of concept system development and
+secure PTR protocol to derive a hardened password rwd from her evaluation of protocol FK-PTR-PAKE described in Figure 3. The
+nominal password pwd, and then register rwd as her actual pass- FK-PTR-PAKE protocol implements a secure DE-PAKE solution
+word with an existing server, where the latter implements any wKCI- with full resilience to online and offline attacks, and without re-
+resistant password authentication protocol. Since the password au- liance on PKI (except for initialization).
+thentication protocol is independent of the hardening procedure, it
+6.1 FK-PTR-PAKE System Design
+can be the standard password-over-TLS protocol used in the de-
+facto standard PKI setting. (Note that if the server stores a salted We implemented parties S, D, U as follows: S is a web-server
+password hash then the password-over-TLS authentication is wKCI- hosted on a Debian 7.6 server running PHP 5.4.4; D is an LG G3
+resistant.) In such case the login phase of the PTR-PAKE protocol Verizon VS985 Android 5.1 phone running our Java code devel-
+consists of the user typing her password pwd, the client terminal oped for Android API 22; and U logs in from a client running
+and the device executing the PTR protocol to compute the hard- Google Chrome 40.0 browser on a MacBook Air laptop with a 1.3
+ened password rwd, and the client terminal sending rwd to the GHz Intel Core i5 and 4GB memory. At the client side, all com-
+server over a TLS session. In this setting, no modification to an putations are performed in our Chrome app. At the device side,
+185
+
+===== PAGE 10 =====
+Parties: User U, Device D, Server S.
+Public Parameters and Components
+• Group G of prime order q with generator g.
+• Hash functions H, H(cid:48) with ranges {0, 1}2τ , G and Zq, respectively, for τ a security parameter.
+• Pseudorandom function (PRF) f with range {0, 1}2τ .
+• OPRF function F k (x) = H(x, (H(cid:48)(x))k) for key k ∈ Zq.
+• Key exchange formula KE: on input long-term and ephemeral private-public keys outputs shared key K ∈ {0, 1}τ .
+Initialization Phase (assumed to be executed over secure links)
+• FK-PTR Initialization: Run FK-PTR initialization of Fig. 2 to choose pwd, device’s OPRF key k d, and compute rwd = F kd (pwd).
+• PAKE Initialization:
+1. S chooses ps ∈
+R
+Zq and sends to U the public key Ps = gps (Ps can be used with all of S’s users).
+2. U chooses z ∈
+R
+{0, 1}τ , ks ∈
+R
+Zq;
+s c e o t m s p v u al t u es es P c u = = z g ⊕ pu F a k n s d (r m w u d) = , r fz = (2 f , z P ( u 0) , , P C s); = an H d ( s r e , n r d w s d to , c S ), th p e u va = lue f s z c (1 , ) C m , o k d s, q P ; u, mu.
+3. S stores c, C, ks, Pu, mu in its U-associated storage (if Ps is user-specific, it also stores Ps and ps).
+Login Phase
+• User-Device Interaction (FK-PTR)
+Follows the FK-PTR protocol as per Fig. 2 to obtain rwd on input pwd from U and input k d from D.
+• User-Server Interaction (PAKE)
+1. U chooses ρ, xu ← Zq; initiates a key exchange session with S by sending its identity U, the value
+α = (H(cid:48)(rwd))ρ and Xu = gxu.
+2. S proceeds as follows:
+(a) Checks that α ∈ G;
+(b) Retrieves (c, C, ks, Pu, mu) from its U-associated storage;
+(c) Picks xs ∈
+R
+Zq and computes β = αks, Xs = gxs.
+(d) Sends to U: β, c, C, Pu, mu, Ps, Xs.
+(e) Computes K = KE(ps, xs, Pu, Xu) and outputs session key SK = fK(0).
+3. U proceeds as follows:
+(a) Sets z = c ⊕ H(rwd, β1/ρ), r = fz(0), pu = fz(1) mod q.
+(b) Aborts unless the following conditions hold: β ∈ G, C = H(r, rwd, c), mu = fz(2, Pu, Ps).
+(c) Computes K = KE(pu, xu, Ps, Xs) and outputs session key SK = fK(0).
+• Explicit Authentication
+If explicit authentication of the parties is required then S adds the value fK(1) to its message and U adds a third message with value
+fK(2). Each party verifies the value received from the other party.
+Figure 3: Instantiation of FK-PTR-PAKE with PKI-free PAKE protocol from [22, 23]
+all computation is performed by our Android app. The server uses coordinate of a point on the curve only if a y value associated with
+a Java communication application to run the single-server PAKE it is a quadratic residue (i.e., x and y satisfy the curve equation).
+of [22] (see Figure 3) and PHP scripts to authenticate the user. Otherwise, the same computation is repeated in the next iteration
+While client U and server S communicate over the Internet, the until a curve element is obtained8. Such a point on the curve is the
+device-client (U−D) communication depends on the features of the output of the hash function H(cid:48). The other hash function in our im-
+device. Our implementation allows D to communicate either via plementation, denoted by H, is a SHA256 hash function. The PRF
+the cellular data network or the WiFi internet, but if such channels f used in computing r, p , and m in Figure 3 is implemented
+u u
+are unavailable, e.g. because device D looses cellular data and/or using HMAC-SHA256 with τ -bit keys and τ -bit outputs.
+WiFi internet coverage, we allow for a fall-back to a localized
+device-client channel, which in our current implementation is re-
+OPRF Function: OPRF is defined as F (x) = H(x, (H(cid:48)(x))k)
+alized by an ad hoc WiFi connection between U and D. k
+with input x from the client and k from the server/device [22]. The
+OPRF works over group G of prime order p, which in our imple-
+Hash Functions: The modular structure of the the DE-PAKE pro- mentation is an elliptic curve NIST P-256 group.
+tocol gives us the flexibility to pick any hash function in the imple-
+mentation. The “Hash onto Elliptic Curve” function, denoted by
+H(cid:48), maps an arbitrary-length string into an element of the group
+8We note that the number of iterations in this hunt-and-peck pro-
+G of prime order q; in our implementation G is an elliptic curve
+cedure (as used in our prototype) can leak information on the pass-
+NIST P-256 group. In this hashing function, SHA-256 of the input word. A safer approach is to use a curve such as 25519 with the El-
+(concatenated with the iteration number) is computed and truncated ligator 2 hashing technique [11] which provides better side-channel
+into an element in Z , the computed value is considered as the x protection and better performance.
+q
+186
+
+===== PAGE 11 =====
+Table 2: Performance Analysis of the FK-PTR-PAKE Protocol; mean (standard deviation) of delay is reported in milliseconds; The interaction of the user
+with the system is exuded from this evaluation. The primary D − U channel implementation is over Cellular Data (12Mbps 4G LTE).
+Device Client Server S − U Channel D − U Channel Total
+PTR 183.30 (0.02) 45.37 (1.20) – – 36.81 (0.10) (4G LTE) 265.48ms
+PAKE – 195.05 (0.03) 27.85 (0.00) 26.76 (2.45) – 249.66ms
+Overall Time 515.14ms
+WiFi Internet
+# of EC Exponentiations 1 7 4 48.09 (0.23)
+(10 Mbps)
+Localized WiFi
+Single EC Exponentiation Cost 167.41(0.03) 10.65 (0.02) 1.39 (0.00) 7.42 (0.01)
+(54 Mbps)
+Key Computation: The Key Computation function, KE, is from connectivity (cellular data or WiFi), which can serve as an effective
+the HMQV protocol [27] described in Section 5 and is computed at device-client communication channel. In addition to performance
+the client’s Chrome application and the server application. and bandwidth, such channels have the advantage that the user does
+Commitment: During initialization, commitment C is computed not need to be involved in the channel set-up phase (unlike, for
+as H(r, rwd, c) at the client side, and is sent to the server to be example, a Bluetooth channel that requires device pairing by the
+stored at the server. During authentication, the server sends back C, user). Although such channels are not cost-free (especially cellular
+which is compared against H(r, rwd, c) to verify that the computed data), currently most of the carriers offer unlimited text/voice/data
+values at the client are valid. The client aborts the protocol if the plan with as less as $25 per month on some of the plans. With these
+commitment is not verified. type of plans, we believe that device-client channels may not im-
+pose additional cost for the user. At home or at work, for example,
+Message Authentication Code: m is the message authentica-
+u users often have WiFi Internet connectivity available.
+tion code that is sent to the server from the client during initializa-
+Due to the above advantages our implementation is based on a
+tion, and is stored at the server. During the authentication phase,
+device-client “data channel”. On occasions this channel becomes
+the server sends m back to the client, which is compared against
+u unavailable, e.g., when the user loses network coverage, our imple-
+f (2, P , P ) at the client side. If the two do not match, it means
+z u s mentation allows fall-back to the localized wireless ad-hoc chan-
+the received m is not the same as the one sent to the server dur-
+u nels at the cost of reduced usability, since some user effort is re-
+ing the initialization and therefore the client aborts the protocol,
+quired for establishing localized channels. Assuming such a fall-
+otherwise the received public key P is valid (i.e., the server is le-
+s back is not required frequently, this “hybrid model” of device-client
+gitimate) and client can continue running the protocol.
+communication may provide a high level of usability. (For other
+Chrome Extension: We developed a Chrome JavaScript applica- case studies using localized WiFi channel see e.g. [14, 29].)
+tion to implement user U on a client browser. The user needs to run
+this application during the initialization and authentication phases
+6.2 Performance Evaluation
+(if not already running). This application interacts with D to recon-
+struct rwd, and with S to construct K and session key SK, and to
+The overall execution time of FK-PTR-PAKE implementations
+authenticate U to S. For all Elliptic Curve computations, we used
+is evaluated over 10, 000 iterations, and the averaged results are
+the Stanford EC library, and for SHA-256 and OPRF functions,
+reported in Table 2 in settings described in the previous subsection.
+we used CryptoJS APIs. We used Stanford JSBN and JSBN2 li-
+The communication between U and S is timed over the Inter-
+braries for all BigInteger computations on the Chrome App. We
+net (web server and client with 10Mbps Internet connection), but
+used Chrome.socket API to send and receive data between U and
+the communication between U and D is tested in three different
+D in the PTR protocol, and between U and S in the PAKE protocol.
+settings: (1) The primary setting is when the communication chan-
+Server Application: Server side PHP scripts are the initial and last nel between D and the internet is a Cellular Data link, which in our
+point of interaction with the user. Moreover, the application on the tests was a 12Mbps Verizon 4G LTE link; (2) The second setting we
+server-side is responsible for storing user specific information, and tested is when D has a WiFi Internet connection (10Mbps), which
+participating in the PAKE protocol to authenticate the user. We is another popular Internet connection setting for mobile devices,
+developed a Java program using native Java Socket, Java Security commonly used as an alternative to cellular data communication;
+and Bouncy Castle libraries to run the PAKE protocol. (3) Finally, we timed the protocol in the Localized WiFi setting,
+namely a point-to-point 54Mbps wireless device-client link (ad hoc
+Device Application: The Android app running on the device is WiFi) established between U and D. As we argued in the previous
+responsible for storing OPRF k d , receiving α = (H(cid:48)(pwd))ρ from subsection, the localized WiFi channel is an important fall-back op-
+the client, checking the group membership of α, and sending β = tion in case the other two channels are unavailable. Table 2 shows
+αkd to the client. Although this application can theoretically run overall costs for setting (1), but at the bottom of the right-most col-
+on the device without any interaction with the user, we require the umn we show the D-U channel delay in settings (2) and (3).
+user to confirm the transfer of β. The user needs to launch the Based on our evaluation, for all parties, the most costly computa-
+application (if not already running) and wait for the app to prompt tion is Elliptic Curve (EC) exponentiation (10.65ms on the Chrome
+for the consent. Then, she can approve the communication, to let app, 167.41ms on the Android app, and 1.39ms on the server with
+the device send β to the client. This design choice is made to ensure the mentioned libraries). In one round of the protocol with dif-
+that the device does not respond to unauthorized requests (without ferent device-client links, the most costly communication is around
+user’s awareness). All elliptic curve functions in our app are based 50ms between the client and the device over 10Mbps WiFi Internet.
+on Java Security and Spongy Castle on Android 5.1. The overall execution time of FK-PTR-PAKE protocol, excluding
+Device-Client Communication. Since the device-client communi- the manual task of password entry, is around 515ms, which seems
+cation in our scheme does not require to be confidential or authen- reasonably efficient. On an average, the PTR part of the protocol
+ticated (i.e., does not need to be protected), we can use any channel takes around 265ms to complete (with the major delay due to com-
+to run the protocol. Today, almost all smartphones have Internet putation on the device), and the PAKE part of the protocol takes
+187
+
+===== PAGE 12 =====
+249ms to complete (with the major delay due to computation on [8] T. Acar, M. Belenkiy, and A. Kupcu. Single password authentication.
+the client). Since the major computation is performed by the client Computer Networks, 57(13):2597 – 2614, 2013.
+due to EC exponentiations (total number of 7 Exponentiation, 2 in [9] M. Bellare, C. Namprempre, D. Pointcheval, and M. Semanko. The
+PTR and 5 in PAKE protocol), optimizing the exponentiation code one-more-RSA-inversion problems and the security of Chaum’s
+blind signature scheme. 16(3):185–215, June 2003.
+at the client might help to further improve the performance. Also,
+[10] M. Bellare, D. Pointcheval, and P. Rogaway. Authenticated key
+one can reduce the number of exponentiations for both server and
+exchange secure against dictionary attacks. In Advances in
+user by almost one exponentiation by implementing the HMQV Cryptology – Eurocrypt, 2000.
+computation via a multi-exponentiation technique. [11] D. J. Bernstein, M. Hamburg, A. Krasnova, and T. Lange. Elligator:
+Communication delays are a smaller component of the overall elliptic-curve points indistinguishable from uniform random strings.
+cost, hence the choice of a particular D − U channel does not sig- pages 967–980, 2013.
+nificanly affect the overall performance: Using WiFi Internet in- [12] S. Blake-Wilson, D. Johnson, and A. Menezes. Key agreement
+stead of Cellular Data adds 11.28ms, causing only a 2% increase in protocols and their security analysis. In Proceedings of the 6th IMA
+International Conference on Cryptography and Coding, pages
+the overall time, while using Localized WiFi cuts 29.39ms, a 6%
+30–45, London, UK, UK, 1997. Springer-Verlag.
+speed-up in the overall time.
+[13] X. Boyen. Hidden credential retrieval from a reusable password. In
+Proceedings of the 4th International Symposium on Information,
+7. CONCLUSIONS AND FUTURE WORK
+Computer, and Communications Security, ASIACCS ’09, pages
+In this paper, we considered the problem of armoring password 228–238, New York, NY, USA, 2009. ACM.
+protocols against online guessing attacks as well as offline dic- [14] A. Czeskis, M. Dietz, T. Kohno, D. Wallach, and D. Balfanz.
+tionary attacks in the event of server or device compromise. We Strengthening user authentication through opportunistic
+cryptographic identity assertions. In Proceedings of ACM conference
+proposed a novel, efficient and modular device-enhanced password
+on Computer and communications security. ACM, 2012.
+protocol (DE-PAKE) and formally analyzed its security. In con-
+[15] I. Dacosta, M. Ahamad, and P. Traynor. Trust no one else: Detecting
+trast to previous work on this subject, our protocol does not re- MITM attacks against SSL/TLS without third-parties. In European
+quire the presence of a public key infrastructure or the availability Symposium on Research in Computer Security, 2012.
+of authenticated public keys (except, possibly, for initial password [16] A. Everspaugh, R. Chaterjee, S. Scott, A. Juels, and T. Ristenpart.
+registration) thus relaxing the concerns regarding PKI failures or The pythia prf service. In 24th USENIX Security Symposium
+compromises. At the same time, when an authentic and uncom- (USENIX Security 15), 2015.
+promised public key of the server is available, our protocol further [17] W. Ford and B. S. Kaliski Jr. Server-assisted generation of a strong
+secret from a password. In Enabling Technologies: Infrastructure for
+guarantees resilience to server impersonation even when the user’s
+Collaborative Enterprises, 2000.
+password is disclosed. Remarkably, we can achieve these benefits
+[18] M. J. Freedman, Y. Ishai, B. Pinkas, and O. Reingold. Keyword
+without necessitating service-side changes. search and oblivious pseudorandom functions. In Theory of
+Finally, we note that, thanks to our modular architecture, one Cryptography. 2005.
+can further increase the resistance to server compromise by using [19] C. Gentry, P. MacKenzie, and Z. Ramzan. A method for making
+a threshold-PAKE protocol (e.g., [22]), in which case an attacker password-based key exchange resilient to server compromise. In
+needs to compromise a threshold of servers in addition to the device Advances in Cryptology-CRYPTO. 2006.
+before being able to mount an offline dictionary attack. [20] M. Georgiev, S. Iyengar, S. Jana, R. Anubhai, D. Boneh, and
+V. Shmatikov. The most dangerous code in the world: Validating ssl
+We demonstrate practical viability of our solution by building a
+certificates in non-browser software. In Proceedings of the ACM
+DE-PAKE system based on a concrete instantiations of our protocol
+Conference on Computer and Communications Security, 2012.
+(with and without server-side changes), utilizing an automated data [21] D. P. Jablon. Password authentication using multiple servers. In The
+channel between the device and the client (falling back to localized Cryptographer’s Track at RSA Conference (CT-RSA). 2001.
+WiFi communication only when such a channel is to become un- [22] S. Jarecki, A. Kiayias, and H. Krawczyk. Round-optimal
+available). Our performance evaluation demonstrate the promising password-protected secret sharing and T-PAKE in the password-only
+feasibility of our schemes, although a systematic investigation of model. In Advances in Cryptology–ASIACRYPT. 2014.
+their overall usability is left for future work. [23] S. Jarecki, A. Kiayias, H. Krawczyk, and J. Xu. Highly Efficient and
+Composable Password-Protected Secret Sharing. In 1st IEEE
+European Symposium on Security and Privacy (EuroS&P). 2015.
+Acknowledgments
+[24] S. Jarecki, H. Krawczyk, M. Shirvanian, and N. Saxena.
+Device-enhanced password protocols with optimal online-offline
+This research is partially supported by ONR Contract N00014-14-
+protection. IACR Cryptology ePrint Archive: Report 2015/1099
+C-0113, NSF CICI Award #1547435 and #1547350, and NSF CNS
+available at http://eprint.iacr.org/2015/1099, December 2015.
+Award #1209280. [25] S. Jarecki and X. Liu. Efficient oblivious pseudorandom function
+with applications to adaptive ot and secure computation of set
+8. REFERENCES intersection. In Theory of Cryptography. 2009.
+[1] Anonymous hackers claim to leak 28,000 PayPal passwords on [26] S. Jarecki and X. Liu. Fast secure computation of set intersection. In
+global protest day. Available at: http://goo.gl/oPv2h. Security and Cryptography for Networks. 2010.
+[2] Blizzard servers hacked; emails, hashed passwords stolen. Available [27] H. Krawczyk. Hmqv: A high-performance secure diffie-hellman
+at: http://goo.gl/OTNWJC. protocol. In Advances in Cryptology–CRYPTO, 2005.
+[3] Hackers compromised nearly 5M Gmail passwords. Available at: [28] B. Ross, C. Jackson, N. Miyake, D. Boneh, and J. C. Mitchell.
+http://goo.gl/IRu07u. Stronger password authentication using browser extensions. In
+[4] LinkedIn Confirms Account Passwords Hacked. Available at: Usenix security Symposium, 2005.
+http://goo.gl/UBWuY0. [29] M. Shirvanian, S. Jarecki, N. Saxena, and N. Nathan. Two-factor
+[5] RSA breach leaks data for hacking securid tokens. Available at: authentication resilient to server compromise using mix-bandwidth
+http://goo.gl/tcEoS. devices. In Network & Distributed System Security Symposium, 2014.
+[6] RSA SecurID software token cloning: a new how-to. Available at: [30] J. Sunshine, S. Egelman, H. Almuhimedi, N. Atri, and L. F. Cranor.
+http://goo.gl/qkSFY. Crying wolf: An empirical study of ssl warning effectiveness. In
+USENIX Security Symposium, 2009.
+[7] Russian Hackers Amass Over a Billion Internet Passwords. Available
+at: http://goo.gl/aXzqj8.
+188
