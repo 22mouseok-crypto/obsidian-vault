@@ -150,14 +150,14 @@ sequenceDiagram
     participant A as Alice / Prover
     participant B as Bob / Verifier
 
-    Note over A,B: 公共参数、生成元、公钥已公开
-    A->>A: 选临时随机数并计算承诺 R
-    A->>B: 1. 发送承诺 R
+    Note over A,B: 公共参数 G,q,g；公钥 Y=gˣ
+    A->>A: 选 r，计算 R=gʳ
+    A->>B: 1. 承诺 R=gʳ
     B->>B: 选随机挑战 c
     B->>A: 2. 挑战 c
-    A->>A: 根据随机数、挑战、私钥计算响应 z
+    A->>A: z=r+c·x mod q
     A->>B: 3. 响应 z
-    B->>B: 验证响应与承诺、公钥是否一致
+    B->>B: 验证 gᶻ=R·Yᶜ
 ```
 
 对应公式：
@@ -198,11 +198,11 @@ $$
 
 ```mermaid
 flowchart LR
-    A[两次证明复用同一个临时随机数] --> B[得到同一个承诺]
+    A[两次证明复用同一个 r] --> B[得到同一个承诺 R=gʳ]
     B --> C[得到两个不同挑战 c, c']
     C --> D[得到两个响应 z, z']
-    D --> E[两条响应方程相减]
-    E --> F[解出私钥]
+    D --> E["z=r+c·x, z'=r+c'·x"]
+    E --> F["x=(z-z')/(c-c') mod q"]
 ```
 
 > [!danger] 结论
@@ -231,14 +231,14 @@ Fiat-Shamir 变换（Fiat-Shamir Transform）解决的正是这个问题：用 H
 ```mermaid
 flowchart TB
     subgraph Interactive[交互式 Schnorr]
-      I1[Alice发送 R] --> I2[Bob随机选择 c]
-      I2 --> I3[Alice发送 z]
+      I1[Alice发送 R=gʳ] --> I2[Bob随机选择 c]
+      I2 --> I3[Alice发送 z=r+c·x]
     end
 
     subgraph NonInteractive[Fiat-Shamir 后]
-      N1[Alice计算承诺 R] --> N2[Hash 生成挑战 c]
-      N2 --> N3[计算响应 z]
-      N3 --> N4[输出非交互式证明]
+      N1[Alice计算 R=gʳ] --> N2[c=H(g,Y,R,msg)]
+      N2 --> N3[z=r+c·x]
+      N3 --> N4["输出证明 π=(R,z)"]
     end
 
     Interactive -->|用 Hash 代替随机挑战| NonInteractive
@@ -283,13 +283,13 @@ sequenceDiagram
     participant E as Eva
     participant B as Bob
 
-    A->>E: Alice 的临时公钥 X
-    E->>B: Eva 的临时公钥 Z，冒充 Alice
-    B->>E: Bob 的临时公钥 Y
-    E->>A: Eva 的临时公钥 Z，冒充 Bob
+    A->>E: X=gˣ
+    E->>B: Z=gᶻ，冒充 Alice
+    B->>E: Y=gʸ
+    E->>A: Z=gᶻ，冒充 Bob
 
-    Note over A,E: Alice 与 Eva 得到一把共享密钥
-    Note over E,B: Bob 与 Eva 得到另一把共享密钥
+    Note over A,E: Alice 与 Eva 得到 K(A,E)=gˣᶻ
+    Note over E,B: Bob 与 Eva 得到 K(B,E)=gʸᶻ
     Note over A,B: Alice 和 Bob 都误以为与对方建立密钥
 ```
 
@@ -320,9 +320,9 @@ HMQV 全称是 Hashed Menezes-Qu-Vanstone Protocol。它是在 MQV（Menezes-Qu-
 
 ```mermaid
 flowchart LR
-    X[临时公钥 X] --> D[Hash 得到 d]
+    X[临时公钥 X] --> D["d=H(X,Bob)"]
     Bob[意定通信方 Bob] --> D
-    Y[临时公钥 Y] --> E[Hash 得到 e]
+    Y[临时公钥 Y] --> E["e=H(Y,Alice)"]
     Alice[意定通信方 Alice] --> E
     D --> K[会话密钥派生]
     E --> K
@@ -343,7 +343,7 @@ $$
 
 ```mermaid
 flowchart TD
-    A[去掉身份输入] --> B[密钥只绑定临时公钥]
+    A["d=H(X), e=H(Y)"] --> B[密钥只绑定临时公钥]
     B --> C[身份不进入密钥派生]
     C --> D[攻击者可能制造身份认知不一致]
     D --> E[未知密钥共享 UKS 风险]
@@ -418,7 +418,7 @@ SPEKE 全称是 Simple Password Exponential Key Exchange，即“简单口令指
 ```mermaid
 flowchart LR
     PW[口令 pw] --> S[派生 s]
-    S --> G[平方映射]
+    S --> G["g=s² mod p"]
     G --> QR[二次剩余子群]
     QR --> Q[阶为 q 的大素数阶子群]
     Q --> DH[后续 DH 运算在正确子群内]
@@ -447,18 +447,18 @@ sequenceDiagram
     participant A as Alice A
     participant B as Bob B
 
-    Note over A,B: 公共参数和共享口令已确定
-    A->>A: 选择临时指数并计算临时公钥 X
-    A->>B: A, X
-    B->>B: 检查 X 合法，计算临时公钥 Y
-    B->>A: B, Y
+    Note over A,B: 公共参数 p,q；共享口令 pw；g=f(pw)=H(pw)²
+    A->>A: x ← 随机数，X=gˣ
+    A->>B: A, X=gˣ
+    B->>B: 检查 X；y ← 随机数，Y=gʸ
+    B->>A: B, Y=gʸ
     A->>A: 检查 Y 合法
-    A->>A: 计算身份绑定的会话标识
-    B->>B: 计算身份绑定的会话标识
-    A->>A: 派生会话密钥
-    B->>B: 派生会话密钥
-    A->>B: 可选密钥确认消息，方向 A 到 B
-    B->>A: 可选密钥确认消息，方向 B 到 A
+    A->>A: sA=H(B∥X), sB=H(A∥Y)
+    B->>B: sA=H(B∥X), sB=H(A∥Y)
+    A->>A: k=KDF(sID∥Yˣ)
+    B->>B: k=KDF(sID∥Xʸ)
+    A->>B: H(A∥B∥gˣ∥gʸ∥gˣʸ∥g)
+    B->>A: H(B∥A∥gʸ∥gˣ∥gˣʸ∥g)
 ```
 
 关键公式：
@@ -495,8 +495,8 @@ $$
 
 ```mermaid
 flowchart TD
-    A[若先发送简单认证值] --> B[攻击者不需要知道会话密钥]
-    B --> C[可由第一条认证值机械推出第二条]
+    A["若先发送 M₁=H(K)"] --> B[攻击者不需要知道会话密钥]
+    B --> C["直接计算 M₂=H(M₁)"]
     C --> D[伪造另一方向认证值]
     D --> E[密钥确认失效]
 ```
@@ -542,11 +542,11 @@ sequenceDiagram
     participant L as Local dictionary
 
     C->>S: I, A
-    S->>C: s, B, 服务器认证值 M1
+    S->>C: s, B, M₁=H(A,B,S)
     loop 离线枚举候选口令
-        C->>L: 用候选口令计算候选共享秘密
-        L-->>C: 计算候选认证值
-        C->>C: 与 M1 比较
+        C->>L: 用 pw′ 计算 S′
+        L-->>C: M₁′=H(A,B,S′)
+        C->>C: 比较 M₁′ ?= M₁
     end
 ```
 
@@ -570,11 +570,11 @@ $$
 
 ```mermaid
 flowchart TD
-    A[服务器提前发 M1] --> B[攻击者获得可验证认证值]
-    B --> C[攻击者拿到 s,B,M1]
-    C --> D[枚举候选口令]
-    D --> E[计算候选共享秘密]
-    E --> F[计算候选认证值并比较]
+    A["服务器提前发 M₁=H(A,B,S)"] --> B[攻击者获得可验证认证值]
+    B --> C[攻击者拿到 s,B,M₁]
+    C --> D[枚举 pw′]
+    D --> E[计算 S′]
+    E --> F["检查 H(A,B,S′) ?= M₁"]
     F -->|相等| G[口令猜中]
     F -->|不等| D
 ```
