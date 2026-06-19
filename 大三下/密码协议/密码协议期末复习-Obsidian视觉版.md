@@ -236,7 +236,7 @@ flowchart TB
     end
 
     subgraph NonInteractive[Fiat-Shamir 后]
-      N1[Alice计算 R] --> N2["c = H(g, Y, R, message/context)"]
+      N1[Alice计算承诺 R] --> N2[Hash 生成挑战 c]
       N2 --> N3[计算响应 z]
       N3 --> N4[输出非交互式证明]
     end
@@ -320,24 +320,40 @@ HMQV 全称是 Hashed Menezes-Qu-Vanstone Protocol。它是在 MQV（Menezes-Qu-
 
 ```mermaid
 flowchart LR
-    X[临时公钥 X] --> D["d = H(X, Bob)"]
+    X[临时公钥 X] --> D[Hash 得到 d]
     Bob[意定通信方 Bob] --> D
-    Y[临时公钥 Y] --> E["e = H(Y, Alice)"]
+    Y[临时公钥 Y] --> E[Hash 得到 e]
     Alice[意定通信方 Alice] --> E
     D --> K[会话密钥派生]
     E --> K
     K --> Safe[双方确认: 这个密钥属于指定身份的会话]
 ```
 
+对应公式：
+
+$$
+d=H(X,\text{Bob})
+$$
+
+$$
+e=H(Y,\text{Alice})
+$$
+
 ### 4.2 如果去掉身份
 
 ```mermaid
 flowchart TD
-    A["d=H(X), e=H(Y)"] --> B[密钥只绑定临时公钥]
+    A[去掉身份输入] --> B[密钥只绑定临时公钥]
     B --> C[身份不进入密钥派生]
     C --> D[攻击者可能制造身份认知不一致]
     D --> E[未知密钥共享 UKS 风险]
 ```
+
+错误改法：
+
+$$
+d=H(X),\quad e=H(Y)
+$$
 
 | 写法 | 是否绑定身份 | 风险 |
 |---|---:|---|
@@ -479,11 +495,25 @@ $$
 
 ```mermaid
 flowchart TD
-    A[若先发送简单认证值 H(K)] --> B[攻击者不需要知道 K]
-    B --> C[直接计算 H(H(K))]
+    A[若先发送简单认证值] --> B[攻击者不需要知道会话密钥]
+    B --> C[可由第一条认证值机械推出第二条]
     C --> D[伪造另一方向认证值]
     D --> E[密钥确认失效]
 ```
+
+例如，如果错误设计成第一条发送：
+
+$$
+M_1=H(K)
+$$
+
+第二条发送：
+
+$$
+M_2=H(M_1)
+$$
+
+攻击者看到 \(M_1\) 后，即使不知道 \(K\)，也能计算 \(M_2\)。
 
 > [!warning] 答题关键
 > 认证消息的顺序和方向绑定用于证明双方确实知道会话密钥。若一条消息能由另一条直接计算得到，则攻击者可能不掌握密钥也通过认证。
@@ -512,21 +542,39 @@ sequenceDiagram
     participant L as Local dictionary
 
     C->>S: I, A
-    S->>C: s, B, M1=H(A,B,S)
+    S->>C: s, B, 服务器认证值 M1
     loop 离线枚举 pw'
-        C->>L: 用 pw' 计算候选 S'
-        L-->>C: H(A,B,S')
-        C->>C: 比较 H(A,B,S') ?= M1
+        C->>L: 用候选口令计算候选共享秘密
+        L-->>C: 计算候选认证值
+        C->>C: 与 M1 比较
     end
 ```
 
+服务器提前返回：
+
+$$
+M_1=H(A,B,S)
+$$
+
+攻击者对候选口令 \(pw'\) 计算：
+
+$$
+M_1'=H(A,B,S')
+$$
+
+并检查：
+
+$$
+M_1'\stackrel{?}=M_1
+$$
+
 ```mermaid
 flowchart TD
-    A[服务器提前发 M1] --> B["M1=H(A,B,S)"]
+    A[服务器提前发 M1] --> B[攻击者获得可验证认证值]
     B --> C[攻击者拿到 s,B,M1]
     C --> D[枚举候选口令 pw']
-    D --> E[计算候选共享秘密 S']
-    E --> F["检查 H(A,B,S') 是否等于 M1"]
+    D --> E[计算候选共享秘密]
+    E --> F[计算候选认证值并比较]
     F -->|相等| G[口令猜中]
     F -->|不等| D
 ```
@@ -561,11 +609,13 @@ flowchart TD
 | 需要次数 | \(10^6(4/5)^t \le 1\) |
 | 结果 | \(t \approx 62\) |
 
-```text
-10^6 * (4/5)^t <= 1
-t >= log(10^-6) / log(4/5)
-t ≈ 62
-```
+$$
+10^6\left(\frac45\right)^t\le 1
+$$
+
+$$
+t\ge \frac{\log(10^{-6})}{\log(4/5)}\approx 62
+$$
 
 ### 8.2 防御总结
 
