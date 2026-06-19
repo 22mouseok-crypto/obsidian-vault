@@ -388,9 +388,9 @@ sequenceDiagram
     participant C as Attacker C
     participant B as Bob
 
-    Note over C: C 已获得旧会话密钥 K'_AB 和旧协议消息
-    C->>C: 用 K'_AB 解密旧消息 5
-    C->>C: 得到 N_A, N_B
+    Note over C: C 已获得旧会话密钥 K′(A,B) 和旧协议消息
+    C->>C: 用 K′(A,B) 解密旧消息 5
+    C->>C: 得到 Nₐ, Nᵦ
     C->>B: 重放旧的 A -> B 消息 3
     B->>B: 按协议继续验证
     B-->>C: 接受旧会话材料
@@ -590,7 +590,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[攻击者选择特殊模数 n_A=5p] --> B[假冒用户与服务器交互]
+    A[攻击者选择特殊模数 nₐ=5p] --> B[假冒用户与服务器交互]
     B --> C[服务器响应泄露互素/非互素差别]
     C --> D[攻击者本地筛选口令字典]
     D --> E{字典是否只剩一个?}
@@ -726,12 +726,12 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-    M[消息 M] --> S1[先签名 Sig_A(M)]
-    S1 --> E1[再加密 Enc_B(M,Sig)]
+    M[消息 M] --> S1[先签名 Sig(A,M)]
+    S1 --> E1[再加密 Enc(B,M,Sig)]
     E1 --> R1[接收方解密后验证]
 
-    M --> E2[先加密 Enc_B(M)]
-    E2 --> S2[再签名 Sig_A(C)]
+    M --> E2[先加密 Enc(B,M)]
+    E2 --> S2[再签名 Sig(A,C)]
     S2 --> R2[第三方可验证密文签名]
 ```
 
