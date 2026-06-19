@@ -238,7 +238,7 @@ flowchart TB
     subgraph NonInteractive[Fiat-Shamir 后]
       N1[Alice计算 R] --> N2["c = H(g, Y, R, message/context)"]
       N2 --> N3[计算响应 z]
-      N3 --> N4["证明 π=(R,z)"]
+      N3 --> N4[输出非交互式证明]
     end
 
     Interactive -->|用 Hash 代替随机挑战| NonInteractive
@@ -263,6 +263,14 @@ $$
 
 ## 3. Diffie-Hellman 中间人攻击
 
+Diffie-Hellman Key Exchange（DH，Diffie-Hellman 密钥交换）的核心目标是让双方在公开信道上协商出共享密钥。基础 DH 的问题是：它只协商密钥，不认证“对面是谁”。
+
+基础 DH 的消息可以写成：
+
+$$
+X=g^x,\quad Y=g^y,\quad K=g^{xy}
+$$
+
 ### 3.1 动画流程
 
 ![DH 中间人攻击动画](protocol-review-assets/dh-mitm-animated.svg)
@@ -275,15 +283,25 @@ sequenceDiagram
     participant E as Eva
     participant B as Bob
 
-    A->>E: g^x
-    E->>B: g^z 代替 g^x
-    B->>E: g^y
-    E->>A: g^z 代替 g^y
+    A->>E: Alice 的临时公钥 X
+    E->>B: Eva 的临时公钥 Z，冒充 Alice
+    B->>E: Bob 的临时公钥 Y
+    E->>A: Eva 的临时公钥 Z，冒充 Bob
 
-    Note over A,E: Alice 与 Eva 得到 g^(xz)
-    Note over E,B: Bob 与 Eva 得到 g^(yz)
+    Note over A,E: Alice 与 Eva 得到一把共享密钥
+    Note over E,B: Bob 与 Eva 得到另一把共享密钥
     Note over A,B: Alice 和 Bob 都误以为与对方建立密钥
 ```
+
+攻击中的两个实际密钥：
+
+$$
+K_{AE}=g^{xz}
+$$
+
+$$
+K_{BE}=g^{yz}
+$$
 
 | 问题 | 答案 |
 |---|---|
@@ -293,6 +311,10 @@ sequenceDiagram
 | 怎么改进 | 对临时 DH 值签名，或将身份、长期密钥、临时公钥放入密钥派生 |
 
 ## 4. HMQV 身份绑定
+
+HMQV 全称是 Hashed Menezes-Qu-Vanstone Protocol。它是在 MQV（Menezes-Qu-Vanstone Protocol）思想上加入 Hash 绑定的认证密钥交换协议。
+
+这一题的逻辑是：DH 的问题是没认证身份，那么 HMQV 如何把“身份”放进密钥计算？答案就是把身份和临时公钥一起 Hash。
 
 ### 4.1 绑定关系图
 
@@ -373,16 +395,28 @@ flowchart TD
 
 ## 6. SPEKE
 
+SPEKE 全称是 Simple Password Exponential Key Exchange，即“简单口令指数密钥交换”。它属于 PAKE（Password-Authenticated Key Exchange，口令认证密钥交换）：双方只共享低熵口令，但希望协商出高熵会话密钥，并抵抗离线口令猜测。
+
 ### 6.1 为什么 \(g=s^2 \bmod p\)
 
 ```mermaid
 flowchart LR
     PW[口令 pw] --> S[派生 s]
-    S --> G["g = s^2 mod p"]
+    S --> G[平方映射]
     G --> QR[二次剩余子群]
     QR --> Q[阶为 q 的大素数阶子群]
     Q --> DH[后续 DH 运算在正确子群内]
 ```
+
+公式：
+
+$$
+p=2q+1
+$$
+
+$$
+g=s^2 \bmod p
+$$
 
 | 条件 | 含义 |
 |---|---|
@@ -397,21 +431,49 @@ sequenceDiagram
     participant A as Alice A
     participant B as Bob B
 
-    Note over A,B: 公共参数 p,q; 共享口令 pw; g=f(pw)=H(pw)^2
-    A->>A: x ← Z_q*, X=g^x
+    Note over A,B: 公共参数和共享口令已确定
+    A->>A: 选择临时指数并计算临时公钥 X
     A->>B: A, X
-    B->>B: 检查 X 合法; y ← Z_q*, Y=g^y
+    B->>B: 检查 X 合法，计算临时公钥 Y
     B->>A: B, Y
     A->>A: 检查 Y 合法
-    A->>A: s_A=H(B||X), s_B=H(A||Y)
-    B->>B: s_A=H(B||X), s_B=H(A||Y)
-    A->>A: sID=max(s_A,s_B)||min(s_A,s_B)
-    B->>B: sID=max(s_A,s_B)||min(s_A,s_B)
-    A->>A: k=KDF(sID || Y^x)
-    B->>B: k=KDF(sID || X^y)
-    A->>B: optional confirm: H(A||B||g^x||g^y||g^xy||g)
-    B->>A: optional confirm: H(B||A||g^y||g^x||g^xy||g)
+    A->>A: 计算身份绑定的会话标识
+    B->>B: 计算身份绑定的会话标识
+    A->>A: 派生会话密钥
+    B->>B: 派生会话密钥
+    A->>B: 可选密钥确认消息，方向 A 到 B
+    B->>A: 可选密钥确认消息，方向 B 到 A
 ```
+
+关键公式：
+
+$$
+g=f(pw)=H(pw)^2
+$$
+
+$$
+X=g^x,\quad Y=g^y
+$$
+
+$$
+s_A=H(B\parallel X),\quad s_B=H(A\parallel Y)
+$$
+
+$$
+sID=\max(s_A,s_B)\parallel \min(s_A,s_B)
+$$
+
+$$
+k_A=\operatorname{KDF}(sID\parallel Y^x),\quad k_B=\operatorname{KDF}(sID\parallel X^y)
+$$
+
+因为：
+
+$$
+Y^x=(g^y)^x=g^{xy}=(g^x)^y=X^y
+$$
+
+所以双方得到同一会话密钥。
 
 ### 6.3 认证消息不能调换
 
