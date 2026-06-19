@@ -15,6 +15,31 @@ tags:
 > [!summary] 这门课的考试主线
 > 期末不是考“背算法名称”，而是考你能不能把密码组件放进协议场景里分析：谁认证谁、密钥怎么来、消息是否新鲜、身份是否绑定、攻击者能不能重放或离线猜口令。
 
+### 缩写全称速查
+
+| 缩写 | 全称 | 中文理解 |
+|---|---|---|
+| DH | Diffie-Hellman Key Exchange | Diffie-Hellman 密钥交换 |
+| MITM | Man-in-the-Middle Attack | 中间人攻击 |
+| ZKP | Zero-Knowledge Proof | 零知识证明 |
+| NIZK | Non-Interactive Zero-Knowledge Proof | 非交互式零知识证明 |
+| FS | Fiat-Shamir Transform | Fiat-Shamir 变换 |
+| HMQV | Hashed Menezes-Qu-Vanstone Protocol | 带 Hash 身份绑定的 MQV 密钥交换 |
+| MQV | Menezes-Qu-Vanstone Protocol | MQV 认证密钥交换协议 |
+| NS | Needham-Schroeder Protocol | Needham-Schroeder 认证协议 |
+| PAKE | Password-Authenticated Key Exchange | 口令认证密钥交换 |
+| EKE | Encrypted Key Exchange | 加密密钥交换 |
+| SPEKE | Simple Password Exponential Key Exchange | 简单口令指数密钥交换 |
+| SRP | Secure Remote Password | 安全远程口令协议 |
+| OPAQUE | OPAQUE aPAKE Protocol | OPAQUE 非对称口令认证密钥交换协议 |
+| RSA-GPAKE | RSA-based Gateway Password-Authenticated Key Exchange | 基于 RSA 的网关口令认证密钥交换 |
+| TLS | Transport Layer Security | 传输层安全协议 |
+| SSL | Secure Sockets Layer | 安全套接字层 |
+| MAC | Message Authentication Code | 消息认证码 |
+| HMAC | Keyed-Hash Message Authentication Code | 带密钥的 Hash 消息认证码 |
+| UKS | Unknown Key-Share Attack | 未知密钥共享攻击 |
+| KDF | Key Derivation Function | 密钥派生函数 |
+
 ```mermaid
 mindmap
   root((密码协议期末))
@@ -34,10 +59,10 @@ mindmap
       HMQV身份绑定
       Needham-Schroeder重放
     口令协议
-      SPEKE
-      SRP
-      OPAQUE
-      RSA-GPAKE
+      SPEKE口令指数交换
+      SRP安全远程口令
+      OPAQUE非对称PAKE
+      RSA-GPAKE网关PAKE
     TLS
       Handshake
       Record
@@ -106,29 +131,55 @@ flowchart TD
 
 ## 2. Schnorr 零知识证明与 Fiat-Shamir
 
-### 2.1 Schnorr 三轮交互
+### 2.1 先理解 Schnorr：为什么需要三轮？
+
+Schnorr 身份认证协议（Schnorr Identification Protocol）是一种典型的交互式零知识证明。它要解决的问题是：
+
+> Alice 想证明“我知道公钥对应的私钥”，但不想把私钥告诉 Bob。
+
+设 Alice 的私钥为 \(x\)，公钥为：
+
+$$
+Y=g^x
+$$
+
+Schnorr 的三轮结构是“承诺 -> 随机挑战 -> 响应”。其中第二轮的随机挑战很关键：它防止证明者先看题再编答案。
 
 ```mermaid
 sequenceDiagram
     participant A as Alice / Prover
     participant B as Bob / Verifier
 
-    Note over A,B: 公共参数: G, q, g, 公钥 Y=g^x
-    A->>A: 选 r ← Z_q, 计算 R=g^r
-    A->>B: 1. 承诺 R
+    Note over A,B: 公共参数、生成元、公钥已公开
+    A->>A: 选临时随机数并计算承诺 R
+    A->>B: 1. 发送承诺 R
     B->>B: 选随机挑战 c
     B->>A: 2. 挑战 c
-    A->>A: z = r + c·x mod q
+    A->>A: 根据随机数、挑战、私钥计算响应 z
     A->>B: 3. 响应 z
-    B->>B: 验证 g^z == R · Y^c
+    B->>B: 验证响应与承诺、公钥是否一致
 ```
+
+对应公式：
+
+$$
+R=g^r
+$$
+
+$$
+z=r+c x \pmod q
+$$
+
+$$
+g^z=R\cdot Y^c
+$$
 
 | 步骤 | 名称 | 作用 |
 |---|---|---|
 | \(R=g^r\) | 承诺 | 先固定证明者的随机选择，防止看挑战后再伪造 |
 | \(c\) | 挑战 | 验证者提供随机性，是交互式证明的关键 |
 | \(z=r+cx\) | 响应 | 同时依赖随机数和私钥 |
-| \(g^z=RY^c\) | 验证 | 检查响应是否与承诺、公钥一致 |
+| \(g^z=R\cdot Y^c\) | 验证 | 检查响应是否与承诺、公钥一致 |
 
 <details>
 <summary>可直接背诵的正确性证明</summary>
@@ -136,7 +187,7 @@ sequenceDiagram
 因为 \(Y=g^x\)，且 \(z=r+cx\)，所以：
 
 $$
-g^z = g^{r+cx}=g^r(g^x)^c=RY^c
+g^z = g^{r+cx}=g^r(g^x)^c=R\cdot Y^c
 $$
 
 因此诚实证明者知道私钥 \(x\) 时，验证一定通过。
@@ -147,17 +198,35 @@ $$
 
 ```mermaid
 flowchart LR
-    A[两次证明复用同一个 r] --> B[同一个承诺 R=g^r]
+    A[两次证明复用同一个临时随机数] --> B[得到同一个承诺]
     B --> C[得到两个不同挑战 c, c']
     C --> D[得到两个响应 z, z']
-    D --> E["z=r+c·x, z'=r+c'·x"]
-    E --> F["x=(z-z')/(c-c') mod q"]
+    D --> E[两条响应方程相减]
+    E --> F[解出私钥]
 ```
 
 > [!danger] 结论
 > Schnorr/ECDSA 这类协议中，临时随机数不是辅助细节。复用或泄露会直接导致私钥泄露。
 
-### 2.3 Fiat-Shamir：三轮变一轮
+公式：
+
+$$
+z=r+c x \pmod q
+$$
+
+$$
+z'=r+c' x \pmod q
+$$
+
+$$
+x=(z-z')(c-c')^{-1}\pmod q
+$$
+
+### 2.3 再问一步：三轮交互能不能改成一轮？
+
+Schnorr 的三轮交互依赖 Bob 现场给出随机挑战。问题是：如果证明要写进区块链、签名文件、论文附录或一次性消息中，就没有 Bob 在线互动。  
+
+Fiat-Shamir 变换（Fiat-Shamir Transform）解决的正是这个问题：用 Hash 函数生成挑战，把三轮交互压缩成一轮非交互式证明。
 
 ```mermaid
 flowchart TB
@@ -168,12 +237,22 @@ flowchart TB
 
     subgraph NonInteractive[Fiat-Shamir 后]
       N1[Alice计算 R] --> N2["c = H(g, Y, R, message/context)"]
-      N2 --> N3["z = r + c·x mod q"]
+      N2 --> N3[计算响应 z]
       N3 --> N4["证明 π=(R,z)"]
     end
 
     Interactive -->|用 Hash 代替随机挑战| NonInteractive
 ```
+
+公式：
+
+$$
+c=H(g,Y,R,\text{message},\text{context})
+$$
+
+$$
+z=r+c x \pmod q
+$$
 
 | 项目 | 交互式 Schnorr | Fiat-Shamir 后 |
 |---|---|---|
@@ -578,4 +657,3 @@ flowchart TD
 - HMQV 身份绑定。
 - Shamir \((3,5),p=17,k=13\) 例题。
 - TLS 四个子协议、Session/Connection、TLS1.3 动机。
-
