@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="390" viewBox="0 0 920 390" role="img" aria-label="SRP 三轮优化口令验证预言机动画">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+    <style>
+      text { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #0f172a; }
+      .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; }
+      .warn { fill: #fff7ed; stroke: #c2410c; stroke-width: 2.5; }
+      .local { fill: #f0fdf4; stroke: #15803d; stroke-width: 2; }
+      .line { stroke: #475569; stroke-width: 2.2; marker-end: url(#arrow); fill: none; }
+      .bad { stroke: #ea580c; stroke-width: 2.8; marker-end: url(#arrow); fill: none; }
+      .label { font-size: 20px; font-weight: 700; }
+      .small { font-size: 14px; }
+      .note { fill: #334155; font-size: 15px; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="920" height="390" fill="#ffffff"/>
+  <text x="460" y="36" text-anchor="middle" font-size="26" font-weight="700">SRP 三轮优化漏洞：服务器提前返回 M1</text>
+  <text x="460" y="62" text-anchor="middle" class="note">服务器在客户端证明口令前返回 M1=H(A,B,S)，攻击者可离线枚举口令验证。</text>
+
+  <rect class="warn" x="55" y="105" width="180" height="180" rx="8"/>
+  <text class="label" x="145" y="138" text-anchor="middle" fill="#9a3412">攻击者 C</text>
+  <text class="small" x="145" y="170" text-anchor="middle">伪装客户端</text>
+  <text class="small" x="145" y="194" text-anchor="middle">发送 I, A</text>
+  <text class="small" x="145" y="238" text-anchor="middle">拿到 s, B, M1</text>
+
+  <rect class="box" x="370" y="105" width="180" height="180" rx="8"/>
+  <text class="label" x="460" y="138" text-anchor="middle">Server</text>
+  <text class="small" x="460" y="170" text-anchor="middle">尚未验证客户端</text>
+  <text class="small" x="460" y="194" text-anchor="middle">提前发送 M1</text>
+  <text class="small" x="460" y="238" text-anchor="middle">M1=H(A,B,S)</text>
+
+  <rect class="local" x="685" y="105" width="180" height="180" rx="8"/>
+  <text class="label" x="775" y="138" text-anchor="middle" fill="#166534">本地字典</text>
+  <text class="small" x="775" y="170" text-anchor="middle">枚举 pw'</text>
+  <text class="small" x="775" y="194" text-anchor="middle">计算 S'</text>
+  <text class="small" x="775" y="238" text-anchor="middle">比对 H(A,B,S')</text>
+
+  <path class="line" d="M235 155 L370 155"/>
+  <text class="small" x="302" y="143" text-anchor="middle">1. I, A</text>
+  <path class="bad" d="M370 230 L235 230"/>
+  <text class="small" x="302" y="220" text-anchor="middle" fill="#9a3412">2. s, B, M1</text>
+  <path class="bad" d="M235 250 C360 330, 560 330, 685 250"/>
+  <text class="small" x="460" y="335" text-anchor="middle" fill="#9a3412">3. 离线枚举：pw' -> S' -> H(A,B,S') ?= M1</text>
+
+  <circle r="8" fill="#2563eb" opacity="0">
+    <animate attributeName="cx" values="235;235;370;370;370;370;370" keyTimes="0;0.05;0.25;0.26;0.50;0.99;1" dur="7s" repeatCount="indefinite"/>
+    <animate attributeName="cy" values="155;155;155;155;155;155;155" keyTimes="0;0.05;0.25;0.26;0.50;0.99;1" dur="7s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0;0;0;0" keyTimes="0;0.05;0.25;0.26;0.50;0.99;1" dur="7s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="8" fill="#ea580c" opacity="0">
+    <animate attributeName="cx" values="370;370;370;235;235;235;235" keyTimes="0;0.28;0.35;0.55;0.56;0.99;1" dur="7s" repeatCount="indefinite"/>
+    <animate attributeName="cy" values="230;230;230;230;230;230;230" keyTimes="0;0.28;0.35;0.55;0.56;0.99;1" dur="7s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0;1;1;0;0;0" keyTimes="0;0.28;0.35;0.55;0.56;0.99;1" dur="7s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="8" fill="#16a34a" opacity="0">
+    <animate attributeName="cx" values="235;235;310;460;610;685;685" keyTimes="0;0.58;0.66;0.75;0.84;0.94;1" dur="7s" repeatCount="indefinite"/>
+    <animate attributeName="cy" values="250;250;300;326;300;250;250" keyTimes="0;0.58;0.66;0.75;0.84;0.94;1" dur="7s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0;1;1;1;1;0" keyTimes="0;0.58;0.66;0.75;0.84;0.94;1" dur="7s" repeatCount="indefinite"/>
+  </circle>
+
+  <rect x="160" y="350" width="600" height="28" rx="6" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="460" y="369" text-anchor="middle" class="note">改进：服务器不要在客户端证明口令知识前返回可离线验证的认证值。</text>
+</svg>
