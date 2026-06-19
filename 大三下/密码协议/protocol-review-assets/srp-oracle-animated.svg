@@ -17,33 +17,33 @@
   </defs>
 
   <rect x="0" y="0" width="920" height="390" fill="#ffffff"/>
-  <text x="460" y="36" text-anchor="middle" font-size="26" font-weight="700">SRP 三轮优化漏洞：服务器提前返回 M1</text>
-  <text x="460" y="62" text-anchor="middle" class="note">服务器在客户端证明口令前返回 M1=H(A,B,S)，攻击者可离线枚举口令验证。</text>
+  <text x="460" y="36" text-anchor="middle" font-size="26" font-weight="700">SRP 三轮优化漏洞：服务器提前返回 M₁</text>
+  <text x="460" y="62" text-anchor="middle" class="note">服务器在客户端证明口令前返回 M₁=H(A,B,S)，攻击者可离线枚举口令验证。</text>
 
   <rect class="warn" x="55" y="105" width="180" height="180" rx="8"/>
   <text class="label" x="145" y="138" text-anchor="middle" fill="#9a3412">攻击者 C</text>
   <text class="small" x="145" y="170" text-anchor="middle">伪装客户端</text>
   <text class="small" x="145" y="194" text-anchor="middle">发送 I, A</text>
-  <text class="small" x="145" y="238" text-anchor="middle">拿到 s, B, M1</text>
+  <text class="small" x="145" y="238" text-anchor="middle">拿到 s, B, M₁</text>
 
   <rect class="box" x="370" y="105" width="180" height="180" rx="8"/>
   <text class="label" x="460" y="138" text-anchor="middle">Server</text>
   <text class="small" x="460" y="170" text-anchor="middle">尚未验证客户端</text>
-  <text class="small" x="460" y="194" text-anchor="middle">提前发送 M1</text>
-  <text class="small" x="460" y="238" text-anchor="middle">M1=H(A,B,S)</text>
+  <text class="small" x="460" y="194" text-anchor="middle">提前发送 M₁</text>
+  <text class="small" x="460" y="238" text-anchor="middle">M₁=H(A,B,S)</text>
 
   <rect class="local" x="685" y="105" width="180" height="180" rx="8"/>
   <text class="label" x="775" y="138" text-anchor="middle" fill="#166534">本地字典</text>
-  <text class="small" x="775" y="170" text-anchor="middle">枚举 pw'</text>
-  <text class="small" x="775" y="194" text-anchor="middle">计算 S'</text>
-  <text class="small" x="775" y="238" text-anchor="middle">比对 H(A,B,S')</text>
+  <text class="small" x="775" y="170" text-anchor="middle">枚举 pw′</text>
+  <text class="small" x="775" y="194" text-anchor="middle">计算 S′</text>
+  <text class="small" x="775" y="238" text-anchor="middle">比对 H(A,B,S′)</text>
 
   <path class="line" d="M235 155 L370 155"/>
   <text class="small" x="302" y="143" text-anchor="middle">1. I, A</text>
   <path class="bad" d="M370 230 L235 230"/>
-  <text class="small" x="302" y="220" text-anchor="middle" fill="#9a3412">2. s, B, M1</text>
+  <text class="small" x="302" y="220" text-anchor="middle" fill="#9a3412">2. s, B, M₁</text>
   <path class="bad" d="M235 250 C360 330, 560 330, 685 250"/>
-  <text class="small" x="460" y="335" text-anchor="middle" fill="#9a3412">3. 离线枚举：pw' -> S' -> H(A,B,S') ?= M1</text>
+  <text class="small" x="460" y="335" text-anchor="middle" fill="#9a3412">3. 离线枚举：pw′ -> S′ -> H(A,B,S′) ?= M₁</text>
 
   <circle r="8" fill="#2563eb" opacity="0">
     <animate attributeName="cx" values="235;235;370;370;370;370;370" keyTimes="0;0.05;0.25;0.26;0.50;0.99;1" dur="7s" repeatCount="indefinite"/>

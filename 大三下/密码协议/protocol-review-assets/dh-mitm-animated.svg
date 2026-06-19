@@ -17,37 +17,37 @@
 
   <rect x="0" y="0" width="920" height="390" fill="#ffffff"/>
   <text x="460" y="36" text-anchor="middle" font-size="26" font-weight="700">Diffie-Hellman 中间人攻击：临时公钥被替换</text>
-  <text x="460" y="62" text-anchor="middle" class="note">动画循环顺序：Alice 发出 g^x，Eva 替换为 g^z；Bob 发出 g^y，Eva 替换为 g^z</text>
+  <text x="460" y="62" text-anchor="middle" class="note">动画循环顺序：Alice 发出 gˣ，Eva 替换为 gᶻ；Bob 发出 gʸ，Eva 替换为 gᶻ</text>
 
   <rect class="actor" x="55" y="95" width="155" height="220" rx="8"/>
   <text class="label" x="132" y="128" text-anchor="middle">Alice</text>
   <text class="small" x="132" y="156" text-anchor="middle">选择 x</text>
-  <text class="small" x="132" y="178" text-anchor="middle">发送 g^x</text>
-  <text class="small" x="132" y="252" text-anchor="middle">收到 g^z</text>
-  <text class="small" x="132" y="274" text-anchor="middle">密钥 g^(xz)</text>
+  <text class="small" x="132" y="178" text-anchor="middle">发送 gˣ</text>
+  <text class="small" x="132" y="252" text-anchor="middle">收到 gᶻ</text>
+  <text class="small" x="132" y="274" text-anchor="middle">密钥 gˣᶻ</text>
 
   <rect class="attacker" x="382" y="95" width="155" height="220" rx="8"/>
   <text class="label" x="460" y="128" text-anchor="middle" fill="#9a3412">Eva</text>
   <text class="small" x="460" y="156" text-anchor="middle">选择 z</text>
   <text class="small" x="460" y="178" text-anchor="middle">替换双方消息</text>
-  <text class="small" x="460" y="252" text-anchor="middle">与 Alice: g^(xz)</text>
-  <text class="small" x="460" y="274" text-anchor="middle">与 Bob: g^(yz)</text>
+  <text class="small" x="460" y="252" text-anchor="middle">与 Alice: gˣᶻ</text>
+  <text class="small" x="460" y="274" text-anchor="middle">与 Bob: gʸᶻ</text>
 
   <rect class="actor" x="710" y="95" width="155" height="220" rx="8"/>
   <text class="label" x="788" y="128" text-anchor="middle">Bob</text>
   <text class="small" x="788" y="156" text-anchor="middle">选择 y</text>
-  <text class="small" x="788" y="178" text-anchor="middle">收到 g^z</text>
-  <text class="small" x="788" y="252" text-anchor="middle">发送 g^y</text>
-  <text class="small" x="788" y="274" text-anchor="middle">密钥 g^(yz)</text>
+  <text class="small" x="788" y="178" text-anchor="middle">收到 gᶻ</text>
+  <text class="small" x="788" y="252" text-anchor="middle">发送 gʸ</text>
+  <text class="small" x="788" y="274" text-anchor="middle">密钥 gʸᶻ</text>
 
   <path class="line" d="M210 142 L382 142"/>
-  <text class="small" x="296" y="132" text-anchor="middle">1. g^x</text>
+  <text class="small" x="296" y="132" text-anchor="middle">1. gˣ</text>
   <path class="bad" d="M537 172 L710 172"/>
-  <text class="small" x="624" y="162" text-anchor="middle" fill="#9a3412">2. g^z</text>
+  <text class="small" x="624" y="162" text-anchor="middle" fill="#9a3412">2. gᶻ</text>
   <path class="line" d="M710 244 L537 244"/>
-  <text class="small" x="624" y="234" text-anchor="middle">3. g^y</text>
+  <text class="small" x="624" y="234" text-anchor="middle">3. gʸ</text>
   <path class="bad" d="M382 274 L210 274"/>
-  <text class="small" x="296" y="264" text-anchor="middle" fill="#9a3412">4. g^z</text>
+  <text class="small" x="296" y="264" text-anchor="middle" fill="#9a3412">4. gᶻ</text>
 
   <circle r="8" fill="#2563eb" opacity="0">
     <animate attributeName="cx" values="210;210;382;382;382;382;382;382;382" keyTimes="0;0.03;0.21;0.22;0.25;0.45;0.70;0.99;1" dur="8s" repeatCount="indefinite"/>
