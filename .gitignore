@@ -9,12 +9,33 @@ Desktop.ini
 # Obsidian 工作区配置（不同设备屏幕不同）
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
+.obsidian/workspace-airport.json
+
+# Obsidian 临时文件
+.obsidian/*.lock
+
+# Obsidian 插件配置和数据（可选：如果需要同步插件设置则保留 data.json）
+.obsidian/plugins/realclaudian/data.json
+.obsidian/plugins/obsidian-git/data.json
+
+# Obsidian Git 插件的自动备份
+.obsidian/plugins/obsidian-git/backups/
+
+# Obsidian 同步助手
+.obsidian/plugins/obsidian-sync-helper/
+
+# Smart Clipboard 剪贴板历史
+Clippings/
+
+# Deep research 输出
+deep-research/output/
 
 # Obsidian 同步助手备份
 .obsidian/.obsidian-sync-helper-backup/
 
-
-
-
 # Ignore Smart Environment folder
 .smart-env
+
+# Codex 临时文件（浏览器 profile 快照、截图等，含大量缓存数据）
+.codex_tmp/
+**/.codex_tmp/
