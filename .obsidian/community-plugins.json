@@ -3,6 +3,8 @@
   "editing-toolbar",
   "pdf-plus",
   "realclaudian",
-  "notehelper",
-  "obsidian-git"
+  "obsidian-git",
+  "obsidian-tasks-plugin",
+  "obsidian-checklist-plugin",
+  "templater-obsidian"
 ]

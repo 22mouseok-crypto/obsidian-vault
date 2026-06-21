@@ -1,0 +1,496 @@
+===== PAGE 1 =====
+密码 口令
+VS
+p 密码
+n 密码算法 （加密算法， Hash 算法，签名算法等）
+n 密钥 （可以长为 1024 bit, 也可以短为 6 个数字如 123456 ）
+Ø 保存在硬件存储器
+Ø 保存在人脑
+p 口令
+n 大家常说的“密码”实际上是“密钥”，并且是很短的密钥，
+人的大脑可以记住，学术界称之为“口令”
+—— password
+n 也是密码学的范畴
+n 大家天天见，天天用
+n 本人的研究方向 Password Cryptography
+
+===== PAGE 2 =====
+Passwords
+o Think for a minute, how many accounts do you
+have? More than 50? 100?
+o We don’t love it, but have to live with it.
+o In the 2000s, it is widely believed that passwords
+will be replaced by some other techniques.
+o Since 2010, there has been wide disillusionment.
+o Today, we are faced with the same problem that
+：
+confronted us twenty years ago
+n Passwords are inherently weak, typically short strings. And
+thus they are guessable.
+n Passwords are prone to shoulder-surfing, key-logging and
+phishing attacks.
+(Herley and Oorschot, IEEE Seucrity&Privacy 2012)
+
+===== PAGE 3 =====
+New challenges give birth to
+Password Cryptography
+o The proliferation of malwares and viruses
+o The infestation of hacker attacks, e.g.,
+recent catastrophic password leakages
+万 口令泄露事件
+n CSDN 600 2011-11-20
+人人网 万 口令泄露事件
+n 500 2011-11-22
+万口令泄露事件
+n Rockyou 3200 2009-12-16
+o A much deadlier problem
+n We all love to reuse passwords !
+(50 accounts, only 3 distinct passwords )
+o There is still no other alternatives to replace
+passwords, neither will there be in the near future.
+
+===== PAGE 4 =====
+Two reports
+o On password reuse
+In average, each user has about 6.5 passwords and 25
+accounts that require passwords (Florencio et al., WWW
+2007)
+o On password weakness
+how weak are our passwords?
+Dataset from IEEE leaked on 2012-09-26
+
+===== PAGE 5 =====
+Enhancing the passwords
+o Two solutions
+Password + Token
+n
+Leakage-resistant password cryptography
+n
+教授团队在
+Deng H.
+发文指出
+NDSS 2012
+该方法是行不通的。
+
+===== PAGE 6 =====
+汇报提纲
+相关知识
+l 信息安全会议和期刊
+l 信息安全概述
+l 信息安全 VS 密码学
+论文报告
+l Introduction
+l Models
+l Attacks
+
+===== PAGE 7 =====
+Smart-card-based password authentication
+o Aim: Assuring two-factor security
+
+===== PAGE 8 =====
+Not an easy task
+—— A history of “break-fix-break-fix”
+
+===== PAGE 9 =====
+( )
+A real attack on EMV
+Europay, MasterCard, and Visa
+BBC Newsnight
+o Ross Anderson et al., IEEE S&P 2010
+
+===== PAGE 10 =====
+Challenges
+o powerful adversary
+n According to the common Dolev-Yao adversary model
+(1) he can eavesdrop 、 replay 、 fabricate 、 intercept 、
+block any messages over the channel
+（ ）
+2 what he cannot do is — — “crack” encrypted
+messages
+n Due to Side-Channel attacks
+smart cards should be assumed to be non-tamper
+resistant when in the hands of the attacker
+We are the first to
+n Breach card security without victim’s awarpeany esasttention to
+this practical
+side-channel attacks + return card
+threat.
+o Naive users my phone
+number?
+n users tend to choose “weak passwords”
+
+===== PAGE 11 =====
+Challenges (continue)
+o Have to reconcile the following issues
+n Security
+resistance to various passive and active attacks
+n Functionalities (e.g., user friendliness )
+n Performance
+
+===== PAGE 12 =====
+Trade-offs and Conflicts
+Security
+Performance
+fre
+e
+ly
+p
+a
+s
+s
+w
+o Usability
+rd
+c
+h
+a
+n
+g
+e
+Offline password Timely wrong
+password detection
+guessing attack
+
+===== PAGE 13 =====
+Contributions are threefold
+o For the first time, we explain why smart
+cards are preferred over USB, even if smart
+cards are assumed non-tamper-proof.
+o We revisit two recent proposals and show
+that, Hsieh-Leu’s scheme cannot achieve
+two-factor security under their own
+assumptions, while Wang’s PSCAV cannot
+achieve two-factor security under our new
+attacking strategy.
+o Our attack on Wang’s PSCItA hVa s halirgehadliyg hgitvsen a r insee wto
+the strongest adversary
+attacking scenario: returning the breached
+model so far.
+card to the victim without his awareness.
+
+===== PAGE 14 =====
+汇报提纲
+相关知识
+l 信息安全会议和期刊
+l 信息安全概述
+l 信息安全 VS 密码学
+论文报告
+l Introduction
+l Models
+l Attacks
+
+===== PAGE 15 =====
+System model
+o
+Four phases
+n Registration phase
+n Login phase
+n Verification phase
+n Password update phase
+
+===== PAGE 16 =====
+System model
+——Registration phase
+Master secret x;
+Choose ID , PW
+i i;
+
+===== PAGE 17 =====
+System model
+—
+Login and verification phase
+
+===== PAGE 18 =====
+System model
+—
+password change phase
+p A tradeoff between security and
+usability, mainly two approaches:
+n Through interaction with the server
+l Secure but cumbersome
+n Performed locally
+l Convenient but vulnerable
+Wang et al. Security flaws in two improved remote user authentication
+schemes using smart cards. Int. J. Communi. Syst., 2013, Doi:
+http://dx.doi.org/10.1002/dac.2468 (SCI/EI)
+
+===== PAGE 19 =====
+Adversary model
+for smart-card-based schemes
+o The present strongest model assumes an
+adversary who can
+(1) Have full control of the public channel
+(2) Either obtain victim’s password,
+or get access to user’s smart card and breach it
+But cannot
+(4) Breach the smart card while intercepting the victim’s
+password by using a malicious card reader
+To avoid the trival case, the attacker is not allowed to
+(5) First compromise the user’s password and then
+compromise the smart card
+
+===== PAGE 20 =====
+Two question arises
+o Now that smart cards are no longer tamper
+proof devices, why we do not use USB?
+o A number of papers claimed that their USB-based
+schemes can enjoy all the advantages of
+smart-card-based schemes, really?
+We investigate these two
+questions for the first time.
+
+===== PAGE 21 =====
+Adversary model
+for USB-based schemes
+o The present widely accepted model
+assumes an adversary who can
+(1) Have full control of the public channel
+(2) Obtain victim’s password
+(3) Compromise the victim’s USB device through
+malware within a short time period
+(4) Extract the sensitive information on the USB while
+intercepting the victim’s password by using malwares
+In contrast, the attacker cannot
+(5) Intercept the victim’s password by using malwares
+while compromising the smart card, because
+综 合
+compromise(4 o)f( 5th),e vUicStBim-’bsa ssmeda rtS ccahredm neese diss special
+instrumnoetn ts aunitda ab lere lfaotriv eulys el oning tuimn-et. rusted
+terminals.
+
+===== PAGE 22 =====
+The answers to these two questions
+o Now that smart cards are no longer tamper
+proof devices, who we do not use USB?
+Answer: USB-based schemes are unfit for
+application in un-trusted terminals.
+o A number of papers claimed that their USB-based
+schemes can enjoy all the advantages of
+smart-card-based schemes, really?
+Answer: Of course, not.
+
+===== PAGE 23 =====
+汇报提纲
+相关知识
+l 信息安全会议和期刊
+l 信息安全概述
+l 信息安全 VS 密码学
+论文报告
+l Introduction
+l Adversary Models
+l Attacks
+
+===== PAGE 24 =====
+Review of Hsieh-Leu s scheme
+’
+o Hsieh-Leu’s scheme
+n the registration phase
+n the login phase
+n the verification phase
+n the password update phase
+Hsieh, W., Leu, J.: Exploiting hash functions to intensify the remote
+user authentication scheme. Computers & Security 31(6), 791–798
+(2012)
+类期刊
+CCF B
+
+===== PAGE 25 =====
+Review of Hsieh-Leu s scheme (1/3)
+’
+—— User registration
+Master secret x;
+Choose ID , PW
+i i;
+a random b;
+Choose
+Compute h(b ⊕ PW ) ;
+i
+
+===== PAGE 26 =====
+Review of Hsieh-Leu s scheme(2/3)
+’
+—— Login and verification phase
+
+===== PAGE 27 =====
+Review of Hsieh-Leu s scheme (4/4)
+’
+—— Password Change phase
+n Support local password update;
+n We only focus on the login and
+verification phase, and omit this phase.
+
+===== PAGE 28 =====
+Two vulnerabilities
+o Offline password guessing attack
+n the most damaging threat to a password
+protocol
+o User anonymity breach
+n Li, X., Xiong, Y., Ma, J., Wang, W.: An efficient and secure
+dynamic identity based authentication protocol for multi-server
+architecture using smart cards. Journal of Network and Computer
+Applications 35(2), 763–769 (2012)
+n Which means the essential goal can not be achieved
+
+===== PAGE 29 =====
+Offline password guessing attack
+obtains {D , E , b, h(y), h(.)} in U ’s smart card
+i i i
+intercepted
+
+===== PAGE 30 =====
+Experiments
+o Common Laptops
+o Linux 2.6.10
+
+===== PAGE 31 =====
+User anonymity breach attack
+S colludes with U
+j m
+U
+i
+E is kept static in all of U ’s login
+i i
+requests, and thus can be
+exploited to trace user activity.
+
+===== PAGE 32 =====
+Lessons learned from the cryptanalysis
+o Two further observations
+n Only symmetric-key primitives (such as Hash,
+symmetric encryption, MAC) are intrinsically
+inadequate to withstand offline password
+guessing attack.
+(We managed to prove it in the following
+work:
+Security flaws in two improved remote user authentication schemes using smart cards.
+Int. J. Commun. Syst. (2012), Submitted on Sep 7, 2012. Last week, it was accepted
+and made on line, DOI: 10.1002/dac.2468. )
+By following our two observations, more
+n In the multi-server environment, collusions attacks are
+than 50% this type of schemes can be easily
+major threats to user privacy.
+found problematic .
+— —Our new work: On the anonymity of two-factor authentication schemes
+
+===== PAGE 33 =====
+Attacking Wang’s PSCAV
+p Our attack on Hsieh-Leu’s scheme can be generalized
+as follows:
+(1) Intercept some transcripts during the previous login session(s);
+(2) Obtain the security parameters stored in the victim’s smart card;
+(3) Repeatedly guess the victim’s password via an offline automated
+program.
+p The following attack on Wang’s PSCAV using a
+new strategy:
+(1) Obtain the security parameters stored in the victim’s smart card;
+(2) Return the exposed card to the victim without detection;
+(3) Impersonate the server to interact with the victim (and intercept the
+exchanged messages during this course);
+(4) Repeatedly guess the victim’s password via an offline automated
+program.
+
+===== PAGE 34 =====
+Review of Wang’s PSCAV
+o Wang’s PSCAV
+n the registration phase
+n the login and verification phase
+Wang, Y.G.: Password protected smart card and memory stick
+authentication against off-line dictionary attacks. In: Gritzalis,
+D., Furnell, S., Theoharidou, M. (eds.) SEC 2012, IFIP AICT,
+vol. 376, pp. 489–500. Springer (2012)
+类会议
+CCF C
+
+===== PAGE 35 =====
+Review of Wang s scheme (1/2)
+’
+—— User registration
+
+Master secret ;
+Choose C，
+
+===== PAGE 36 =====
+Review of Wang s scheme(2/2)
+’
+—— Login and verification phase
+
+===== PAGE 37 =====
+Offline password guessing attack
+on Wang’s scheme (1)
+pThe attacking strategy:
+(1) Obtain the security data stored in the victim’s smart card;
+(2) Return the exposed card to the victim without detection;
+(3) Impersonate the server to interact with the victim;
+(4) Repeatedly guess the victim’s password via an offline
+automated program.
+
+===== PAGE 38 =====
+Offline password guessing attack
+on Wang’s scheme (2)
+Obtains in C’s smart card
+Sends back the exposed card to the victim C
+
+===== PAGE 39 =====
+Experiments
+o Common Laptops
+o Linux 2.6.10
+o For ， it only takes 1~2 hours
+to recover the expected password!
+
+===== PAGE 40 =====
+Conclusion
+o We have explained why smart cards are preferred
+to USB-alike devices in two-factor schemes.
+o Two practical attacks are demonstrated on Hsieh-
+Leu’s scheme and Wang’s scheme, respectively.
+o A new attacking strategy is highlighted:
+There is potential that the attacker may return the exposed
+card to the victim!
+p Remarkably, our new attacking strategy has
+already given rise to the strongest adversary
+model so far —— Type III-r.
+
+===== PAGE 41 =====
+THANK YOU & QUESTIONS
+
+===== PAGE 42 =====
+Side-Channel Attack
+Side
+Channel
+Attacks
+
+===== PAGE 43 =====
+Various attacks
+o Offline password guessing attack
+o Smart card loss attack
+o Stolen verifier attack
+o User impersonation attack
+o Server masquerading attack
+o Replay attack
+o Parallel session attack
+o Denial of service attack
+o Password disclosure to server (Insider attack)
+o Forward secrecy
+o Key compromise impersonation attack
+o Unknown key share attack
+o …
+
+===== PAGE 44 =====
+Functionalities
+o key agreement
+o mutual authentication
+o local password change
+o user anonymity (initiator un-traceability)
+o no verifier table
+o support weak password
+o non-tamper resistant smart cards
+o repairability
+
+===== PAGE 45 =====
+Performance
+o Computation complexity ( a big hill )
+cryptographic operations are often computation-intensive, like
+modular exponentiation, modulo inversion, pairing …
+o Storage cost ( not a big problem)
+o Communication overhead (not a big
+problem)

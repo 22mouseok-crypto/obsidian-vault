@@ -1,0 +1,160 @@
+[
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\ppt\\ASIACCS_20160602.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\ppt__ASIACCS_20160602.pdf.txt",
+    "pages": 48,
+    "chars": 10371,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\ppt\\密码协议概述2026南开v5.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\ppt__密码协议概述2026南开v5.pdf.txt",
+    "pages": 47,
+    "chars": 6471,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\ppt\\密码协议课程概述0220南开v3.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\ppt__密码协议课程概述0220南开v3.pdf.txt",
+    "pages": 14,
+    "chars": 1850,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\ppt\\密码学基础南开0310v3.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\ppt__密码学基础南开0310v3.pdf.txt",
+    "pages": 96,
+    "chars": 18262,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\ppt\\第10讲-双因素认证(1).pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\ppt__第10讲-双因素认证(1).pdf.txt",
+    "pages": 45,
+    "chars": 12138,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\ppt\\第11讲-从SSL1.0到TLS1.3.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\ppt__第11讲-从SSL1.0到TLS1.3.pdf.txt",
+    "pages": 136,
+    "chars": 31220,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\ppt\\认证协议20260507-v17(1).pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\ppt__认证协议20260507-v17(1).pdf.txt",
+    "pages": 155,
+    "chars": 35318,
+    "empty_pages": 2
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\ppt\\认证协议20260507-v17.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\ppt__认证协议20260507-v17.pdf.txt",
+    "pages": 155,
+    "chars": 35318,
+    "empty_pages": 2
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\ppt\\零知识证明0227南开 v2(1).pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\ppt__零知识证明0227南开 v2(1).pdf.txt",
+    "pages": 61,
+    "chars": 9181,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\作业\\26密码协议第一次作业.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\作业__26密码协议第一次作业.pdf.txt",
+    "pages": 1,
+    "chars": 264,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\作业\\26密码协议第三次作业v1.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\作业__26密码协议第三次作业v1.pdf.txt",
+    "pages": 1,
+    "chars": 348,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pptx",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\作业\\密码协议第一次作业讲解(2).pptx",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\作业__密码协议第一次作业讲解(2).pptx.txt",
+    "slides": 17,
+    "chars": 1654,
+    "empty_slides": 9
+  },
+  {
+    "kind": "pptx",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\作业\\密码协议第三次作业讲解(2).pptx",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\作业__密码协议第三次作业讲解(2).pptx.txt",
+    "slides": 9,
+    "chars": 456,
+    "empty_slides": 4
+  },
+  {
+    "kind": "pptx",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\作业\\密码协议第二次作业讲解(2).pptx",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\作业__密码协议第二次作业讲解(2).pptx.txt",
+    "slides": 11,
+    "chars": 1335,
+    "empty_slides": 4
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\作业\\第二次作业--密码协议26v2.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\作业__第二次作业--密码协议26v2.pdf.txt",
+    "pages": 1,
+    "chars": 256,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\大作业\\原文.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\大作业__原文.pdf.txt",
+    "pages": 12,
+    "chars": 84384,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\大作业\\小论文要求南开v1（15min).pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\大作业__小论文要求南开v1（15min).pdf.txt",
+    "pages": 12,
+    "chars": 889,
+    "empty_pages": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\大作业\\论文13-一种设备增强的口令认证协议：Device-Enhanced Password Protocols with Optimal Online-Offline Protection-提供模块化的设计 PTR+PAKE--假设口令均匀分布--攻击U, D, S任意一方，不会导致pw泄露，实现最优抗在线和离线猜测能力- Jarecki-ASIACCS 2016.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\大作业__论文13-一种设备增强的口令认证协议：Device-Enhanced Password Protocols with Optimal Online-Offline Protection-提供模块化的设计 PTR+PAKE--假设口令均匀分布--攻击U, D, S任意一方，不会导致pw泄露，实现最优抗在线和离线猜测能力- Jarecki-ASIACCS 2016.pdf.txt",
+    "pages": 24,
+    "chars": 85783,
+    "empty_pages": 0
+  },
+  {
+    "kind": "txt",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\大作业\\论文粗读.txt",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\大作业__论文粗读.txt.txt",
+    "chars": 0
+  },
+  {
+    "kind": "pdf",
+    "path": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\大作业\\（备份）原文.pdf",
+    "out": "D:\\耗吧那就\\Documents\\我的第一个知识库\\大三下\\密码协议\\tmp_course_extract\\大作业__（备份）原文.pdf.txt",
+    "pages": 12,
+    "chars": 84384,
+    "empty_pages": 0
+  }
+]
